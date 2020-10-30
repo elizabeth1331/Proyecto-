@@ -50,23 +50,7 @@ public class GestioDoc {
 }
     
     
-    public void Lectura(String name){
-        Scanner stdIn = new Scanner(System.in);
-        Scanner file;
-        String line;
-        try {
-            System.out.print("Introduzca el nombre completo del archivo (con ruta): ");
-            file = new Scanner(new FileReader(stdIn.nextLine()));
-            while (file.hasNextLine()) {
-                line = file.nextLine();
-                System.out.println(line);
-            }
-            file.close();
-        }
-        catch (FileNotFoundException e){
-            System.out.println("Error al leer el archivo, " + e.getMessage());
-        }
-    }    
+        
 
     
 }
