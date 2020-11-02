@@ -4,9 +4,6 @@ package proyecto1;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Scanner;
 import javax.swing.*;
 
 
@@ -19,6 +16,7 @@ public class Lectura extends javax.swing.JFrame {
     JFileChooser seleccionado  =new JFileChooser();
     File archivo;
     GestioDoc op=new GestioDoc();
+    metodosDeLectura read=new metodosDeLectura();
     
     
     /**
@@ -135,6 +133,7 @@ public class Lectura extends javax.swing.JFrame {
             if(archivo.getName().endsWith("asc")||archivo.getName().endsWith("txt")){
               String contenido= op.abrirArchivo(archivo);
               txtAreaText.setText(contenido);
+              read.Lectura(archivo.getName());
             }
           }else{
               JOptionPane.showMessageDialog(null, "Error, documento no encontrado. Intenta de nuevo", "Error", JOptionPane.ERROR_MESSAGE);
