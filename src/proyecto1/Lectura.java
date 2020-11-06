@@ -69,7 +69,7 @@ public class Lectura extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtAreaText);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(70, 210, 1050, 500);
+        jScrollPane1.setBounds(50, 110, 1050, 360);
         getContentPane().add(IE);
         IE.setBounds(1170, 20, 190, 230);
 
@@ -86,7 +86,7 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(select);
-        select.setBounds(170, 760, 290, 90);
+        select.setBounds(100, 540, 280, 70);
 
         save1.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         save1.setText("Guardar Cambios");
@@ -101,7 +101,7 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(save1);
-        save1.setBounds(590, 760, 290, 90);
+        save1.setBounds(450, 540, 240, 60);
 
         next1.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         next1.setText("Regresar");
@@ -116,7 +116,7 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(next1);
-        next1.setBounds(1050, 760, 230, 90);
+        next1.setBounds(760, 540, 230, 50);
 
         fondo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"))); // NOI18N
         getContentPane().add(fondo2);
@@ -130,7 +130,7 @@ public class Lectura extends javax.swing.JFrame {
         if(seleccionado.showDialog(null, "ABRIR ARCHIVO")== JFileChooser.APPROVE_OPTION){
           archivo=seleccionado.getSelectedFile();
           if(archivo.canRead()){
-            if(archivo.getName().endsWith("asc")||archivo.getName().endsWith("txt")){
+            if(archivo.getName().endsWith("ASC")||archivo.getName().endsWith("asc")||archivo.getName().endsWith("TXT")||archivo.getName().endsWith("txt")){
               String contenido= op.abrirArchivo(archivo);
               txtAreaText.setText(contenido);
               read.Lectura(archivo.getName());
@@ -170,7 +170,7 @@ public class Lectura extends javax.swing.JFrame {
 
         if(seleccionado.showDialog(null, "Guardar archivo")== JFileChooser.APPROVE_OPTION){
           archivo=seleccionado.getSelectedFile();
-          if(archivo.getName().endsWith("asc")||archivo.getName().endsWith("txt")){
+          if(archivo.getName().endsWith("ASC")||archivo.getName().endsWith("asc")||archivo.getName().endsWith("TXT")||archivo.getName().endsWith("txt")){
               String contenido= txtAreaText.getText();
               String respuesta = op.GuardarArchivo(archivo, contenido);
               if(respuesta!=null){

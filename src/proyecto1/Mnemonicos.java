@@ -20,9 +20,17 @@ public class Mnemonicos {
     Hashtable<String,String> Inmediato;
     Hashtable<String,Integer> BytesInmediato;
     //Hashtable<String,String> Inherente;
-    //Hashtable<String,String> Relativo;
+    Hashtable<String,String> Relativo;
     //Hashtable<String,String> Indexado;
     //Hashtable<String,String> directoYExtendido;
+    Hashtable<String,Integer> modo;
+    Hashtable<String,String> mod;
+    
+    public Mnemonicos(){
+        this.Inmediato = new Hashtable();
+        this.BytesInmediato = new Hashtable();
+        this.Relativo = new Hashtable();
+    }
     
     /**
      * En este método guarda cada una de las instrucciones con su respectivo OPCODE y/o con el tamaño de su operando.
@@ -61,6 +69,28 @@ public class Mnemonicos {
         Inmediato.put("SUBB","C0");
         Inmediato.put("SUBD","83");
         
+        
+        Relativo.put("BCC", "24");
+        Relativo.put("BCS", "25");
+        Relativo.put("BEQ", "27");
+        Relativo.put("BGE", "2C");
+        Relativo.put("BGT", "2E");
+        Relativo.put("BHI", "22");
+        Relativo.put("BHS", "24");
+        Relativo.put("BLE", "2F");
+        Relativo.put("BLO", "25");
+        Relativo.put("BLS", "23");
+        Relativo.put("BLT", "2D");
+        Relativo.put("BMI", "2B");
+        Relativo.put("BNE", "26");
+        Relativo.put("BPL", "2A");
+        Relativo.put("BRA", "20");
+        Relativo.put("BSR", "8D");
+        Relativo.put("BVC", "28");
+        Relativo.put("BVS", "29");
+        
+        
+        
         //Número de bytes de los operandos que debería tener cada instrucción
         BytesInmediato=new Hashtable<>();
         BytesInmediato.put("ADCA",1);
@@ -93,6 +123,7 @@ public class Mnemonicos {
         BytesInmediato.put("SUBB",1);
         BytesInmediato.put("SUBD",2);
         
+        
         guardarListas();
     }
     /**
@@ -109,13 +140,22 @@ public class Mnemonicos {
         }catch(IOException e){
             System.out.println("No se pudo escribir el archivo ListaInmediato.txt");
         }
+        
+        //Lista de modo de direccionamiento relativo
+        try{
+            fileOut = new ObjectOutputStream(new FileOutputStream("ListaRelativo.txt"));
+            fileOut.writeObject(Relativo);
+            fileOut.close();
+        }catch(IOException e){
+            System.out.println("No se pudo escribir el archivo ListaRelativo.txt");
+        }
     }
     
     /**
      * En este método se lee el archivo que contiene la tabla hash del OPCODE de cada instruccion del modo de direccionamiento inmediato.
      * @return Tabla hash con valores Instruccion, OPCODE.
      */
-    public Hashtable<String,String> LeerOpcodeINM(){
+    /*public Hashtable<String,String> LeerOpcodeINM(){
         ObjectInputStream fileIn;
         try{
             fileIn = new ObjectInputStream(new FileInputStream("ListaInmediato.txt"));
@@ -126,13 +166,30 @@ public class Mnemonicos {
             System.out.println("No se pudo leer el archivo ListaInmediato.txt o no se pudo recuperar la lista");
             return null;
         }
-    }
+    } */
+    
+    /**
+     * En este método se lee el archivo que contiene la tabla hash del OPCODE de cada instruccion del modo de direccionamiento relativo.
+     * @return Tabla hash con valores Instruccion, OPCODE. 
+     */
+   /* public Hashtable<String,String> LeerOpcodeREL(){
+        ObjectInputStream fileIn;
+        try{
+            fileIn = new ObjectInputStream(new FileInputStream("ListaRelativo.txt"));
+            Relativo=(Hashtable)fileIn.readObject();
+            fileIn.close();
+            return Relativo;
+        }catch(Exception e){
+            System.out.println("No se pudo leer el archivo ListaRelativo.txt o no se pudo recuperar la lista");
+            return null;
+        }
+    } */
     
     /**
      * En este método se lee el archivo que contiene la tabla hash con la longitud en bytes del operando de cada instruccion del modo de direccionamiento inmediato.
      * @return Tabla hash con valores Instruccion, longitud del operando en bytes.
      */
-    public Hashtable<String,Integer> LeerBytesINM(){
+    /*public Hashtable<String,Integer> LeerBytesINM(){
         ObjectInputStream fileIn;
         try{
             fileIn = new ObjectInputStream(new FileInputStream("ListaInmediato.txt"));
@@ -143,6 +200,57 @@ public class Mnemonicos {
             System.out.println("No se pudo leer el archivo ListaInmediato.txt o no se pudo recuperar la lista");
             return null;
         }
+    } */
+    
+    public Hashtable<String,String> LeerOpcode(String file){
+        ObjectInputStream fileIn;
+        try{
+            fileIn = new ObjectInputStream(new FileInputStream(file));
+            if(file == "ListaIndexadoX.txt"){
+                mod=(Hashtable)fileIn.readObject();
+                fileIn.close();
+            }else if(file== "ListaIndexadoY.txt"){
+                mod=(Hashtable)fileIn.readObject();
+                fileIn.close(); 
+            }else if(file== "ListaInmediato.txt"){
+                mod=(Hashtable)fileIn.readObject();
+                fileIn.close(); 
+            }else if(file== "ListaRelativo.txt"){
+                mod=(Hashtable)fileIn.readObject();
+                fileIn.close(); 
+            }  
+            return mod;
+        }catch(Exception e){
+            System.out.println("No se pudo leer el archivo ListaInmediato.txt o no se pudo recuperar la lista");
+            return null;
+        }
     }
     
+    /**
+     * En este método se lee el archivo que contiene la tabla hash con la longitud en bytes del operando de cada instruccion del modo de direccionamiento inmediato.
+     * @return Tabla hash con valores Instruccion, longitud del operando en bytes.
+     */
+    public Hashtable<String,Integer> LeerBytes(String file){
+        ObjectInputStream fileIn;
+        try{
+            fileIn = new ObjectInputStream(new FileInputStream(file));
+            
+            if(file == "ListaIndexadoX.txt"){
+                modo=(Hashtable)fileIn.readObject();
+                fileIn.close();
+            }else if(file== "ListaIndexadoY.txt"){
+                modo=(Hashtable)fileIn.readObject();
+                fileIn.close(); 
+            }else if(file== "ListaInmediato.txt"){
+                modo=(Hashtable)fileIn.readObject();
+                modo=(Hashtable)fileIn.readObject();
+                fileIn.close(); 
+            }
+            return modo;
+        }catch(Exception e){
+            System.out.println("No se pudo leer el archivo ListaInmediato.txt o no se pudo recuperar la lista");
+            return null;
+        }
+    
+    }
 }
