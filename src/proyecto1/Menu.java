@@ -21,6 +21,7 @@ import javax.swing.*;
  */
 public class Menu extends javax.swing.JFrame {
 GestioDoc op=new GestioDoc();
+metodosDeLectura lectura = new metodosDeLectura();
     /**
      * Creates new form proyecto
      */
@@ -134,7 +135,7 @@ GestioDoc op=new GestioDoc();
 
     private void ejecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarActionPerformed
         String file = name.getText();
-        op.Lectura(file);
+        lectura.Lectura(file);
         
     }//GEN-LAST:event_ejecutarActionPerformed
 
