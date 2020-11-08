@@ -108,9 +108,10 @@ public class metodosDeLectura {
             }
         }else if(line.contains(",")){
             
+            
             if(line.contains(",X")||line.contains(",x")){
                 //Si la línea contiene es de tipo ",x" o ",X", se utiliza la clase del método de direccionamiento indexado.
-                Indexado IND= new Indexado();
+                IndexadoX IND= new IndexadoX();
                 newLine=IND.revisarLineaX(line, m);
                 //Si se regresa un error al analizar la línea, se devuelve la cadena con el error
                 if(newLine.contains("Error")){
@@ -122,21 +123,21 @@ public class metodosDeLectura {
                     return newLine;
                 }
                 
-            }/*else if(line.contains(",Y")||line.contains(",y")){
+            }else if(line.contains(",Y")||line.contains(",y")){
                 
                 //Si la línea contiene es de tipo ",y" o ",Y", se utiliza la clase del método de direccionamiento indexado.
-                Indexado IND= new Indexado();
+                IndexadoY IND= new IndexadoY();
                 newLine=IND.revisarLineaY(line, m);
                 //Si se regresa un error al analizar la línea, se devuelve la cadena con el error
                 if(newLine.contains("Error")){
                     return newLine;
                 /*Si no se encuentra un error, se agrega el código frente al OPCODE dejando un espacio de 3 tabuladores
                 y se regresan ambos*/
-              /*  }else{
+                }else{
                     newLine=newLine.concat("\t\t\t"+line);
                     return newLine;
                 }
-            }*/
+            }
         
         }else{
             Relativo REL = new Relativo();
