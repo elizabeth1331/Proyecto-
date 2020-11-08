@@ -186,7 +186,6 @@ public class metodosDeLectura {
     }
     
     
-    
     public Hashtable<String,Integer> GuardarVariablesH(String clave, Integer valor){
         
         System.out.print("   "+ clave +"---"+ valor+"\n");
@@ -263,4 +262,6 @@ public class metodosDeLectura {
                     
 }
     
+    
+
 }
