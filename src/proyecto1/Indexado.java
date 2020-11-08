@@ -43,7 +43,7 @@ public class Indexado {
         StringTokenizer st = new StringTokenizer (line);
         while (st.hasMoreTokens())
         {
-            String newLine1="";
+            
             palabra = st.nextToken();
             numPalabra++;
           
@@ -56,7 +56,7 @@ public class Indexado {
                 
                 if (IndexadoX.containsKey(palabra)){
                     instruccion=instruccion.concat(palabra);
-                    newLine1=newLine1.concat(IndexadoX.get(palabra));
+                    newLine=newLine.concat(IndexadoX.get(palabra));
                     System.out.println(instruccion +" Es instruccion de Indexado en X");
                 }else if (lectura.EsInstruccion(palabra, m)){
                     System.out.println("Error 000: ERROR DE SINTAXIS 1");
@@ -94,15 +94,14 @@ public class Indexado {
                     //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
                     System.out.println("La instruccion es "+instruccion +" y su numero de bytes debe ser: "+BytesIndexadoX.get(instruccion));
                     
-                    newLine1=newLine1.concat(aux);
-                    
-                   System.out.println((Integer.valueOf(String.valueOf(newLine1.length()/2))) +"    "+ BytesIndexadoX.get(instruccion));
-                   
-                   if( (BytesIndexadoX.get(instruccion))==(Integer.parseInt(String.valueOf(newLine1.length()/2)))){
+                    newLine=newLine.concat(aux);
+
+                   if( (BytesIndexadoX.get(instruccion))==(Integer.parseInt(String.valueOf(newLine.length()/2)))){
                         //Si coinciden, se agrega a la cadena que será regresada
+                        System.out.println("El tamaño de bytes coincide con el Mnemonico");
                         
-                        newLine=newLine1.concat(aux);
                     }else{
+                       newLine=palabra;
                         System.out.println("Error 007: MAGNITUD DE  OPERANDO ERRONEA");
                         return "Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                     }
