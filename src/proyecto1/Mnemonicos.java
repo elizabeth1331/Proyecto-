@@ -34,6 +34,13 @@ public class Mnemonicos {
         this.Inmediato = new Hashtable();
         this.BytesInmediato = new Hashtable();
         this.Relativo = new Hashtable();
+        this.Inherente=new Hashtable<>();
+        this.IndexadoX=new Hashtable<>();
+        this.IndexadoY=new Hashtable<>();
+        this.BytesInherente=new Hashtable<>();
+        this.BytesInmediato=new Hashtable<>();
+        this.BytesIndexadoX=new Hashtable<>();
+        this.BytesIndexadoY=new Hashtable<>();
     }
     
     /**
@@ -43,7 +50,7 @@ public class Mnemonicos {
     public void insertar(){
         
         //OPCODE correspondiente de cada instrucción Inmediato 
-        Inmediato=new Hashtable<>();
+        
         Inmediato.put("ADCA","89");
         Inmediato.put("ADCB","C9");
         Inmediato.put("ADDA","8B");
@@ -96,7 +103,7 @@ public class Mnemonicos {
         Relativo.put("BVS", "29");
         
         //OPCODE inherente
-        Inherente=new Hashtable<>();
+        
         Inherente.put("ABA","1B");
         Inherente.put("ABX","3A");
         Inherente.put("ABY","183A");
@@ -174,7 +181,7 @@ public class Mnemonicos {
         
         //OPCODE correspondiente de cada instrucción Indexado para X
         
-        IndexadoX=new Hashtable<>();
+        
         IndexadoX.put("ADCA","A9");
         IndexadoX.put("ADCB","E9");
         IndexadoX.put("ADDA","AB");
@@ -230,7 +237,7 @@ public class Mnemonicos {
         IndexadoX.put("TST","6D");
         
         //OPCODE correspondiente de cada instrucción Indexado para Y
-        IndexadoY=new Hashtable<>();
+        
         IndexadoY.put("ADCA","18A9");
         IndexadoY.put("ADCB","18E9");
         IndexadoY.put("ADDA","18AB");
@@ -286,7 +293,7 @@ public class Mnemonicos {
         IndexadoY.put("TST","186D");
         
         //Número de bytes de los operandos que debería tener cada instrucción
-        BytesInmediato=new Hashtable<>();
+        
         BytesInmediato.put("ADCA",1);
         BytesInmediato.put("ADCB",1);
         BytesInmediato.put("ADDA",1);
@@ -318,7 +325,7 @@ public class Mnemonicos {
         BytesInmediato.put("SUBD",2);
         
         //Número de bytes de los operandos que debería tener cada instrucción Indexado para X
-        BytesIndexadoX=new Hashtable<>();
+        
         BytesIndexadoX.put("ADCA",2);
         BytesIndexadoX.put("ADCB",2);
         BytesIndexadoX.put("ADDA",2);
@@ -374,7 +381,7 @@ public class Mnemonicos {
         BytesIndexadoX.put("TST",2);
         
         //Número de bytes de los operandos que debería tener cada instrucción Indexado para Y
-        BytesIndexadoY=new Hashtable<>();
+        
         BytesIndexadoY.put("ADCA",3);
         BytesIndexadoY.put("ADCB",3);
         BytesIndexadoY.put("ADDA",3);
@@ -430,7 +437,7 @@ public class Mnemonicos {
         BytesIndexadoY.put("TST",3);
         
         //Número de bytes modo inherente
-        BytesInherente=new Hashtable<>();
+        
         BytesInherente.put("ABA",1);
         BytesInherente.put("ABX",1);
         BytesInherente.put("ABY",2);
@@ -606,8 +613,10 @@ public class Mnemonicos {
             
             if(file == "ListaIndexadoX.txt"){
                 modo=(Hashtable)fileIn.readObject();
+                modo=(Hashtable)fileIn.readObject();
                 fileIn.close();
             }else if(file== "ListaIndexadoY.txt"){
+                modo=(Hashtable)fileIn.readObject();
                 modo=(Hashtable)fileIn.readObject();
                 fileIn.close(); 
             }else if(file== "ListaInmediato.txt"){

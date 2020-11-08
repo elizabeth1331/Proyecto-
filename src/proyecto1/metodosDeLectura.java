@@ -122,7 +122,7 @@ public class metodosDeLectura {
                     return newLine;
                 }
                 
-            }else if(line.contains(",Y")||line.contains(",y")){
+            }/*else if(line.contains(",Y")||line.contains(",y")){
                 
                 //Si la línea contiene es de tipo ",y" o ",Y", se utiliza la clase del método de direccionamiento indexado.
                 Indexado IND= new Indexado();
@@ -132,11 +132,11 @@ public class metodosDeLectura {
                     return newLine;
                 /*Si no se encuentra un error, se agrega el código frente al OPCODE dejando un espacio de 3 tabuladores
                 y se regresan ambos*/
-                }else{
+              /*  }else{
                     newLine=newLine.concat("\t\t\t"+line);
                     return newLine;
                 }
-            }
+            }*/
         
         }else{
             Relativo REL = new Relativo();
@@ -176,4 +176,5 @@ public class metodosDeLectura {
         }
       return false; 
     }
+    
 }

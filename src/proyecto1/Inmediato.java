@@ -62,6 +62,7 @@ public class Inmediato {
                     instruccion=instruccion.concat(palabra);
                     newLine=newLine.concat(Inmediato.get(palabra));
                     System.out.println(instruccion +" Es instruccion de inmediato");
+                   
                 }else if (lectura.EsInstruccion(palabra, m)){
                     //Instrucción de otro modo de direccionamiento con #
                     System.out.println("Error 000: ERROR DE SINTAXIS 1");
