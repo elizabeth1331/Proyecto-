@@ -34,8 +34,7 @@ public class Lectura extends javax.swing.JFrame {
        this.setExtendedState(WIDTH);
        Image ico= Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("imagenes/escudo_fi_color.png"));
         this.setIconImage(ico);
-        //this.setExtendedState(Menu.MAXIMIZED_BOTH);
-        setSize(1400,1200);
+        setBounds(100,100,1300,900);
         
         ImageIcon imagen3 = new ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"));
         Icon fondo3 =new ImageIcon(imagen3.getImage().getScaledInstance(fondo2.getWidth(),fondo2.getHeight(),Image.SCALE_DEFAULT));
@@ -69,9 +68,9 @@ public class Lectura extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtAreaText);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(50, 110, 1050, 360);
+        jScrollPane1.setBounds(30, 250, 1010, 360);
         getContentPane().add(IE);
-        IE.setBounds(1170, 20, 190, 230);
+        IE.setBounds(1060, 70, 190, 180);
 
         select.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         select.setText("Seleccionar Archivo");
@@ -86,7 +85,7 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(select);
-        select.setBounds(100, 540, 280, 70);
+        select.setBounds(110, 670, 280, 70);
 
         save1.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         save1.setText("Guardar Cambios");
@@ -101,7 +100,7 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(save1);
-        save1.setBounds(450, 540, 240, 60);
+        save1.setBounds(540, 670, 240, 60);
 
         next1.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         next1.setText("Regresar");
@@ -116,7 +115,7 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(next1);
-        next1.setBounds(760, 540, 230, 50);
+        next1.setBounds(930, 680, 230, 50);
 
         fondo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"))); // NOI18N
         getContentPane().add(fondo2);

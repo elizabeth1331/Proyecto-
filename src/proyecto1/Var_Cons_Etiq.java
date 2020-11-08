@@ -30,7 +30,11 @@ public class Var_Cons_Etiq {
     
     public int buscarEtiqueta(String etiqueta){
         int pos = 0;
-        pos =  Etiquetas.get(etiqueta);
-        return pos;
+        if(Etiquetas.containsKey(etiqueta)){
+            pos =  Etiquetas.get(etiqueta);
+            return pos;
+        }else{
+            return pos;
+        }
     }
 }

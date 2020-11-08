@@ -9,48 +9,42 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 
 /**
- * Clase que analiza una instrucción del modo de direccionamiento inmediato.
- * @author Ari
+ *
+ * @author Eliss
  */
-public class Inmediato {
-    Hashtable<String, String> Inmediato;
-    Hashtable<String, Integer> BytesInmediato;
+public class IndexadoX {
     
-    public Inmediato(){
-        this.Inmediato = new Hashtable();
-    }
-    /**
-     * En este método se analiza la línea que supuestamente contiene una instrucción del modo de 
-     * direccionamiento inmediato.
-     * @param line linea que supuestamente contiene una instrucción del modo de direccionamiento INM.
-     * @return OPCODE de la instrucción procesada o mensaje de error.
-     */
-    public String AnalizarLinea(String line, Mnemonicos m){
-        //Se llama a mnemónicos para recuperar la lista de instrucciones del modo Inmediato
-        metodosDeLectura lectura = new metodosDeLectura();
-        Inmediato=m.LeerOpcode("ListaInmediato.txt");
-        BytesInmediato=m.LeerBytes("ListaInmediato.txt");
+    Hashtable<String, String> IndexadoX;
+    Hashtable<String, Integer> BytesIndexadoX;
+    
+    
+    //se crea objeto para conectar con la lista de Mnemonicos encontrada en Mnemonico.java
+    Mnemonicos m=new Mnemonicos();
+    //Se recuperan las listas de instrucciones del modo indexado 
+    metodosDeLectura lectura = new metodosDeLectura();
+    
+    public String revisarLineaX(String line, Mnemonicos m){
         
-        //System.out.println(Inmediato);
-        //System.out.println(BytesInmediato);
-        
+    
+        IndexadoX=m.LeerOpcode("ListaIndexadoX.txt");
+        BytesIndexadoX=m.LeerBytes("ListaIndexadoX.txt");
+         
         //Palabra nos sirve para separar la linea en palabras y contabilizarlas
-        String palabra;
-        int numPalabra=0;
-        
+            String palabra;
+            int numPalabra=0;
+    
+    
         //Esta cadena será la que se devolverá si la sintaxis es correcta
-        String newLine="", instruccion="";
+            String newLine="", instruccion="";
         
         //Se leen las palabras de la línea
         StringTokenizer st = new StringTokenizer (line);
         while (st.hasMoreTokens())
         {
+            
             palabra = st.nextToken();
             numPalabra++;
-            
-            //System.out.println(numPalabra);
-            //System.out.println("Palabra: "+palabra);
-            
+          
             String aux="";
             
             /*Se verifica que la primera palabra sea una instrucción del modo de direccionamiento inmediato, y de 
@@ -58,12 +52,12 @@ public class Inmediato {
             if(numPalabra==1){
                 palabra=palabra.toUpperCase();
                 
-                if (Inmediato.containsKey(palabra)){
+                if (IndexadoX.containsKey(palabra)){
                     instruccion=instruccion.concat(palabra);
-                    newLine=newLine.concat(Inmediato.get(palabra));
-                    System.out.println(instruccion +" Es instruccion de inmediato");
-                   
+                    newLine=newLine.concat(IndexadoX.get(palabra));
+                    System.out.println(instruccion +" Es instruccion de Indexado en X");
                 }else if (lectura.EsInstruccion(palabra, m)){
+                    System.out.println("Error 000: ERROR DE SINTAXIS 1");
                     //Instrucción de otro modo de direccionamiento con #
                     System.out.println("Error 000: ERROR DE SINTAXIS 1");
                     return "Error 000: ERROR DE SINTAXIS";
@@ -73,22 +67,39 @@ public class Inmediato {
                 }
             }
             
-            //Se verifica el operando, el cual corresponde a la segunda palabra de la línea y debe comenzar con #
-            if((numPalabra==2)&&(palabra.startsWith("#"))){
-                //En caso de que sea un operando en número hexadecimal
-                if(palabra.startsWith("#$")){
-                    //System.out.println(palabra+" Es operando hexadecimal");
-                    //Se utiliza la cadena aux para separar #$ del operando
-                    aux=aux.concat(palabra.substring(2));
-                    //System.out.println(aux+ " Es el operando sin #$ ");
+            //Se verifica el operando, el cual corresponde a la segunda palabra de la línea y debe comenzar con $
+            if((numPalabra==2)){
+                int n=palabra.length();
+                
+                // Se transforma la palabra a cadena
+                char[] p = palabra.toCharArray();
+                char[] auxPalabra=new  char[n-2];
+                char[] auxP=new  char[n-3];
+                for (int i = 0; i < n-2; i++){
+                    auxPalabra[i]=p[i]; 
+                }
+                for (int j = 0; j < n-3; j++){   
+                    auxP[j]=p[j+1];
+                }
+                
+                 aux = String.valueOf(auxP);
+                 palabra = String.valueOf(auxPalabra);
+                 
+                 //En caso de que sea un operando en número hexadecimal
+                if(palabra.startsWith("$")){
+                    System.out.println(palabra+" Es operando hexadecimal");
+                    
                     //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
-                    //System.out.println("La instruccion sigue siendo "+instruccion);
-                    //System.out.println("El numero de bytes debe ser: "+BytesInmediato.get(instruccion));
-                    //System.out.println("aux/2 es: "+aux.length()/2);
-                    if(BytesInmediato.get(instruccion)==(aux.length()/2)&&(aux.length()%2==0)){
+                    System.out.println("La instruccion es "+instruccion +" y su numero de bytes debe ser: "+BytesIndexadoX.get(instruccion));
+                    
+                    newLine=newLine.concat(aux);
+
+                   if( (BytesIndexadoX.get(instruccion))==(Integer.parseInt(String.valueOf(newLine.length()/2)))){
                         //Si coinciden, se agrega a la cadena que será regresada
-                        newLine=newLine.concat(aux);
+                        System.out.println("El tamaño de bytes coincide con el Mnemonico");
+                        
                     }else{
+                       newLine=palabra;
                         System.out.println("Error 007: MAGNITUD DE  OPERANDO ERRONEA");
                         return "Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                     }
@@ -101,7 +112,7 @@ public class Inmediato {
                     //System.out.println(aux+" Es el caracter");
                     //Se comprueba si el operando es un solo caracter
                     if(aux.length()==1){
-                        char character = aux.charAt(0);
+                        char character = aux.charAt(0); 
                         //System.out.println("El caracter es: "+character);
                         //Se convierte el caracter a decimal
                         int ascii = (int) character;
@@ -116,7 +127,7 @@ public class Inmediato {
                         return "Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                     }
                 //En caso de que sea un operando en número decimal
-                }else{
+                }/*else{
                     //Se utiliza la cadena aux para separar # del operando
                     aux=aux.concat(palabra.substring(1));
                     //Se convierte a número decimal
@@ -126,14 +137,14 @@ public class Inmediato {
                     String operando= Integer.toHexString(op).toUpperCase();
                     //System.out.println(operando+" Es el operando en hexadecimal");
                     //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
-                    if(BytesInmediato.get(instruccion)==(operando.length()/2)&&(operando.length()%2==0)){
+                    if(BytesIndexadoX.get(instruccion)==(operando.length()/2)&&(operando.length()%2==0)){
                         //Si coinciden, se agrega a la cadena que será regresada
                         newLine=newLine.concat(operando);
                     }else{
                         System.out.println("Error 007: MAGNITUD DE  OPERANDO ERRONEA");
                         return "Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                     }
-                }
+                }*/
             }
             if((numPalabra==3)&&(palabra.startsWith("*"))){
                 //Es un comentario, no es necesario realizar nada más
@@ -141,7 +152,12 @@ public class Inmediato {
                 System.out.println("Error 000: ERROR DE SINTAXIS 2");
                 return "Error 000: ERROR DE SINTAXIS";
             }
-        }
+            
+            
+            
+            }
+            
+        
         if (numPalabra<2){
             System.out.println("Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)");
             return "Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)";
@@ -150,4 +166,9 @@ public class Inmediato {
         System.out.println("La cadena generada es: "+newLine);
         return newLine;
     }
-}
+
+    }
+    
+    
+    
+

@@ -38,8 +38,7 @@ metodosDeLectura lectura = new metodosDeLectura();
        this.setExtendedState(WIDTH);
        Image ico= Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("imagenes/escudo_fi_color.png"));
         this.setIconImage(ico);
-        //this.setExtendedState(Menu.MAXIMIZED_BOTH);
-        setSize(1400,1200);
+        setBounds(100,100,1200,800);
         
         ImageIcon imagen2 = new ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"));
         Icon fondo2 =new ImageIcon(imagen2.getImage().getScaledInstance(fondo.getWidth(),fondo.getHeight(),Image.SCALE_DEFAULT));
@@ -71,7 +70,7 @@ metodosDeLectura lectura = new metodosDeLectura();
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
         getContentPane().add(IE);
-        IE.setBounds(1060, 20, 230, 230);
+        IE.setBounds(900, 20, 230, 210);
 
         leer.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         leer.setText("Visualizar");
@@ -124,7 +123,7 @@ metodosDeLectura lectura = new metodosDeLectura();
 
         fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"))); // NOI18N
         getContentPane().add(fondo);
-        fondo.setBounds(0, 0, 1390, 1040);
+        fondo.setBounds(0, 0, 1280, 1040);
 
         fondo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"))); // NOI18N
         getContentPane().add(fondo1);
