@@ -25,7 +25,7 @@ public class Inmediato {
      * @param line linea que supuestamente contiene una instrucción del modo de direccionamiento INM.
      * @return OPCODE de la instrucción procesada o mensaje de error.
      */
-    public String AnalizarLinea(String line, Mnemonicos m){
+    public String AnalizarLinea(String line, Mnemonicos m, Hashtable<String,Integer> variables){
         //Se llama a mnemónicos para recuperar la lista de instrucciones del modo Inmediato
         metodosDeLectura lectura = new metodosDeLectura();
         Inmediato=m.LeerOpcode("ListaInmediato.txt");
@@ -115,26 +115,41 @@ public class Inmediato {
                         System.out.println("Error 007: MAGNITUD DE  OPERANDO ERRONEA");
                         return "Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                     }
-                //En caso de que sea un operando en número decimal
-                }else{
+                }else {
                     //Se utiliza la cadena aux para separar # del operando
                     aux=aux.concat(palabra.substring(1));
-                    //Se convierte a número decimal
-                    int op=Integer.parseInt(aux);
-                    //System.out.println(op+" Es el operando decimal sin #");
-                    //Se convierte el número decimal a hexadecimal y como cadena
-                    String operando= Integer.toHexString(op).toUpperCase();
-                    //System.out.println(operando+" Es el operando en hexadecimal");
-                    //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
-                    if(BytesInmediato.get(instruccion)==(operando.length()/2)&&(operando.length()%2==0)){
+                    if(esNumero(palabra)){
+                        System.out.println(palabra+" Es operando numérico");
+                        //El operando es numérico, probablemente decimal
+                        //Se convierte a número decimal
+                        int op=Integer.parseInt(aux);
+                        //System.out.println(op+" Es el operando decimal sin #");
+                        //Se convierte el número decimal a hexadecimal y como cadena
+                        String operando= Integer.toHexString(op).toUpperCase();
+                        //System.out.println(operando+" Es el operando en hexadecimal");
+                        //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
+                        if(BytesInmediato.get(instruccion)==(operando.length()/2)&&(operando.length()%2==0)){
                         //Si coinciden, se agrega a la cadena que será regresada
                         newLine=newLine.concat(operando);
+                        }else{
+                            System.out.println("Error 007: MAGNITUD DE  OPERANDO ERRONEA");
+                            return "Error 007: MAGNITUD DE  OPERANDO ERRONEA";
+                        }
                     }else{
-                        System.out.println("Error 007: MAGNITUD DE  OPERANDO ERRONEA");
-                        return "Error 007: MAGNITUD DE  OPERANDO ERRONEA";
+                        //Solo puede ser una constante o variable
+                        if(variables.containsKey(aux)){
+                            //El operando es una constante o varible
+                            System.out.println("El operando es una variable");
+                            newLine=newLine.concat(variables.get(aux).toString());
+                        }else{
+                            System.out.println("Error 001: CONSTANTE INEXTISTENTE");
+                        }
                     }
                 }
+            }else if((numPalabra==2)&&(!palabra.startsWith("#"))){
+                System.out.println("Error 005: INSTRUCCION CARECE DE OPERANDOS");
             }
+            
             if((numPalabra==3)&&(palabra.startsWith("*"))){
                 //Es un comentario, no es necesario realizar nada más
             }else if((numPalabra==3)&&(!palabra.startsWith("*"))){
@@ -149,5 +164,15 @@ public class Inmediato {
         //System.out.println("El número total de palabras leídas es "+numPalabra);
         System.out.println("La cadena generada es: "+newLine);
         return newLine;
+    }
+    
+    
+    public boolean esNumero(String operando){
+        try{
+            Integer.parseInt(operando);
+            return true;
+        }catch(NumberFormatException e){
+            return false;
+        }
     }
 }

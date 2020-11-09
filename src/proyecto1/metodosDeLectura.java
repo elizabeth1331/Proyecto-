@@ -105,7 +105,7 @@ public class metodosDeLectura {
         if(line.contains("#")){
             //Si la línea contiene un #, se utiliza la clase correspondiente al método de direccionamiento inmediato.
             Inmediato INM= new Inmediato();
-            newLine=INM.AnalizarLinea(line, m);
+            newLine=INM.AnalizarLinea(line, m, variables);
             //Si se regresa un error al analizar la línea, se devuelve la cadena con el error
             if(newLine.contains("Error")){
                 return newLine;
