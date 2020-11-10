@@ -67,7 +67,7 @@ public class metodosDeLectura {
                     //Convertimos la palabra en mayúsculas 
                     palabra = palabra.toUpperCase();
                     if(numPalabra==1){
-                        if(EsInstruccion(palabra, m)){
+                        if(EsInstruccion(palabra, m)!=0){
                         //Error 009
                         //Pero debe revisar todos los archivos para corroborar que la primera "palabra" sea una instrucción,
                         //Si no la encuentra entonces es una ETIQUETA     
@@ -100,22 +100,16 @@ public class metodosDeLectura {
      * @return newLine Es la línea que se analizó más su OPCODE o el error detectado.
      */
     public String DifModoDeDireccionamiento(String line, Mnemonicos m, int numLinea, Var_Cons_Etiq VCE){
-        String newLine;
+        Inmediato IMM= new Inmediato();
+        Relativo REL=new Relativo();
+        Inherente INH=new Inherente();
+        String palabra="";
+        //Directo y Extendido
         
-        if(line.contains("#")){
-            //Si la línea contiene un #, se utiliza la clase correspondiente al método de direccionamiento inmediato.
-            Inmediato INM= new Inmediato();
-            newLine=INM.AnalizarLinea(line, m, variables);
-            //Si se regresa un error al analizar la línea, se devuelve la cadena con el error
-            if(newLine.contains("Error")){
-                return newLine;
-            /*Si no se encuentra un error, se agrega el código frente al OPCODE dejando un espacio de 3 tabuladores
-            y se regresan ambos*/
-            }else{
-                newLine=newLine.concat("\t\t\t"+line);
-                return newLine;
-            }
-        }else if(line.contains(",")){
+        String newLine="";
+        int op;
+        
+        if(line.contains(",")){
             
             if(line.contains(",X")||line.contains(",x")){
                 //Si la línea contiene es de tipo ",x" o ",X", se utiliza la clase del método de direccionamiento indexado.
@@ -146,44 +140,78 @@ public class metodosDeLectura {
                     return newLine;
                 }
             }
-        
-        }else{
-            Relativo REL = new Relativo();
-            newLine = REL.RevisarLinea(line, m, VCE, numLinea);
-            Inherente INH = new Inherente();
-            newLine = INH.AnalizarLinea(line, m);
         }
-        return null;
+        if(!line.equals("")){
+            StringTokenizer st = new StringTokenizer (line);
+            //Leemos la ínea hasta encontrar el primer espacio
+            if(st.hasMoreTokens()){
+                palabra = st.nextToken();
+            }
+            //Convertimos la palabra en mayúsculas 
+            palabra = palabra.toUpperCase();
+            op=EsInstruccion(palabra,m);
+            switch (op){
+                case 0:
+                    System.out.println("Error 004: MNEMÓNICO INEXISTENTE");
+                    newLine="Error 004: MNEMÓNICO INEXISTENTE";
+                    break;
+                case 1:
+                    System.out.println(palabra+" Es instrucción del modo inmediato");
+                    newLine=IMM.AnalizarLinea(line, m, variables);
+                    break;
+                case 2:
+                    System.out.println(palabra+" Es unstrucción del modo inherente");
+                    newLine=INH.AnalizarLinea(line, m);
+                    break;
+                case 3:
+                    System.out.println(palabra+" Es instrucción del modo relativo");
+                    newLine=REL.RevisarLinea(line, m, VCE, numLinea);
+                    break;
+                case 4:
+                    //Puede ser directo o extendido
+                    System.out.println(palabra+" Es instrucción del modo directo o extendido");
+                    newLine="";
+                    break;
+                }
+        }
+        return newLine;
     }
 
-    public boolean EsInstruccion(String palabra, Mnemonicos m) {
+    public int EsInstruccion(String palabra, Mnemonicos m) {
+        int op;
         
         //Se recuperan las tablas de todos los modos de direccionamiento 
         System.out.println("La palabra a diferenciar es:"+palabra);
         
         Hashtable<String, String> Inmediato = new Hashtable();
-        Hashtable<String,String> Inherente;
+        Hashtable<String,String> Inherente = new Hashtable();
         Hashtable<String, String> Relativo = new Hashtable();
         Hashtable<String, String> IndexadoX = new Hashtable();
         Hashtable<String, String> IndexadoY = new Hashtable();
-        //Hashtable<String,String> directoYExtendido;
+        Hashtable<String, String> Directo = new Hashtable();
         
         Inmediato = m.LeerOpcode("ListaInmediato.txt");
         Relativo = m.LeerOpcode("ListaRelativo.txt");
         Inherente = m.LeerOpcode("ListaInherente.txt");
         IndexadoX= m.LeerOpcode("ListaIndexadoX.txt");
         IndexadoY=m.LeerOpcode("ListaIndexadoY.txt");
-        //Añadir los métodos para recuperar el resto de Mnemónicos
+        Directo=m.LeerOpcode("ListaDirecto.txt");
         
-        
-        //Comprobamos si la palabra corresponde a algúna instrucción 
-        if (Inmediato.containsKey(palabra)||Relativo.containsKey(palabra)){
-            System.out.println("Es instrucción");
-            return true;
+        if(Inmediato.containsKey(palabra)){
+            op=1;
+        }else if(Inherente.containsKey(palabra)){
+            op=2;
+        }else if(Relativo.containsKey(palabra)){
+            op=3;
+        }else if(Directo.containsKey(palabra)){
+            //Puede ser directo o extendido
+            op=4;
         }else{
-            System.out.println("No es instrucción");
+            op=0;
         }
-      return false; 
+        return op;
+        //Comprobamos si la palabra corresponde a algúna instrucción 
+         
     }
     
     public Hashtable<String,Integer> GuardarVariables(String line){

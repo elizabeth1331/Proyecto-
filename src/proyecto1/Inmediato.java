@@ -63,11 +63,11 @@ public class Inmediato {
                     newLine=newLine.concat(Inmediato.get(palabra));
                     System.out.println(instruccion +" Es instruccion de inmediato");
                    
-                }else if (lectura.EsInstruccion(palabra, m)){
+                }/*else if (lectura.EsInstruccion(palabra,m)==0){
                     //Instrucción de otro modo de direccionamiento con #
                     System.out.println("Error 000: ERROR DE SINTAXIS 1");
                     return "Error 000: ERROR DE SINTAXIS";
-                }else{
+                }*/else{
                     System.out.println("Error 004: MNEMÓNICO INEXISTENTE");
                     return "Error 004: MNEMÓNICO INEXISTENTE";
                 }

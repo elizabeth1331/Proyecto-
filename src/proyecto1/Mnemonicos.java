@@ -26,7 +26,8 @@ public class Mnemonicos {
     Hashtable<String,Integer> BytesIndexadoX;
     Hashtable<String,String> IndexadoY;
     Hashtable<String,Integer> BytesIndexadoY;
-    //Hashtable<String,String> directoYExtendido;
+    Hashtable<String,String> Directo;
+    Hashtable<String,String> Extendido;
     Hashtable<String,Integer> modo;
     Hashtable<String,String> mod;
     
@@ -37,6 +38,8 @@ public class Mnemonicos {
         this.Inherente=new Hashtable<>();
         this.IndexadoX=new Hashtable<>();
         this.IndexadoY=new Hashtable<>();
+        this.Directo=new Hashtable<>();
+        this.Extendido=new Hashtable<>();
         this.BytesInherente=new Hashtable<>();
         this.BytesInmediato=new Hashtable<>();
         this.BytesIndexadoX=new Hashtable<>();
@@ -566,6 +569,16 @@ public class Mnemonicos {
         }catch(IOException e){
             System.out.println("No se pudo escribir el archivo ListaInherente.txt");
         }
+        
+        //Lista opcode modo de direccionamiento Directo y Extendido
+        try{
+            fileOut = new ObjectOutputStream(new FileOutputStream("ListaDirecto.txt"));
+            fileOut.writeObject(Directo);
+            fileOut.close();
+        }catch(IOException e){
+            System.out.println("No se pudo escribir el archivo ListaDirecto.txt");
+        }
+        
     }
     
     /**
@@ -593,8 +606,10 @@ public class Mnemonicos {
             }else if(file== "ListaInherente.txt"){
                 mod=(Hashtable)fileIn.readObject();
                 fileIn.close(); 
-            }  
-            
+            }else if(file== "ListaDirecto.txt"){
+                mod=(Hashtable)fileIn.readObject();
+                fileIn.close(); 
+            }
             return mod;
         }catch(Exception e){
             System.out.println("No se pudo leer el archivo ListaInmediato.txt o no se pudo recuperar la lista");
