@@ -27,7 +27,9 @@ public class Mnemonicos {
     Hashtable<String,String> IndexadoY;
     Hashtable<String,Integer> BytesIndexadoY;
     Hashtable<String,String> Directo;
+    Hashtable<String,Integer> BytesDirecto;
     Hashtable<String,String> Extendido;
+    Hashtable<String,Integer> BytesExtendido;
     Hashtable<String,Integer> modo;
     Hashtable<String,String> mod;
     
@@ -42,6 +44,8 @@ public class Mnemonicos {
         this.Extendido=new Hashtable<>();
         this.BytesInherente=new Hashtable<>();
         this.BytesInmediato=new Hashtable<>();
+        this.BytesDirecto=new Hashtable<>();
+        this.BytesExtendido=new Hashtable<>();
         this.BytesIndexadoX=new Hashtable<>();
         this.BytesIndexadoY=new Hashtable<>();
     }
@@ -295,6 +299,105 @@ public class Mnemonicos {
         IndexadoY.put("SUBD","18A3");
         IndexadoY.put("TST","186D");
         
+        //OPCODE Directo
+        
+        Directo.put("ADCA","99");
+        Directo.put("ADCB","D9");
+        Directo.put("ADDA","9B");
+        Directo.put("ADDB","DB");
+        Directo.put("ADDD","D3");
+        Directo.put("ANDA","94");
+        Directo.put("ANDB","D4");
+        //Directo.put("BCLR","15");
+        Directo.put("BITA","95");
+        Directo.put("BITB","D5");
+        //Directo.put("BRCLR","13");
+        //Directo.put("BRSET","12");
+        //Directo.put("BSET","14");
+        Directo.put("CMPA","91");
+        Directo.put("CMPB","D1");
+        Directo.put("CPD","1A93");
+        Directo.put("CPX","9C");
+        Directo.put("CPY","189C");
+        Directo.put("EORA","98");
+        Directo.put("EORB","D8");
+        Directo.put("JSR","9D");
+        Directo.put("IDAA","96");
+        Directo.put("IDAB","D6");
+        Directo.put("IDD","DC");
+        Directo.put("IDS","9E");
+        Directo.put("IDX","DE");
+        Directo.put("IDY","18DE");
+        Directo.put("ORAA","9A");
+        Directo.put("ORAB","DA");
+        Directo.put("SBCA","22");
+        Directo.put("SBCB","D2");
+        Directo.put("STAA","97");
+        Directo.put("STAB","D7");
+        Directo.put("STD","DD");
+        Directo.put("STS","9F");
+        Directo.put("STX","DF");
+        Directo.put("STY","18DF");
+        Directo.put("SUBA","90");
+        Directo.put("SUBB","D0");
+        Directo.put("SUBD","93");
+        
+        //OPCODE del método extendido
+        Extendido.put("ADCA","B9");
+        Extendido.put("ADCB","F9");
+        Extendido.put("ADDA","BB");
+        Extendido.put("ADDB","FB");
+        Extendido.put("ADDD","F3");
+        Extendido.put("ANDA","B4");
+        Extendido.put("ANDB","F4");
+        Extendido.put("ASL","78");
+        Extendido.put("ASR","77");
+        Extendido.put("BITA","B5");
+        Extendido.put("BITB","F5");
+        Extendido.put("CLR","7F");
+        Extendido.put("CMPA","B1");
+        Extendido.put("CMPB","F1");
+        Extendido.put("COM","73");
+        Extendido.put("CPD","1AB3");
+        Extendido.put("CPX","BC");
+        Extendido.put("CPY","18BC");
+        Extendido.put("DEC","7A");
+        Extendido.put("EORA","B8");
+        Extendido.put("EORB","F8");
+        Extendido.put("INC","7C");
+        Extendido.put("JMP","7E");
+        Extendido.put("JSR","BD");
+        Extendido.put("IDAA","B6");
+        Extendido.put("IDAB","F6");
+        Extendido.put("IDD","FC");
+        Extendido.put("IDS","BE");
+        Extendido.put("IDX","FE");
+        Extendido.put("IDY","18FE");
+        Extendido.put("LSL","78");
+        Extendido.put("LSR","74");
+        Extendido.put("NEG","70");
+        Extendido.put("ORAA","BA");
+        Extendido.put("ORAB","FA");
+        Extendido.put("ROL","79");
+        Extendido.put("ROR","76");
+        Extendido.put("SBCA","B2");
+        Extendido.put("SBCB","F2");
+        Extendido.put("STAA","B7");
+        Extendido.put("STAB","F7");
+        Extendido.put("STD","FD");
+        Extendido.put("STS","BF");
+        
+        Extendido.put("STX","FF");
+        Extendido.put("STY","FF");
+        
+        Extendido.put("SUBA","B0");
+        Extendido.put("SUBB","F0");
+        Extendido.put("SUBD","B3");
+        Extendido.put("TST","7D");
+        
+        
+        
+        
         //Número de bytes de los operandos que debería tener cada instrucción
         
         BytesInmediato.put("ADCA",1);
@@ -327,7 +430,105 @@ public class Mnemonicos {
         BytesInmediato.put("SUBB",1);
         BytesInmediato.put("SUBD",2);
         
-        //Número de bytes de los operandos que debería tener cada instrucción Indexado para X
+        //Numero de bytes del operando de las instricciones del modo directo
+        BytesDirecto.put("ADCA",1);
+        BytesDirecto.put("ADCB",1);
+        BytesDirecto.put("ADDA",1);
+        BytesDirecto.put("ADDB",1);
+        BytesDirecto.put("ADDD",1);
+        BytesDirecto.put("ANDA",1);
+        BytesDirecto.put("ANDB",1);
+        //BytesDirecto.put("BCLR",2);
+        BytesDirecto.put("BITA",1);
+        BytesDirecto.put("BITB",1);
+        //BytesDirecto.put("BRCLR",3);
+        //BytesDirecto.put("BRSET",3);
+        //BytesDirecto.put("BSET",2);
+        BytesDirecto.put("CMPA",1);
+        BytesDirecto.put("CMPB",1);
+        BytesDirecto.put("CPD",1);
+        BytesDirecto.put("CPX",1);
+        BytesDirecto.put("CPY",1);
+        BytesDirecto.put("EORA",1);
+        BytesDirecto.put("EORB",1);
+        BytesDirecto.put("JSR",1);
+        BytesDirecto.put("IDAA",1);
+        BytesDirecto.put("IDAB",1);
+        BytesDirecto.put("IDD",1);
+        BytesDirecto.put("IDS",1);
+        BytesDirecto.put("IDX",1);
+        BytesDirecto.put("IDY",1);
+        BytesDirecto.put("ORAA",1);
+        BytesDirecto.put("ORAB",1);
+        BytesDirecto.put("SBCA",1);
+        BytesDirecto.put("SBCB",1);
+        BytesDirecto.put("STAA",1);
+        BytesDirecto.put("STAB",1);
+        BytesDirecto.put("STD",1);
+        BytesDirecto.put("STS",1);
+        BytesDirecto.put("STX",1);
+        BytesDirecto.put("STY",1);
+        BytesDirecto.put("SUBA",1);
+        BytesDirecto.put("SUBB",1);
+        BytesDirecto.put("SUBD",1);
+        
+        
+        //Numero de bytes de los operandos del modo Extendido
+        
+        BytesExtendido.put("ADCA",2);
+        BytesExtendido.put("ADCB",2);
+        BytesExtendido.put("ADDA",2);
+        BytesExtendido.put("ADDB",2);
+        BytesExtendido.put("ADDD",2);
+        BytesExtendido.put("ANDA",2);
+        BytesExtendido.put("ANDB",2);
+        BytesExtendido.put("ASL",2);
+        BytesExtendido.put("ASR",2);
+        BytesExtendido.put("BITA",2);
+        BytesExtendido.put("BITB",2);
+        BytesExtendido.put("CLR",2);
+        BytesExtendido.put("CMPA",2);
+        BytesExtendido.put("CMPB",2);
+        BytesExtendido.put("COM",2);
+        BytesExtendido.put("CPD",2);
+        BytesExtendido.put("CPX",2);
+        BytesExtendido.put("CPY",2);
+        BytesExtendido.put("DEC",2);
+        BytesExtendido.put("EORA",2);
+        BytesExtendido.put("EORB",2);
+        BytesExtendido.put("INC",2);
+        BytesExtendido.put("JMP",2);
+        BytesExtendido.put("JSR",2);
+        BytesExtendido.put("IDAA",2);
+        BytesExtendido.put("IDAB",2);
+        BytesExtendido.put("IDD",2);
+        BytesExtendido.put("IDS",2);
+        BytesExtendido.put("IDX",2);
+        BytesExtendido.put("IDY",2);
+        BytesExtendido.put("LSL",2);
+        BytesExtendido.put("LSR",2);
+        BytesExtendido.put("NEG",2);
+        BytesExtendido.put("ORAA",2);
+        BytesExtendido.put("ORAB",2);
+        BytesExtendido.put("ROL",2);
+        BytesExtendido.put("ROR",2);
+        BytesExtendido.put("SBCA",2);
+        BytesExtendido.put("SBCB",2);
+        BytesExtendido.put("STAA",2);
+        BytesExtendido.put("STAB",2);
+        BytesExtendido.put("STD",2);
+        BytesExtendido.put("STS",2);
+        
+        BytesExtendido.put("STX",2);
+        BytesExtendido.put("STY",3);
+        
+        BytesExtendido.put("SUBA",2);
+        BytesExtendido.put("SUBB",2);
+        BytesExtendido.put("SUBD",2);
+        BytesExtendido.put("TST",2);
+        
+        
+        //Número de bytes que debería tener cada instrucción Indexado para X
         
         BytesIndexadoX.put("ADCA",2);
         BytesIndexadoX.put("ADCB",2);
@@ -383,7 +584,7 @@ public class Mnemonicos {
         BytesIndexadoX.put("SUBD",2);
         BytesIndexadoX.put("TST",2);
         
-        //Número de bytes de los operandos que debería tener cada instrucción Indexado para Y
+        //Número de bytes que debería tener cada instrucción Indexado para Y
         
         BytesIndexadoY.put("ADCA",3);
         BytesIndexadoY.put("ADCB",3);
@@ -570,15 +771,25 @@ public class Mnemonicos {
             System.out.println("No se pudo escribir el archivo ListaInherente.txt");
         }
         
-        //Lista opcode modo de direccionamiento Directo y Extendido
+        //Lista opcode y bytes modo de direccionamiento Directo
         try{
             fileOut = new ObjectOutputStream(new FileOutputStream("ListaDirecto.txt"));
             fileOut.writeObject(Directo);
+            fileOut.writeObject(BytesDirecto);
             fileOut.close();
         }catch(IOException e){
             System.out.println("No se pudo escribir el archivo ListaDirecto.txt");
         }
         
+        //Lista opcode y bytes modo de direccionamiento Extendido
+        try{
+            fileOut = new ObjectOutputStream(new FileOutputStream("ListaExtendido.txt"));
+            fileOut.writeObject(Extendido);
+            fileOut.writeObject(BytesExtendido);
+            fileOut.close();
+        }catch(IOException e){
+            System.out.println("No se pudo escribir el archivo ListaExtendido.txt");
+        }
     }
     
     /**
@@ -607,6 +818,9 @@ public class Mnemonicos {
                 mod=(Hashtable)fileIn.readObject();
                 fileIn.close(); 
             }else if(file== "ListaDirecto.txt"){
+                mod=(Hashtable)fileIn.readObject();
+                fileIn.close(); 
+            }else if(file== "ListaExtendido.txt"){
                 mod=(Hashtable)fileIn.readObject();
                 fileIn.close(); 
             }
@@ -639,6 +853,14 @@ public class Mnemonicos {
                 modo=(Hashtable)fileIn.readObject();
                 fileIn.close(); 
             }else if(file== "ListaInherente.txt"){
+                modo=(Hashtable)fileIn.readObject();
+                modo=(Hashtable)fileIn.readObject();
+                fileIn.close(); 
+            }else if(file== "ListaDirecto.txt"){
+                modo=(Hashtable)fileIn.readObject();
+                modo=(Hashtable)fileIn.readObject();
+                fileIn.close(); 
+            }else if(file== "ListaExtendido.txt"){
                 modo=(Hashtable)fileIn.readObject();
                 modo=(Hashtable)fileIn.readObject();
                 fileIn.close(); 

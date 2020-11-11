@@ -156,7 +156,7 @@ public class metodosDeLectura {
                     newLine="Error 004: MNEMÓNICO INEXISTENTE";
                     break;
                 case 1:
-                    System.out.println(palabra+" Es instrucción del modo inmediato");
+                    System.out.println(palabra+" Es instrucción del modo inmediato, directo o extendido xd");
                     newLine=IMM.AnalizarLinea(line, m, variables);
                     break;
                 case 2:
@@ -169,8 +169,8 @@ public class metodosDeLectura {
                     break;
                 case 4:
                     //Puede ser directo o extendido
-                    System.out.println(palabra+" Es instrucción del modo directo o extendido");
-                    newLine="";
+                    System.out.println(palabra+" Es instrucción del modo inmediato, directo o extendido xd");
+                    newLine=IMM.AnalizarLinea(line, m, variables);
                     break;
                 }
         }
@@ -189,6 +189,7 @@ public class metodosDeLectura {
         Hashtable<String, String> IndexadoX = new Hashtable();
         Hashtable<String, String> IndexadoY = new Hashtable();
         Hashtable<String, String> Directo = new Hashtable();
+        Hashtable<String, String> Extendido = new Hashtable();
         
         Inmediato = m.LeerOpcode("ListaInmediato.txt");
         Relativo = m.LeerOpcode("ListaRelativo.txt");
@@ -196,6 +197,7 @@ public class metodosDeLectura {
         IndexadoX= m.LeerOpcode("ListaIndexadoX.txt");
         IndexadoY=m.LeerOpcode("ListaIndexadoY.txt");
         Directo=m.LeerOpcode("ListaDirecto.txt");
+        Extendido=m.LeerOpcode("ListaExtendido.txt");
         
         if(Inmediato.containsKey(palabra)){
             op=1;
@@ -203,7 +205,7 @@ public class metodosDeLectura {
             op=2;
         }else if(Relativo.containsKey(palabra)){
             op=3;
-        }else if(Directo.containsKey(palabra)){
+        }else if(Directo.containsKey(palabra)||Inmediato.containsKey(palabra)||Extendido.containsKey(palabra)){
             //Puede ser directo o extendido
             op=4;
         }else{
