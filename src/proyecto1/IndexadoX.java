@@ -139,7 +139,7 @@ public class IndexadoX {
                                 return "\n                         Error 001: CONSTANTE INEXISTENTE\n";
                     }
                 //Define si es variable
-                    else if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2))) && true==(variables.containsKey(recortarCS(palabra, 2))) && recortarCS(palabra, 2).startsWith("'")== false){ 
+                    else if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2))) && true==(variables.containsKey(recortarCS(palabra, 2))) && recortarCS(palabra, 2).startsWith("'")== false && Hexa( palabra)==true){ 
                                 //System.out.print((esD(palabra))+"   "+(esCoV(recortarCS(palabra, 2)))+"   "+recortarSS(palabra, 2));
                                 //lc=lc.concat(palabra);
 
@@ -163,8 +163,8 @@ public class IndexadoX {
                                        System.out.println("\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n");
                                        return "\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n";
                                    }
-                        }else if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2)))&& false==(variables.containsKey(recortarSS(palabra, 2)))&& recortarCS(palabra, 2).startsWith("'")== false){
-                                    System.out.println("\n                         Error 002: VARIABLE INEXISTENTE\n "+recortarSS(palabra, 2));
+                        }else if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarCS(palabra, 2)))&& false==(variables.containsKey(recortarCS(palabra, 2)))&& recortarCS(palabra, 2).startsWith("'")== false&& Hexa( palabra)==false){
+                                    System.out.println("\n                         Error 002: VARIABLE INEXISTENTE\n "+recortarCS(palabra, 2));
                                     return "\n                         Error 002: VARIABLE INEXISTENTE\n";
                         }
                 
@@ -291,6 +291,18 @@ public class IndexadoX {
                              String nPalabra = String.valueOf(auxP);
         return nPalabra;
         
+    }
+    
+         public boolean Hexa(String palabra){
+        if (esD(recortarCS(palabra, 4))==false && esD(recortarCS(palabra, 3))==false){ 
+            System.out.print(esD(recortarCS(palabra, 4))+ "  "+recortarCS(palabra, 4) +"  "+esD(recortarCS(palabra, 3))+ "  "+recortarCS(palabra, 3));
+            return true;
+        }else {
+            System.out.print(esD(recortarCS(palabra, 4))+ "  "+recortarCS(palabra, 4) +"  "+esD(recortarCS(palabra, 3))+ "  "+recortarCS(palabra, 3));
+            System.out.print("false");
+            return false;
+            
+        }
     }
 }
     

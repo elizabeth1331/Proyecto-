@@ -139,7 +139,7 @@ public class IndexadoY {
                                 return "\n                         Error 001: CONSTANTE INEXISTENTE\n";
                     }
                 //Define si es variable
-                    else if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2))) && true==(variables.containsKey(recortarCS(palabra, 2))) && recortarCS(palabra, 2).startsWith("'")== false){ 
+                    else if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2))) && true==(variables.containsKey(recortarCS(palabra, 2))) && esCoH(recortarCS(palabra, 2))== false && Hexa( palabra)==true){ 
                                 //System.out.print((esD(palabra))+"   "+(esCoV(recortarCS(palabra, 2)))+"   "+recortarSS(palabra, 2));
                                 //lc=lc.concat(palabra);
 
@@ -162,12 +162,12 @@ public class IndexadoY {
                                        System.out.println("\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n");
                                        return "\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n";
                                    }
-                        }else if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2)))&& false==(variables.containsKey(recortarSS(palabra, 2))) && recortarCS(palabra, 2).startsWith("'")== false){
-                                    System.out.println("\n                         Error 002: VARIABLE INEXISTENTE\n "+recortarSS(palabra, 2));
+                        }else if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarCS(palabra, 2)))&& false==(variables.containsKey(recortarCS(palabra, 2))) && esCoH(recortarCS(palabra, 2))==false&& Hexa( palabra)==false){
+                                    System.out.println("\n                         Error 002: VARIABLE INEXISTENTE\n "+recortarCS(palabra, 2));
                                     return "\n                         Error 002: VARIABLE INEXISTENTE\n";
                         }
                 //Tratando a un caracter como operando 
-                    if(recortarCS(palabra, 2).startsWith("'")== true ){
+                    if(esCoH(recortarCS(palabra, 2))== true ){
                         aux =recortarSS(palabra, 3);
                         System.out.print(aux + "operando tipo caracter ");
                         
@@ -247,6 +247,25 @@ public class IndexadoY {
     
     public boolean esCoV(String palabra){
         if (palabra.startsWith("#")){ 
+            return true;
+        }else {
+            return false;
+        }
+    }
+    
+     public boolean Hexa(String palabra){
+        if (esD(recortarCS(palabra, 4))==false && esD(recortarCS(palabra, 3))==false){ 
+            System.out.print(esD(recortarCS(palabra, 4))+ "  "+recortarCS(palabra, 4) +"  "+esD(recortarCS(palabra, 3))+ "  "+recortarCS(palabra, 3));
+            return true;
+        }else {
+            System.out.print(esD(recortarCS(palabra, 4))+ "  "+recortarCS(palabra, 4) +"  "+esD(recortarCS(palabra, 3))+ "  "+recortarCS(palabra, 3));
+            System.out.print("false");
+            return false;
+        }
+    }
+    
+    public boolean esCoH(String palabra){
+        if (palabra.startsWith("'")){ 
             return true;
         }else {
             return false;
