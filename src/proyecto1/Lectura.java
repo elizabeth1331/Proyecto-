@@ -15,7 +15,7 @@ public class Lectura extends javax.swing.JFrame {
 
     JFileChooser seleccionado  =new JFileChooser();
     File archivo;
-    GestioDoc op=new GestioDoc();
+    GestionDoc op=new GestionDoc();
     metodosDeLectura read=new metodosDeLectura();
     
     
@@ -34,11 +34,12 @@ public class Lectura extends javax.swing.JFrame {
        this.setExtendedState(WIDTH);
        Image ico= Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("imagenes/escudo_fi_color.png"));
         this.setIconImage(ico);
-        setBounds(100,100,1300,900);
+        setBounds(50,50,1100,900);
         
         ImageIcon imagen3 = new ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"));
         Icon fondo3 =new ImageIcon(imagen3.getImage().getScaledInstance(fondo2.getWidth(),fondo2.getHeight(),Image.SCALE_DEFAULT));
        fondo2.setIcon(fondo3);
+       toFront();
        this.repaint();
        
     }
@@ -54,10 +55,10 @@ public class Lectura extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         txtAreaText = new javax.swing.JTextArea();
-        IE = new javax.swing.JLabel();
         select = new javax.swing.JButton();
         save1 = new javax.swing.JButton();
         next1 = new javax.swing.JButton();
+        IE = new javax.swing.JLabel();
         fondo2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -69,8 +70,6 @@ public class Lectura extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1);
         jScrollPane1.setBounds(30, 250, 1010, 360);
-        getContentPane().add(IE);
-        IE.setBounds(1060, 70, 190, 180);
 
         select.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         select.setText("Seleccionar Archivo");
@@ -85,7 +84,7 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(select);
-        select.setBounds(110, 670, 280, 70);
+        select.setBounds(60, 650, 280, 70);
 
         save1.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         save1.setText("Guardar Cambios");
@@ -100,7 +99,7 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(save1);
-        save1.setBounds(540, 670, 240, 60);
+        save1.setBounds(430, 650, 240, 60);
 
         next1.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         next1.setText("Regresar");
@@ -115,11 +114,13 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(next1);
-        next1.setBounds(930, 680, 230, 50);
+        next1.setBounds(750, 660, 230, 50);
+        getContentPane().add(IE);
+        IE.setBounds(820, 20, 190, 180);
 
         fondo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"))); // NOI18N
         getContentPane().add(fondo2);
-        fondo2.setBounds(-410, -290, 1880, 1320);
+        fondo2.setBounds(-330, -280, 1880, 1320);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

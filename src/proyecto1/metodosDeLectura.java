@@ -5,8 +5,11 @@
  */
 package proyecto1;
 
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -31,6 +34,7 @@ public class metodosDeLectura {
         //Variable que ayuda a llevar el conteo de líneas que ocupan memoria 
         int numLinea = 0, numPalabra=0;
         String error = "";
+        boolean end=false, wrong=false;
         
         /*Se crean varios archivos dentro de la carpeta del proyecto, cada archivo guarda una lista de las
         instrucciones correspondientes a cada modo de direccionamiento */
@@ -44,7 +48,9 @@ public class metodosDeLectura {
         String line = "";
         try {
             file = new Scanner(new FileReader(name));
+            int num=0;
             while (file.hasNextLine()) {
+                num++;
                 line = file.nextLine();
                 numPalabra++;
                 System.out.println(line);
@@ -53,12 +59,19 @@ public class metodosDeLectura {
                 }else if(line.startsWith("\t")|line.startsWith(" ")){
                     numLinea++;
                     error = DifModoDeDireccionamiento(line, m, numLinea, VCE); 
+                    if(error.contains("error")||error.contains("Error")||error.contains("ERROR")){
+                        wrong=true;
+                    }
                 }else if(line.contains("EQU")||line.contains("equ")){
                     GuardarVariables(line);
+                    error=line;
                 }else if(line.startsWith("ORG")||line.startsWith("org")){
-                    //Asignar el valor de inicio de memoria  
+                    //Asignar el valor de inicio de memoria
+                    error=line;
                 }else if(line.equals("END")||line.equals("end")){
                     //Terminar la lectura del archivo?
+                    end=true;
+                    error=line;
                 }else if(!line.equals("")){
                     //Con este objeto podemos dividir la cadena en sub cadenas. 
                     StringTokenizer st = new StringTokenizer (line);
@@ -71,7 +84,8 @@ public class metodosDeLectura {
                         //Error 009
                         //Pero debe revisar todos los archivos para corroborar que la primera "palabra" sea una instrucción,
                         //Si no la encuentra entonces es una ETIQUETA     
-                        error = "Error 09: INSTRUCCIÓN CARECE DE AL MENOS UN ESPACIO RELATIVO AL MARGEN"; 
+                        System.out.println("\u001B[31m Error 09: INSTRUCCIÓN CARECE DE AL MENOS UN ESPACIO RELATIVO AL MARGEN");
+                        error = line+"\n\t\t\t^Error 09: INSTRUCCIÓN CARECE DE AL MENOS UN ESPACIO RELATIVO AL MARGEN"; 
                         }else{
                             palabra = "";
                             //Con este objeto podemos dividir la cadena en sub cadenas. 
@@ -81,13 +95,32 @@ public class metodosDeLectura {
                             VCE.agregarEtiqueta(palabra, numLinea + 1);                    
                         }
                     }
+                }else if(line.equals("")){
+                    error=line;
                 }
-                    
+                try {
+                    FileWriter fstream = new FileWriter("Archivo.txt", true);
+                    BufferedWriter out = new BufferedWriter(fstream);
+                    out.write("\n"+num+" A"+"\t"+error);
+                    out.close();
+                } catch (IOException ex) {
+                    System.out.println("Error: "+ex.getMessage());
+                }
             }
-            if(line.equals("END")||line.equals("end")){
-                error = "Error 010: NO SE ENCUENTRA END";
+            if(!end){
+                System.out.println("\u001B[31m Error 010: NO SE ENCUENTRA END\u001B[0m");
+                error= line+"\n\t\t\t^Error 010: NO SE ENCUENTRA END";
+            }
+            try {
+                FileWriter fstream = new FileWriter("Archivo.txt", true);
+                BufferedWriter out = new BufferedWriter(fstream);
+                out.write("\n"+num+" A"+"\t"+error);
+                out.close();
+            } catch (IOException ex) {
+                System.out.println("Error: "+ex.getMessage());
             }
             file.close();
+            
         }
         catch (FileNotFoundException e){
             System.out.println("Error al leer el archivo, " + e.getMessage());
@@ -104,6 +137,7 @@ public class metodosDeLectura {
         Relativo REL=new Relativo();
         Inherente INH=new Inherente();
         String palabra="";
+        String linea;
         //Directo y Extendido
         
         String newLine="";
@@ -114,7 +148,7 @@ public class metodosDeLectura {
             if(line.contains(",X")||line.contains(",x")){
                 //Si la línea contiene es de tipo ",x" o ",X", se utiliza la clase del método de direccionamiento indexado.
                 IndexadoX IND= new IndexadoX();
-                newLine=IND.revisarLineaX(line, m);
+                newLine=IND.revisarLineaX(line, m, variables);
                 //Si se regresa un error al analizar la línea, se devuelve la cadena con el error
                 if(newLine.contains("Error")){
                     return newLine;
@@ -129,7 +163,7 @@ public class metodosDeLectura {
                 
                 //Si la línea contiene es de tipo ",y" o ",Y", se utiliza la clase del método de direccionamiento indexado.
                 IndexadoY IND= new IndexadoY();
-                newLine=IND.revisarLineaY(line, m);
+                linea=newLine=IND.revisarLineaY(line, m, variables);
                 //Si se regresa un error al analizar la línea, se devuelve la cadena con el error
                 if(newLine.contains("Error")){
                     return newLine;
@@ -140,8 +174,7 @@ public class metodosDeLectura {
                     return newLine;
                 }
             }
-        }
-        if(!line.equals("")){
+        }else if(!line.equals("")){
             StringTokenizer st = new StringTokenizer (line);
             //Leemos la ínea hasta encontrar el primer espacio
             if(st.hasMoreTokens()){
@@ -152,11 +185,11 @@ public class metodosDeLectura {
             op=EsInstruccion(palabra,m);
             switch (op){
                 case 0:
-                    System.out.println("Error 004: MNEMÓNICO INEXISTENTE");
-                    newLine="Error 004: MNEMÓNICO INEXISTENTE";
+                    System.out.println("\u001B[31m Error 004: MNEMÓNICO INEXISTENTE\u001B[0m");
+                    newLine=line+"\n\t\t\t^Error 004: MNEMÓNICO INEXISTENTE";
                     break;
                 case 1:
-                    System.out.println(palabra+" Es instrucción del modo inmediato, directo o extendido xd");
+                    System.out.println(palabra+" Es instrucción del modo inmediato, directo o extendido");
                     newLine=IMM.AnalizarLinea(line, m, variables);
                     break;
                 case 2:
@@ -167,11 +200,6 @@ public class metodosDeLectura {
                     System.out.println(palabra+" Es instrucción del modo relativo");
                     newLine=REL.RevisarLinea(line, m, VCE, numLinea);
                     break;
-                case 4:
-                    //Puede ser directo o extendido
-                    System.out.println(palabra+" Es instrucción del modo inmediato, directo o extendido xd");
-                    newLine=IMM.AnalizarLinea(line, m, variables);
-                    break;
                 }
         }
         return newLine;
@@ -181,7 +209,7 @@ public class metodosDeLectura {
         int op;
         
         //Se recuperan las tablas de todos los modos de direccionamiento 
-        System.out.println("La palabra a diferenciar es:"+palabra);
+        //System.out.println("La palabra a diferenciar es:"+palabra);
         
         Hashtable<String, String> Inmediato = new Hashtable();
         Hashtable<String,String> Inherente = new Hashtable();
@@ -199,15 +227,12 @@ public class metodosDeLectura {
         Directo=m.LeerOpcode("ListaDirecto.txt");
         Extendido=m.LeerOpcode("ListaExtendido.txt");
         
-        if(Inmediato.containsKey(palabra)){
+        if(Directo.containsKey(palabra)||Inmediato.containsKey(palabra)||Extendido.containsKey(palabra)){
             op=1;
         }else if(Inherente.containsKey(palabra)){
             op=2;
         }else if(Relativo.containsKey(palabra)){
             op=3;
-        }else if(Directo.containsKey(palabra)||Inmediato.containsKey(palabra)||Extendido.containsKey(palabra)){
-            //Puede ser directo o extendido
-            op=4;
         }else{
             op=0;
         }

@@ -20,7 +20,7 @@ import javax.swing.*;
  * @author eliss
  */
 public class Menu extends javax.swing.JFrame {
-GestioDoc op=new GestioDoc();
+GestionDoc op=new GestionDoc();
 metodosDeLectura lectura = new metodosDeLectura();
     /**
      * Creates new form proyecto
@@ -38,11 +38,13 @@ metodosDeLectura lectura = new metodosDeLectura();
        this.setExtendedState(WIDTH);
        Image ico= Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("imagenes/escudo_fi_color.png"));
         this.setIconImage(ico);
-        setBounds(100,100,1200,800);
+        
+        setBounds(50,50,1100,900);
         
         ImageIcon imagen2 = new ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"));
         Icon fondo2 =new ImageIcon(imagen2.getImage().getScaledInstance(fondo.getWidth(),fondo.getHeight(),Image.SCALE_DEFAULT));
        fondo.setIcon(fondo2);
+       toFront();
        this.repaint();
        
         
@@ -70,7 +72,7 @@ metodosDeLectura lectura = new metodosDeLectura();
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
         getContentPane().add(IE);
-        IE.setBounds(900, 20, 230, 210);
+        IE.setBounds(770, 30, 230, 210);
 
         leer.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         leer.setText("Visualizar");
@@ -85,7 +87,7 @@ metodosDeLectura lectura = new metodosDeLectura();
             }
         });
         getContentPane().add(leer);
-        leer.setBounds(490, 560, 230, 90);
+        leer.setBounds(420, 490, 230, 90);
 
         doc.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         doc.setText("Sobre el programa ");
@@ -95,13 +97,13 @@ metodosDeLectura lectura = new metodosDeLectura();
             }
         });
         getContentPane().add(doc);
-        doc.setBounds(850, 560, 270, 90);
+        doc.setBounds(720, 490, 270, 90);
 
         Texto1.setFont(new java.awt.Font("Times New Roman", 3, 36)); // NOI18N
         Texto1.setForeground(new java.awt.Color(255, 255, 255));
         Texto1.setText("Ingresa el nombre del archivo ");
         getContentPane().add(Texto1);
-        Texto1.setBounds(140, 170, 490, 100);
+        Texto1.setBounds(60, 120, 490, 100);
 
         ejecutar.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         ejecutar.setText("Ejecutar");
@@ -111,7 +113,7 @@ metodosDeLectura lectura = new metodosDeLectura();
             }
         });
         getContentPane().add(ejecutar);
-        ejecutar.setBounds(100, 560, 240, 90);
+        ejecutar.setBounds(100, 490, 240, 90);
 
         name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -119,7 +121,7 @@ metodosDeLectura lectura = new metodosDeLectura();
             }
         });
         getContentPane().add(name);
-        name.setBounds(280, 310, 560, 80);
+        name.setBounds(160, 270, 560, 80);
 
         fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"))); // NOI18N
         getContentPane().add(fondo);
@@ -134,7 +136,8 @@ metodosDeLectura lectura = new metodosDeLectura();
 
     private void ejecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarActionPerformed
         String file = name.getText();
-        lectura.Lectura(file);
+        GestionDoc d= new GestionDoc(); 
+        d.BuscarA(file);
         
     }//GEN-LAST:event_ejecutarActionPerformed
 
@@ -146,6 +149,7 @@ metodosDeLectura lectura = new metodosDeLectura();
 
                   Lectura lect=new Lectura();
                   lect.setVisible(true);
+                  toFront();
                   this.dispose();
               
     }//GEN-LAST:event_leerActionPerformed
