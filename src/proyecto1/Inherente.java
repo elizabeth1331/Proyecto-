@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 
 /**
  * Clase que analiza una instrucción del modo de direccionamiento inherente.
- * @author Ari
+ * @author Fer
  */
 public class Inherente {
     Hashtable<String, String> Inherente;

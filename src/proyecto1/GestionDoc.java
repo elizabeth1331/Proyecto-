@@ -1,19 +1,44 @@
 package proyecto1;
 import java.io.*;
-import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author eliss
  */
-public class GestioDoc {
+public class GestionDoc {
     FileInputStream entrada;
     FileOutputStream salida;
     File archivo;
     
     
-    public GestioDoc(){
+    public GestionDoc(){
+        
+        
+    }
+    
+    public void BuscarA(String fd){
+        metodosDeLectura op= new metodosDeLectura();
+        String f;
+        File archivo=new File(fd);
+       
+            System.out.print( archivo.getAbsolutePath());
+            if(archivo.exists()){
+               f = archivo.getAbsolutePath();
+              System.out.print( "\nDireccion absoluta del archivo ---"+f+ " \n");
+               op.Lectura(f);
+
+            }else{
+                System.out.print(" \n "+ archivo + "++++"+fd + "*****Archivo inexistente, por favor vuelve a ingresar el nombre de un archivo*****");
+                JOptionPane.showMessageDialog(null, fd + "*****Archivo inexistente, por favor vuelve a ingresar el nombre de un archivo*****", "ATENCION", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        
+     /*   }catch(NullPointerException e){
+            System.out.print(" Inserta el nombre del archivo a compilar");
+                JOptionPane.showMessageDialog(null, "Inserta el nombre del archivo a compilar", "SAVE", JOptionPane.ERROR_MESSAGE);
+        }*/
+        
         
     }
     
@@ -33,7 +58,6 @@ public class GestioDoc {
         return contenido;
     }
     
-    
     public String GuardarArchivo(File archivo, String contenido){
         
         String respuesta=null;
@@ -50,23 +74,7 @@ public class GestioDoc {
 }
     
     
-    public void Lectura(String name){
-        Scanner stdIn = new Scanner(System.in);
-        Scanner file;
-        String line;
-        try {
-            System.out.print("Introduzca el nombre completo del archivo (con ruta): ");
-            file = new Scanner(new FileReader(stdIn.nextLine()));
-            while (file.hasNextLine()) {
-                line = file.nextLine();
-                System.out.println(line);
-            }
-            file.close();
-        }
-        catch (FileNotFoundException e){
-            System.out.println("Error al leer el archivo, " + e.getMessage());
-        }
-    }    
+        
 
     
 }
