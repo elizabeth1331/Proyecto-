@@ -15,7 +15,8 @@ import java.util.StringTokenizer;
 public class Inherente {
     Hashtable<String, String> Inherente;
     Hashtable<String, Integer> BytesInherente;
-    
+    int numTotalPalabra = 0;
+    String Palabra2 = " ";
     
     public Inherente(){
         this.Inherente = new Hashtable();
@@ -33,9 +34,12 @@ public class Inherente {
         Inherente=m.LeerOpcode("ListaInherente.txt");
         BytesInherente=m.LeerBytes("ListaInherente.txt");
         
-        /*Palabra nos sirve para separar la linea en palabras y contabilizarlas, al ser inherente y NO tener operando, 
-        solo debera tener una palabra que es el mnemonico. */
-        String palabra;
+        //Se cuenta el numero total de palabras para validar que la instruccion no tenga operando
+        StringTokenizer stt = new StringTokenizer (line);
+        numTotalPalabra = stt.countTokens();
+        //System.out.println("Número total de palabras en la linea es: " + numTotalPalabra);
+        
+        String palabra ;
         int numPalabra=0;
         
         //Esta cadena será la que se devolverá si la sintaxis es correcta.
@@ -43,31 +47,51 @@ public class Inherente {
         
         //Se leen las palabras de la línea.
         StringTokenizer st = new StringTokenizer (line);
-        while (st.hasMoreTokens())
-        {
+        while (st.hasMoreTokens()){
             palabra = st.nextToken();
             numPalabra++;
             String instruccion="";
             /*Se verifica que la primera palabra sea una instrucción del modo de direccionamiento inherente, y de 
             ser así, se concatena al inicio de la cadena que se desea devolver*/
-            if((numPalabra==1)&&(palabra.startsWith("*"))){
-                //Es un comentario, no es necesario realizar nada más
-                
-            }else if((numPalabra==1)&&(!palabra.startsWith("*"))){
-                palabra=palabra.toUpperCase();
-                
-                if (Inherente.containsKey(palabra)){
-                    instruccion=instruccion.concat(palabra);
-                    newLine=newLine.concat(Inherente.get(palabra));
-                    System.out.println(instruccion +" Es instruccion de inherente");
+            if((numPalabra==1)&& numTotalPalabra<2){
+                if(palabra.startsWith("*")){
+                    //Es un comentario, no es necesario realizar nada más
                 }else{
-                    System.out.println("Error 004: MNEMÓNICO INEXISTENTE");
-                    return "Error 004: MNEMÓNICO INEXISTENTE";
+                    palabra=palabra.toUpperCase();
+                    if (Inherente.containsKey(palabra)){
+                        instruccion=instruccion.concat(palabra+" ");
+                        newLine=newLine.concat(palabra+" ");
+                        newLine=newLine.concat(Inherente.get(palabra));
+                        //System.out.println("La linea resultante es: " +newLine);
+                    }else{
+                        System.out.println("Error 004: MNEMÓNICO INEXISTENTE");
+                        return "Error 004: MNEMÓNICO INEXISTENTE";
+                    }
                 }
-            /*Se verifica que solo haya una palabra (el mnemonico), ya que si tiene mas palabras, corresponden al operando
-            el cual NO admite este modo.*/
-            }else if(numPalabra>=2){
-                return "Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)";
+            }else if((numPalabra==1)&& numTotalPalabra>=2){
+                Palabra2 = palabra;
+                Palabra2 = st.nextToken();
+                if((Palabra2.startsWith("*"))){
+                    palabra=palabra.toUpperCase();
+                    if (Inherente.containsKey(palabra)){
+                        instruccion=instruccion.concat(palabra+" ");
+                        newLine=newLine.concat(palabra+" ");
+                        newLine=newLine.concat(Inherente.get(palabra));
+                        //System.out.println("La linea resultante es: " +newLine);
+                    }
+                }else{
+                    System.out.println("Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)");
+                    return "Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)";
+                }
+            }
+            
+            if(numPalabra==2){
+                if(palabra.startsWith("*")){
+                    //Es un comentario, no es necesario realizar nada más
+                }else if(!palabra.startsWith("*")){
+                    System.out.println("Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)");
+                    return "Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)";
+                }
             }
         }
         return newLine;

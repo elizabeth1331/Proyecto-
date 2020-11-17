@@ -30,11 +30,9 @@ public class Mnemonicos {
     Hashtable<String,Integer> BytesDirecto;
     Hashtable<String,String> Extendido;
     Hashtable<String,Integer> BytesExtendido;
-    
     Hashtable<String,String> ExcepDirecto;
     Hashtable<String,String> ExcepIndexadoX;
     Hashtable<String,String> ExcepIndexadoY;
-    
     Hashtable<String,Integer> modo;
     Hashtable<String,String> mod;
     
@@ -53,11 +51,9 @@ public class Mnemonicos {
         this.BytesExtendido=new Hashtable<>();
         this.BytesIndexadoX=new Hashtable<>();
         this.BytesIndexadoY=new Hashtable<>();
-        
         this.ExcepDirecto = new Hashtable();
         this.ExcepIndexadoX = new Hashtable();
         this.ExcepIndexadoY = new Hashtable();
-        
     }
     
     /**
@@ -75,14 +71,14 @@ public class Mnemonicos {
         ExcepDirecto.put("BRSET","12");
         ExcepDirecto.put("BSET","14");
         
-        //OPCODE correspondiente a modo Extendido respecto a X
+        //OPCODE correspondiente a modo Indexado respecto a X
         
         ExcepIndexadoX.put("BCLR","1D");
         ExcepIndexadoX.put("BRCLR","1F");
         ExcepIndexadoX.put("BRSET","1E");
         ExcepIndexadoX.put("BSET","1C");
         
-        //OPCODE correspondiente a modo Extendido respecto a Y
+        //OPCODE correspondiente a modo Indexado respecto a Y
         
         ExcepIndexadoY.put("BCLR","181D");
         ExcepIndexadoY.put("BRCLR","181F");

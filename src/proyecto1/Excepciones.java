@@ -69,9 +69,11 @@ public class Excepciones {
             return "NO es mnemonico excepcional";
         }else if(numTotalPalabra>=3 && numTotalPalabra<=5){
             System.out.println("SI es mnemonico excepcional");
-        }else{
-            System.out.println("Error: La instrucción solo puede tener hasta maximo 3 operandos");
-            return "Error: La instrucción solo puede tener hasta maximo 3 operandos";
+        }else if(numTotalPalabra>=6){
+            if(!line.contains("*")){
+                System.out.println("Error: La instrucción solo puede tener hasta maximo 3 operandos");
+                return "Error: La instrucción solo puede tener hasta maximo 3 operandos";
+            }
         }
         
         //Se leen las palabras de la línea
@@ -80,13 +82,12 @@ public class Excepciones {
         while (st.hasMoreTokens()){
             palabra = st.nextToken();
             numPalabra++;
-            //System.out.println(numPalabra);
-            //System.out.println("Palabra: "+palabra);
             palabra=palabra.toUpperCase();
-            System.out.println("ya entro");
-            System.out.println("La palabra es: " +palabra);
             if(numPalabra==1){
-                if(palabra.equals("BCLR")){
+                if(palabra.startsWith("*")){
+                    //No hace nada pues es un comentario
+                    return " ";
+                }else if(palabra.equals("BCLR")){
                     d=1;
                 }else if(palabra.equals("BSET")){
                     d=2;
@@ -100,7 +101,6 @@ public class Excepciones {
                     case 1:
                         if(numTotalPalabra>=3 && numTotalPalabra<=4){
                             if(numTotalPalabra==3){ //Es directo pues si tiviera X o Y tendria 4 palabras
-                                System.out.println("La palabra 1 es: " +palabra);
                                 palabraNueva = palabra;
                                 palabraNueva= st.nextToken();
                                 System.out.println("La segunda palabra es: " +palabraNueva);
@@ -115,21 +115,25 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabraNueva+" ");
                                             newLine=newLine.concat(palabra+" "); //Palabra BCLR
                                             newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva+" "); //Operando
+                                            newLine=newLine.concat(palabraNueva); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
-                                            //Convertir a hexadecimal
-                                            instruccion=instruccion.concat(palabra);
-                                            instruccion=instruccion.concat(palabraNueva);
-                                            newLine=newLine.concat(palabra); //Palabra BCLR
-                                            newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
+                                            //Convierte a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BCLR
+                                            newLine=newLine.concat((ExcepDirecto.get(palabra)) +" "); //Opcode directo
                                             newLine=newLine.concat(palabraNueva); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }
                             }
                             if(numTotalPalabra==4){
-                                System.out.println("La palabra 1 es: " +palabra);
                                 palabraNueva = palabra;
                                 palabraNueva= st.nextToken(); //Tiene la segunda palabra
                                 palabraXY = palabraNueva;
@@ -141,31 +145,51 @@ public class Excepciones {
                                         if(palabraNueva.startsWith("$")){
                                             //Se quita $
                                             palabraNueva = palabraNueva.replace('$', ' ');
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BCLR
+                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra))); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
-                                            //Convertir a hexadecimal
+                                            //Convierte a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BCLR
+                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra)) +" "); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
-                                        instruccion=instruccion.concat(palabra+" ");
-                                        instruccion=instruccion.concat(palabraNueva+" ");
-                                        newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                        newLine=newLine.concat(ExcepIndexadoX.get(palabra)); //Opcode indexado de X
-                                        newLine=newLine.concat(palabraNueva+" "); //Operando
-                                        System.out.println("La linea resultante es: " +newLine);
                                     }else if(palabraXY.equals("Y")){
                                         System.out.println("es indexado con respecto a Y");
                                         if(palabraNueva.startsWith("$")){
                                             //Se quita $
                                             palabraNueva = palabraNueva.replace('$', ' ');
-                                        }
-                                        else if(!palabraNueva.startsWith("$")){
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BCLR
+                                            newLine=newLine.concat((ExcepIndexadoY.get(palabra))); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
+                                        }else if(!palabraNueva.startsWith("$")){
                                             //Convertir a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BCLR
+                                            newLine=newLine.concat((ExcepIndexadoY.get(palabra)) +" "); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
-                                        instruccion=instruccion.concat(palabra+" ");
-                                        instruccion=instruccion.concat(palabraNueva+" ");
-                                        newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                        newLine=newLine.concat(ExcepIndexadoY.get(palabra)); //Opcode indexado de X
-                                        newLine=newLine.concat(palabraNueva+" "); //Operando
-                                        System.out.println("La linea resultante es: " +newLine);
                                     }else{
                                         System.out.println("Error: La instruccion BCLR solo acepta 2 operandos.");
                                         return "";
@@ -179,7 +203,6 @@ public class Excepciones {
                     case 2:
                         if(numTotalPalabra>=3 && numTotalPalabra<=4){
                             if(numTotalPalabra==3){ //Es directo pues si tiviera X o Y tendria 4 palabras
-                                System.out.println("La palabra 1 es: " +palabra);
                                 palabraNueva = palabra;
                                 palabraNueva= st.nextToken();
                                 System.out.println("La segunda palabra es: " +palabraNueva);
@@ -193,21 +216,25 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabraNueva+" ");
                                             newLine=newLine.concat(palabra+" "); //Palabra BSET
                                             newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva+" "); //Operando
+                                            newLine=newLine.concat(palabraNueva); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
                                             //Convertir a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            
                                             instruccion=instruccion.concat(palabra+" ");
                                             instruccion=instruccion.concat(palabraNueva+" ");
-                                            newLine=newLine.concat(palabra+" "); //Palabra BSET
-                                            newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva+" "); //Operando
+                                            newLine=newLine.concat(palabra+" "); //Palabra BCLR
+                                            newLine=newLine.concat((ExcepDirecto.get(palabra)) +" "); //Opcode directo
+                                            newLine=newLine.concat(palabraNueva); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }
                             }
                             if(numTotalPalabra==4){
-                                System.out.println("La palabra 1 es: " +palabra);
                                 palabraNueva = palabra;
                                 palabraNueva= st.nextToken(); //Tiene la segunda palabra
                                 palabraXY = palabraNueva;
@@ -219,31 +246,51 @@ public class Excepciones {
                                         if(palabraNueva.startsWith("$")){
                                             //Se quita $
                                             palabraNueva = palabraNueva.replace('$', ' ');
-                                        }
-                                        else if(!palabraNueva.startsWith("$")){
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BCLR
+                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra))); //Opcode directo
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
+                                        }else if(!palabraNueva.startsWith("$")){
                                             //Convertir a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BCLR
+                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra)) +" "); //Opcode directo
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
-                                        instruccion=instruccion.concat(palabra+" ");
-                                        instruccion=instruccion.concat(palabraNueva+" ");
-                                        newLine=newLine.concat(palabra+" "); //Palabra BSET
-                                        newLine=newLine.concat(ExcepIndexadoX.get(palabra)); //Opcode indexado de X
-                                        newLine=newLine.concat(palabraNueva+" "); //Operando
-                                        System.out.println("La linea resultante es: " +newLine);
                                     }else if(palabraXY.equals("Y")){
                                         System.out.println("es indexado con respecto a Y");
                                         if(palabraNueva.startsWith("$")){
                                             //Se quita $
                                             palabraNueva = palabraNueva.replace('$', ' ');
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BSET
+                                            newLine=newLine.concat(ExcepIndexadoY.get(palabra)); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                        System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
                                             //Convertir a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BSET
+                                            newLine=newLine.concat((ExcepIndexadoY.get(palabra))+" "); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
-                                        instruccion=instruccion.concat(palabra+" ");
-                                        instruccion=instruccion.concat(palabraNueva+" ");
-                                        newLine=newLine.concat(palabra+" "); //Palabra BSET
-                                        newLine=newLine.concat(ExcepIndexadoY.get(palabra)); //Opcode indexado de X
-                                        newLine=newLine.concat(palabraNueva+" "); //Operando
-                                        System.out.println("La linea resultante es: " +newLine);
                                     }else{
                                         System.out.println("Error: La instruccion BSET solo acepta 2 operandos.");
                                         return "";
@@ -257,7 +304,6 @@ public class Excepciones {
                     case 3:
                         if(numTotalPalabra>=4 && numTotalPalabra<=5){
                             if(numTotalPalabra==4){//Es directo pues si tiviera X o Y tendria 5 palabras
-                                System.out.println("La palabra 1 es: " +palabra);
                                 palabraNueva = palabra;
                                 palabraNueva= st.nextToken();
                                 System.out.println("La segunda palabra es: " +palabraNueva);
@@ -271,20 +317,25 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabraNueva+" ");
                                             newLine=newLine.concat(palabra+" "); //Palabra BRCLR
                                             newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva+" "); //Operando
+                                            newLine=newLine.concat(palabraNueva); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
                                             //Convertir a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            
                                             instruccion=instruccion.concat(palabra+" ");
                                             instruccion=instruccion.concat(palabraNueva+" ");
                                             newLine=newLine.concat(palabra+" "); //Palabra BRCLR
-                                            newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva+" "); //Operando
+                                            newLine=newLine.concat((ExcepDirecto.get(palabra))+ " "); //Opcode directo
+                                            newLine=newLine.concat(palabraNueva); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }
                             }
-                            if(numTotalPalabra==5){
+                            if((numTotalPalabra==5)){
                                 System.out.println("La palabra 1 es: " +palabra);
                                 palabraNueva = palabra;
                                 palabraNueva= st.nextToken(); //Tiene la segunda palabra
@@ -297,35 +348,54 @@ public class Excepciones {
                                         if(palabraNueva.startsWith("$")){
                                             //Se quita $
                                             palabraNueva = palabraNueva.replace('$', ' ');
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BRCLR
+                                            newLine=newLine.concat(ExcepIndexadoX.get(palabra)); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
-                                            //Convertir a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BRCLR
+                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra))+ " "); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
-                                        instruccion=instruccion.concat(palabra+" ");
-                                        instruccion=instruccion.concat(palabraNueva+" ");
-                                        newLine=newLine.concat(palabra+" "); //Palabra BRCLR
-                                        newLine=newLine.concat(ExcepIndexadoX.get(palabra)); //Opcode indexado de X
-                                        newLine=newLine.concat(palabraNueva+" "); //Operando
-                                        System.out.println("La linea resultante es: " +newLine);
                                     }else if(palabraXY.equals("Y")){
                                         System.out.println("es indexado con respecto a Y");
                                         if(palabraNueva.startsWith("$")){
                                             //Se quita $
                                             palabraNueva = palabraNueva.replace('$', ' ');
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BRCLR
+                                            newLine=newLine.concat(ExcepIndexadoY.get(palabra)); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
-                                            //Convertir a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BRCLR
+                                            newLine=newLine.concat((ExcepIndexadoY.get(palabra)) +" "); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
-                                        instruccion=instruccion.concat(palabra+" ");
-                                        instruccion=instruccion.concat(palabraNueva+" ");
-                                        newLine=newLine.concat(palabra+" "); //Palabra BRCLR
-                                        newLine=newLine.concat(ExcepIndexadoY.get(palabra)); //Opcode indexado de X
-                                        newLine=newLine.concat(palabraNueva+" "); //Operando
-                                        System.out.println("La linea resultante es: " +newLine);
                                     }else{
-                                        System.out.println("Error: La instruccion BRCLR solo acepta 3 operandos.");
-                                        return " ";
-                                    }
+                                            System.out.println("Error: La instruccion BRCLR solo acepta 3 operandos.");
+                                            return " ";
+                                        }
                             }
                         }else{
                             System.out.println("BRCLR debe tener 3 operandos");
@@ -336,7 +406,6 @@ public class Excepciones {
                     case 4:
                         if(numTotalPalabra>=4 && numTotalPalabra<=5){
                             if(numTotalPalabra==4){//Es directo pues si tiviera X o Y tendria 5 palabras
-                                System.out.println("La palabra 1 es: " +palabra);
                                 palabraNueva = palabra;
                                 palabraNueva= st.nextToken();
                                 System.out.println("La segunda palabra es: " +palabraNueva);
@@ -350,15 +419,20 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabraNueva+" ");
                                             newLine=newLine.concat(palabra+" "); //Palabra BRSET
                                             newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva+" "); //Operando
+                                            newLine=newLine.concat(palabraNueva); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
-                                            //Convertir a hexadecimal
+                                            //Convierte a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            
                                             instruccion=instruccion.concat(palabra+" ");
                                             instruccion=instruccion.concat(palabraNueva+" ");
                                             newLine=newLine.concat(palabra+" "); //Palabra BRSET
-                                            newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva+" "); //Operando
+                                            newLine=newLine.concat((ExcepDirecto.get(palabra))+" "); //Opcode directo
+                                            newLine=newLine.concat(palabraNueva); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }
@@ -376,31 +450,52 @@ public class Excepciones {
                                         if(palabraNueva.startsWith("$")){
                                             //Se quita $
                                             palabraNueva = palabraNueva.replace('$', ' ');
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BRSET
+                                            newLine=newLine.concat(ExcepIndexadoX.get(palabra)); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
-                                            //Convertir a hexadecimal
+                                            //Convierte a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BRSET
+                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra))+" "); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
-                                        instruccion=instruccion.concat(palabra+" ");
-                                        instruccion=instruccion.concat(palabraNueva+" ");
-                                        newLine=newLine.concat(palabra+" "); //Palabra BRSET
-                                        newLine=newLine.concat(ExcepIndexadoX.get(palabra)); //Opcode indexado de X
-                                        newLine=newLine.concat(palabraNueva+" "); //Operando
-                                        System.out.println("La linea resultante es: " +newLine);
                                     }else if(palabraXY.equals("Y")){
                                         System.out.println("es indexado con respecto a Y");
                                         if(palabraNueva.startsWith("$")){
                                             //Se quita $
                                             palabraNueva = palabraNueva.replace('$', ' ');
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BRSET
+                                            newLine=newLine.concat(ExcepIndexadoY.get(palabra)); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
-                                            //Convertir a hexadecimal
+                                            //Convierte a hexadecimal
+                                            System.out.println(palabraNueva+" Es un operando numérico (decimal)");
+                                            int opN=Integer.parseInt(palabraNueva);
+                                            op=Integer.toHexString(opN).toUpperCase();
+                                            System.out.println(op+" Es el operando en hexadecimal");
+                                            instruccion=instruccion.concat(palabra+" ");
+                                            instruccion=instruccion.concat(palabraNueva+" ");
+                                            newLine=newLine.concat(palabra+" "); //Palabra BRSET
+                                            newLine=newLine.concat((ExcepIndexadoY.get(palabra))+" "); //Opcode indexado de X
+                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            System.out.println("La linea resultante es: " +newLine);
                                         }
-                                        instruccion=instruccion.concat(palabra+" ");
-                                        instruccion=instruccion.concat(palabraNueva+" ");
-                                        newLine=newLine.concat(palabra+" "); //Palabra BRSET
-                                        newLine=newLine.concat(ExcepIndexadoY.get(palabra)); //Opcode indexado de X
-                                        newLine=newLine.concat(palabraNueva+" "); //Operando
-                                        System.out.println("La linea resultante es: " +newLine);
                                     }else{
                                         System.out.println("Error: La instruccion BRSET solo acepta 3 operandos.");
                                         return " ";
@@ -413,18 +508,56 @@ public class Excepciones {
                     break;
                 }
             }
-            if(numPalabra==2){
+            if(numPalabra==2){ //Segundo operando o tercer palabra
+                //Ya esta concatenada desde el swich case, pues se necesitaba para elegir el opcode de la instruccion.
                 System.out.println("La segunda palabra es: "+palabra);
+                if(palabra.equals("X")||palabra.equals("X")){
+                    String tercerPalabra = palabra;
+                    tercerPalabra = st.nextToken();
+                    System.out.println("La palabra despues de X o Y es: "+tercerPalabra);
+                }else{
+                    //Concatenar si $ o # y en hexadecimal
+                    if(palabra.startsWith("$") || palabra.startsWith("#$")){
+                        //Se quita $ o #
+                        if (palabra.startsWith("$")){
+                            palabra = palabra.replace('$', ' ');
+                        }else if((palabra.startsWith("#$"))){
+                            palabra = palabra.replace('$', ' ');
+                            palabra = palabra.replace('#', ' ');
+                            palabra=palabra.substring(1);
+                        }
+                        instruccion=instruccion.concat(palabra+" ");
+                        newLine=newLine.concat(palabra+" ");
+                        System.out.println("La linea resultante es: " +newLine);
+                    }else if(!palabra.contains("$")){// || palabra.startsWith("#$")){
+                        if(palabra.startsWith("#")){
+                            palabra=palabra.substring(1);
+                            //Convertirla a hexadecimal
+                            System.out.println(palabra+" Es un operando numérico (decimal)");
+                            int opN=Integer.parseInt(palabra);
+                            op=Integer.toHexString(opN).toUpperCase();
+                            System.out.println(op+" Es el operando en hexadecimal");
+                            instruccion=instruccion.concat(op+" ");
+                            newLine=newLine.concat(" "+op+" ");
+                            System.out.println("La linea resultante es: " +newLine);
+                        }else{
+                            //Convertirla a hexadecimal
+                            System.out.println(palabra+" Es un operando numérico (decimal)");
+                            int opN=Integer.parseInt(palabra);
+                            op=Integer.toHexString(opN).toUpperCase();
+                            System.out.println(op+" Es el operando en hexadecimal");
+                            instruccion=instruccion.concat(op+" ");
+                            newLine=newLine.concat(" "+op+" ");
+                            System.out.println("La linea resultante es: " +newLine);
+                        }
+                    }
+                }
+            }
+            if(numPalabra==3){
+                //Aqui van los saltos
+                System.out.println("La tercer palabra es: "+palabra);
             }
         }
-        
-        
-        
-        
-        
-        
-        
-        
     //System.out.println("El número total de palabras leídas es "+numPalabra);
     //newLine=newLine.concat("\t\t\t"+line);
     //System.out.println("La cadena generada es: \n\n"+newLine+"\n");
