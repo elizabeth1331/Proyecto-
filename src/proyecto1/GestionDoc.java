@@ -34,12 +34,6 @@ public class GestionDoc {
             }
             
         
-     /*   }catch(NullPointerException e){
-            System.out.print(" Inserta el nombre del archivo a compilar");
-                JOptionPane.showMessageDialog(null, "Inserta el nombre del archivo a compilar", "SAVE", JOptionPane.ERROR_MESSAGE);
-        }*/
-        
-        
     }
     
     public String abrirArchivo(File archivo){

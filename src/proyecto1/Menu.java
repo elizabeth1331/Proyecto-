@@ -1,13 +1,17 @@
 package proyecto1;
 
 
+import java.awt.Desktop;
 import proyecto1.Lectura;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -66,6 +70,9 @@ metodosDeLectura lectura = new metodosDeLectura();
         Texto1 = new javax.swing.JLabel();
         ejecutar = new javax.swing.JButton();
         name = new javax.swing.JTextField();
+        Texto3 = new javax.swing.JLabel();
+        Texto2 = new javax.swing.JLabel();
+        name1 = new javax.swing.JTextField();
         fondo = new javax.swing.JLabel();
         fondo1 = new javax.swing.JLabel();
 
@@ -87,7 +94,7 @@ metodosDeLectura lectura = new metodosDeLectura();
             }
         });
         getContentPane().add(leer);
-        leer.setBounds(420, 490, 230, 90);
+        leer.setBounds(420, 510, 230, 90);
 
         doc.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         doc.setText("Sobre el programa ");
@@ -97,13 +104,13 @@ metodosDeLectura lectura = new metodosDeLectura();
             }
         });
         getContentPane().add(doc);
-        doc.setBounds(720, 490, 270, 90);
+        doc.setBounds(720, 510, 270, 90);
 
         Texto1.setFont(new java.awt.Font("Times New Roman", 3, 36)); // NOI18N
         Texto1.setForeground(new java.awt.Color(255, 255, 255));
-        Texto1.setText("Ingresa el nombre del archivo ");
+        Texto1.setText("Nombre del archivo \" .lst\"");
         getContentPane().add(Texto1);
-        Texto1.setBounds(60, 120, 490, 100);
+        Texto1.setBounds(40, 280, 1010, 100);
 
         ejecutar.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         ejecutar.setText("Ejecutar");
@@ -113,7 +120,7 @@ metodosDeLectura lectura = new metodosDeLectura();
             }
         });
         getContentPane().add(ejecutar);
-        ejecutar.setBounds(100, 490, 240, 90);
+        ejecutar.setBounds(100, 510, 240, 90);
 
         name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,7 +128,27 @@ metodosDeLectura lectura = new metodosDeLectura();
             }
         });
         getContentPane().add(name);
-        name.setBounds(160, 270, 560, 80);
+        name.setBounds(150, 210, 560, 80);
+
+        Texto3.setFont(new java.awt.Font("Times New Roman", 3, 36)); // NOI18N
+        Texto3.setForeground(new java.awt.Color(255, 255, 255));
+        Texto3.setText("Ingresa la direccion completa  del archivo (incluyendo su nombre) ");
+        getContentPane().add(Texto3);
+        Texto3.setBounds(620, 250, 1010, 100);
+
+        Texto2.setFont(new java.awt.Font("Times New Roman", 3, 36)); // NOI18N
+        Texto2.setForeground(new java.awt.Color(255, 255, 255));
+        Texto2.setText("Ingresa la ruta comprenta del archivo a ejecutar");
+        getContentPane().add(Texto2);
+        Texto2.setBounds(40, 70, 1010, 100);
+
+        name1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                name1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(name1);
+        name1.setBounds(160, 390, 560, 80);
 
         fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"))); // NOI18N
         getContentPane().add(fondo);
@@ -155,12 +182,26 @@ metodosDeLectura lectura = new metodosDeLectura();
     }//GEN-LAST:event_leerActionPerformed
 
     private void docActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_docActionPerformed
-        // TODO add your handling code here:
+    
+        try {
+
+            File objetofile = new File ("Resúmenes.pdf");
+            Desktop.getDesktop().open(objetofile);
+
+        }catch (IOException ex) {
+            System.out.println(ex);
+       }
+        
+
     }//GEN-LAST:event_docActionPerformed
 
     private void leerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_leerMouseClicked
       
     }//GEN-LAST:event_leerMouseClicked
+
+    private void name1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_name1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -207,11 +248,14 @@ metodosDeLectura lectura = new metodosDeLectura();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel IE;
     private javax.swing.JLabel Texto1;
+    private javax.swing.JLabel Texto2;
+    private javax.swing.JLabel Texto3;
     private javax.swing.JButton doc;
     private javax.swing.JButton ejecutar;
     private javax.swing.JLabel fondo;
     private javax.swing.JLabel fondo1;
     private javax.swing.JButton leer;
     private javax.swing.JTextField name;
+    private javax.swing.JTextField name1;
     // End of variables declaration//GEN-END:variables
 }
