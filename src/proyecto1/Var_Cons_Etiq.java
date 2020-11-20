@@ -24,13 +24,22 @@ public class Var_Cons_Etiq {
      * @param etiqueta Es la etiqueta a guardar
      * @param pos Es la posisión (número de línea) en la que se enuentra la instrucción que le sigue a la etiqueta
      */
-    public void agregarEtiqueta(String etiqueta, int pos){
+    public String agregarEtiqueta(String etiqueta, int pos){
+       if(Etiquetas.containsKey(etiqueta)){
+           System.out.println("\033[0;1m"+ etiqueta +"\u001B[0m"+ "\u001B[31m Error: Esta etiqueta está duplicada \u001B[0m");
+           return etiqueta + "\n\t\t\t^Error: Esta etiqueta está duplicada";
+       }
        Etiquetas.put(etiqueta, pos);
+       return "";
     }
     
     public int buscarEtiqueta(String etiqueta){
         int pos = 0;
-        pos =  Etiquetas.get(etiqueta);
-        return pos;
+        if(Etiquetas.containsKey(etiqueta)){
+            pos =  Etiquetas.get(etiqueta);
+            return pos;
+        }else{
+            return pos;
+        }
     }
 }
