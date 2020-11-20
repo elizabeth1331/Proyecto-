@@ -136,6 +136,7 @@ public class metodosDeLectura {
         Inmediato IMM= new Inmediato();
         Relativo REL=new Relativo();
         Inherente INH=new Inherente();
+        Excepciones EXC=new Excepciones();
         String palabra="";
         String linea;
         //Directo y Extendido
@@ -143,7 +144,15 @@ public class metodosDeLectura {
         String newLine="";
         int op;
         
-        if(line.contains(",")){
+        if(line.contains("BCLR")||line.contains("BRCLR")||line.contains("BRSET")||line.contains("BSET")||line.contains("bclr")||line.contains("brclr")||line.contains("brset")||line.contains("bset")){
+            /*Si la linea contiene alguna de las 4 excepciones, va la clase de excepciones para verificar si 
+            es una excepcion o tratarla como un mnemonico comun.*/
+            newLine=EXC.analizarLinea(line, m, variables);
+            //Si se regresa un error al analizar la línea, se devuelve la cadena con el error
+            //f(newLine.contains("No es mnemonico excepcional") || newLine.contains("ERROR")){
+            //return newLine;
+            //}
+        }else if(line.contains(",")){
             
             if(line.contains(",X")||line.contains(",x")){
                 //Si la línea contiene es de tipo ",x" o ",X", se utiliza la clase del método de direccionamiento indexado.

@@ -91,22 +91,9 @@ public class IndexadoX {
                                 if((newLine.length()%2 ==0 )&& (BytesIndexadoX.get(instruccion))==(Integer.parseInt(String.valueOf(newLine.length()/2)))){
                                 //Si coinciden, avisa que la longitud es correcta 
                                    // System.out.println("El tamaño de bytes coincide con el Mnemonico");
-                                    if(!(esD(aux))){
-                                     //System.out.println("Es hexagecimal ++++"+ esD(aux) +aux); 
-                                     int num=recortarSS(palabra,2).length();
-                                        if(esD(recortarCS(recortarSS(palabra,2), num-1))==false && esD(recortarSS(recortarSS(palabra,2), num-1))==false){
-                                            //System.out.println(esD(recortarCS(palabra, num-1))+ recortarCS(palabra, num-1)+esD(recortarSS(palabra, num-1))+recortarSS(palabra, num-1));
-                                            System.out.println("\u001B[31m Error 000: ERROR DE SINTAXIS\u001B[0m");
-                                             return line+"\n\t\t\t^Error 000: ERROR DE SINTAXIS";
-                                        }else{
-                                            System.out.print("\n\u001B[44;37m"+nl+"\u001B[0m");
-                                            System.out.print("\u001B[34m"+aux+"\u001B[0m"+"\t\t\t"+instruccion + " " + lc+"\n");
-                                        }
-                                     
-                                    }else{
-                                      System.out.print("\n\u001B[44;37m"+nl+"\u001B[0m");
-                                      System.out.print("\u001B[34m"+aux+"\u001B[0m"+"\t\t\t"+instruccion + " " + lc+"\n");  
-                                    }
+                                    System.out.print("\n\u001B[44;37m"+nl+"\u001B[0m");
+                                    System.out.print("\u001B[34m"+aux+"\u001B[0m"+"\t\t\t"+instruccion + " " + lc+"\n");
+                                
                                 }else{
                                 //avisa que el tamaño es incorrecto y muestra el valor incorrecto 
                                    newLine=palabra;
@@ -175,9 +162,11 @@ public class IndexadoX {
           
                         //confirmar tamaño del operando
                             if(aux.length()==1){
-                                char character = palabra.charAt(0);
+                                char character = aux.charAt(0);
+                                
                                 int va = (int)character;
-                                cop=Integer.toHexString(va).toUpperCase();
+                                cop=Integer.toHexString(va);
+                                System.out.println(aux +palabra +"******************"+ character +"*****************"+va+"*****************"+cop);
                                 newLine=newLine.concat(cop);
                                 System.out.print("\n\u001B[44;37m"+nl+"\u001B[0m");
                                 System.out.print("\u001B[34m"+cop+"\u001B[0m"+"\t\t\t"+instruccion + " " + lc+"\n");  

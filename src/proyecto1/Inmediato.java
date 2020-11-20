@@ -65,11 +65,11 @@ public class Inmediato {
             //System.out.println(numPalabra);
             //System.out.println("Palabra: "+palabra);
             
-            palabra=palabra.toUpperCase();
-            
             /*Se verifica que la primera palabra sea una instrucción del modo de direccionamiento inmediato, y de 
             ser así, se concatena al inicio de la cadena que se desea devolver*/
             if(numPalabra==1){
+                palabra=palabra.toUpperCase();
+                
                 if((Extendido.containsKey(palabra))&&!(Directo.containsKey(palabra))&&!(Inmediato.containsKey(palabra))){
                     instruccion=instruccion.concat(palabra);
                     newLine=newLine.concat(Extendido.get(palabra));
