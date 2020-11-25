@@ -4,9 +4,6 @@ package proyecto1;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Scanner;
 import javax.swing.*;
 
 
@@ -18,7 +15,8 @@ public class Lectura extends javax.swing.JFrame {
 
     JFileChooser seleccionado  =new JFileChooser();
     File archivo;
-    GestioDoc op=new GestioDoc();
+    GestionDoc op=new GestionDoc();
+    metodosDeLectura read=new metodosDeLectura();
     
     
     /**
@@ -36,12 +34,12 @@ public class Lectura extends javax.swing.JFrame {
        this.setExtendedState(WIDTH);
        Image ico= Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("imagenes/escudo_fi_color.png"));
         this.setIconImage(ico);
-        //this.setExtendedState(Menu.MAXIMIZED_BOTH);
-        setSize(1400,1200);
+        setBounds(50,50,1100,900);
         
         ImageIcon imagen3 = new ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"));
         Icon fondo3 =new ImageIcon(imagen3.getImage().getScaledInstance(fondo2.getWidth(),fondo2.getHeight(),Image.SCALE_DEFAULT));
        fondo2.setIcon(fondo3);
+       toFront();
        this.repaint();
        
     }
@@ -57,10 +55,10 @@ public class Lectura extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         txtAreaText = new javax.swing.JTextArea();
-        IE = new javax.swing.JLabel();
         select = new javax.swing.JButton();
         save1 = new javax.swing.JButton();
         next1 = new javax.swing.JButton();
+        IE = new javax.swing.JLabel();
         fondo2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -71,9 +69,7 @@ public class Lectura extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtAreaText);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(70, 210, 1050, 500);
-        getContentPane().add(IE);
-        IE.setBounds(1170, 20, 190, 230);
+        jScrollPane1.setBounds(30, 250, 1010, 360);
 
         select.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         select.setText("Seleccionar Archivo");
@@ -88,7 +84,7 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(select);
-        select.setBounds(170, 760, 290, 90);
+        select.setBounds(60, 650, 280, 70);
 
         save1.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         save1.setText("Guardar Cambios");
@@ -103,7 +99,7 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(save1);
-        save1.setBounds(590, 760, 290, 90);
+        save1.setBounds(430, 650, 240, 60);
 
         next1.setFont(new java.awt.Font("Viner Hand ITC", 3, 24)); // NOI18N
         next1.setText("Regresar");
@@ -118,11 +114,13 @@ public class Lectura extends javax.swing.JFrame {
             }
         });
         getContentPane().add(next1);
-        next1.setBounds(1050, 760, 230, 90);
+        next1.setBounds(750, 660, 230, 50);
+        getContentPane().add(IE);
+        IE.setBounds(820, 20, 190, 180);
 
         fondo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo1.jpg"))); // NOI18N
         getContentPane().add(fondo2);
-        fondo2.setBounds(-410, -290, 1880, 1320);
+        fondo2.setBounds(-330, -280, 1880, 1320);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -132,9 +130,10 @@ public class Lectura extends javax.swing.JFrame {
         if(seleccionado.showDialog(null, "ABRIR ARCHIVO")== JFileChooser.APPROVE_OPTION){
           archivo=seleccionado.getSelectedFile();
           if(archivo.canRead()){
-            if(archivo.getName().endsWith("asc")||archivo.getName().endsWith("txt")){
+            if(archivo.getName().endsWith("ASC")||archivo.getName().endsWith("asc")||archivo.getName().endsWith("TXT")||archivo.getName().endsWith("txt")||archivo.getName().endsWith("lst")||archivo.getName().endsWith("LST")){
               String contenido= op.abrirArchivo(archivo);
               txtAreaText.setText(contenido);
+              read.Lectura(archivo.getName());
             }
           }else{
               JOptionPane.showMessageDialog(null, "Error, documento no encontrado. Intenta de nuevo", "Error", JOptionPane.ERROR_MESSAGE);
@@ -171,7 +170,7 @@ public class Lectura extends javax.swing.JFrame {
 
         if(seleccionado.showDialog(null, "Guardar archivo")== JFileChooser.APPROVE_OPTION){
           archivo=seleccionado.getSelectedFile();
-          if(archivo.getName().endsWith("asc")||archivo.getName().endsWith("txt")){
+          if(archivo.getName().endsWith("ASC")||archivo.getName().endsWith("asc")||archivo.getName().endsWith("TXT")||archivo.getName().endsWith("txt")||archivo.getName().endsWith("lst")||archivo.getName().endsWith("LST")){
               String contenido= txtAreaText.getText();
               String respuesta = op.GuardarArchivo(archivo, contenido);
               if(respuesta!=null){
