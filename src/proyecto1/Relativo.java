@@ -14,12 +14,14 @@ import java.util.StringTokenizer;
  */
 public class Relativo {
     Hashtable<String, String> Relativo;
+    static Boolean error;
     
     /**
      * Constructor
      */
     public Relativo(){
         this.Relativo = new Hashtable();
+        error = false;
     }
     
     /**
@@ -51,9 +53,9 @@ public class Relativo {
             String instruccion="";
             
             palabra=palabra.toUpperCase();
-            System.out.println("La palabra es: "+palabra);
+            //System.out.println("La palabra es: "+palabra);
             
-            System.out.println("Instrucción del modo REL");
+            //System.out.println("Instrucción del modo REL");
             
             //Cálculo del numero de memoria utilizado hasta el momento
             metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + 2;
@@ -77,11 +79,17 @@ public class Relativo {
                 }else if (i==2){
                     inicio = inicio + palabra + "\t";
                     posMem = Integer.parseInt(palabra,16);
-                    System.out.println("PosMem= "+posMem);
-                    System.out.println("Inicio : " + ini);
+                    //System.out.println("PosMem= "+posMem);
+                    //System.out.println("Inicio : " + ini);
                 }
             }
-                    
+            //Guardamos el resto de la línea que corresponde a la línea original
+            
+            linea = "";
+            while(st.hasMoreTokens()){
+                linea = linea + st.nextToken() + " ";
+            }
+            st = new StringTokenizer (linea);
             while (st.hasMoreTokens()){
                 numPalabra++;
                 palabra = st.nextToken();
@@ -89,19 +97,19 @@ public class Relativo {
                     //Guardamos la instrucción
                     instruccion = palabra;
                 }else if(numPalabra==2){
-                    System.out.println(palabra);
+                    //System.out.println(palabra);
                     if(palabra.startsWith("*")){
                         //Lo demás es un comentario así que no tiene operandos
                         System.out.println("\u001B[31m Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S) \u001B[0m");
                         return newLine + "\n\t\t\t^Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)";
                     }
                     //Nos ayuda a identificar si hay un error en la etiqueta
-                    Boolean error = false;
-                    newLine = verificarEtiqueta(palabra, VCE, posMem, error);
+                    
+                    newLine = verificarEtiqueta(palabra, VCE, posMem);
                     if(error){
-                        newLine = linea + newLine;
+                        newLine = inicio + linea + newLine;
                     }else{
-                        System.out.print("\n\033[46;34m"+Relativo.get(instruccion)+"\u001B[44;36m"+"\u001B[0m"+newLine+"\t\t\t"+linea+"\n");
+                        System.out.print("\n\033[46;34m"+Relativo.get(instruccion)+"\u001B[44;36m"+newLine+"\u001B[0m"+"\t\t\t"+linea+"\n");
                         newLine = inicio+Relativo.get(instruccion)+newLine+"\t\t\t"+linea;
                     }
                 }else if((numPalabra==3)&&(palabra.startsWith("*"))){
@@ -121,7 +129,7 @@ public class Relativo {
         return newLine;
     }
     
-    public String verificarEtiqueta(String palabra, Var_Cons_Etiq VCE, int numMem, boolean error){
+    public String verificarEtiqueta(String palabra, Var_Cons_Etiq VCE, int numMem){
         
         //Pos no ayuda a guardar la posición de la etiqueta
         int pos = 0;
@@ -129,7 +137,7 @@ public class Relativo {
         
         //Buscar si existe esa etiqueta                    
         pos = VCE.buscarEtiqueta(palabra);
-        System.out.println("pos: " + pos);
+        //System.out.println("pos: " + pos);
         if (pos == 0){
             error = true;
             System.out.println("\u001B[31m Error 003: ETIQUETA INEXISTENTE \u001B[0m");
@@ -141,13 +149,13 @@ public class Relativo {
             
             if (pos<numMem){
                 //Caso de salto negativo
-                System.out.println("El salto es negativo");
+                //System.out.println("El salto es negativo");
                 salto = (numMem+2)-pos;
-                System.out.println("El salto es: "+ salto);
+                //System.out.println("El salto es: "+ salto);
                 if (salto <= 127){
                     error = false;
                     String binario = Integer.toBinaryString(salto);
-                    System.out.println("Binario antes: "+binario);
+                    //System.out.println("Binario antes: "+binario);
                    
                 //Pasamos el String a un arreglo de caracteres, llenando los espacios vacíos con ceros
                     int tamaño = binario.length();
@@ -174,11 +182,11 @@ public class Relativo {
                     StringBuffer bin = new StringBuffer();
                     for (int i=0;i<aBinario.length;i++){
                         bin =bin.append(aBinario[i]);
-                        System.out.println(aBinario[i]);
+                        //System.out.println(aBinario[i]);
                     }
                     binario = bin.toString();
-                    System.out.println(bin);
-                    System.out.println("Num bin: "+ binario);
+                    //System.out.println(bin);
+                    //System.out.println("Num bin: "+ binario);
                     //Convertimos la cadena binaria a decimal
                     int decimal=Integer.parseInt(binario,2);
                     //Le sumamos 1
@@ -186,6 +194,9 @@ public class Relativo {
                     //Convertimos el decimal a una cadena haxadecimal
                     String hexadecimal = Integer.toHexString(decimal);
                     hexadecimal = hexadecimal.toUpperCase();
+                    if(hexadecimal.length()==1){
+                        hexadecimal = "0" + hexadecimal;
+                    }
                     return hexadecimal;
                               
                 }else{
@@ -201,6 +212,10 @@ public class Relativo {
                     error = false;
                     //Calcular el valor del operando
                     String hexadecimal = Integer.toHexString(salto);
+                    hexadecimal = hexadecimal.toUpperCase();
+                    if(hexadecimal.length()==1){
+                        hexadecimal = "0" + hexadecimal;
+                    }
                     return hexadecimal;
                 }else{
                     error = true;

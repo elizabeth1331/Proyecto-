@@ -12,6 +12,7 @@ public class Excepciones {
     Hashtable<String, String> ExcepDirecto;
     Hashtable<String, String> ExcepIndexadoX;
     Hashtable<String, String> ExcepIndexadoY;
+    static Boolean error;
     
     //se crea objeto para conectar con la lista de Mnemonicos de excepciones
     Mnemonicos m=new Mnemonicos();
@@ -20,6 +21,7 @@ public class Excepciones {
         this.ExcepDirecto = new Hashtable();
         this.ExcepIndexadoX = new Hashtable();
         this.ExcepIndexadoY = new Hashtable();
+        error = false;
     }
     
     /**
@@ -28,7 +30,7 @@ public class Excepciones {
      * @return OPCODE de la instrucción procesada o mensaje de error.
      */
     
-    public String analizarLinea(String line, Mnemonicos m, Var_Cons_Etiq VCE, Hashtable<String,Integer> variables, int numMemoria, int pasada, int numLinea){
+    public String analizarLinea(String line, Mnemonicos m, Var_Cons_Etiq VCE, Hashtable<String,Integer> variables, int numMemoria, int pasada, int numLinea, int ini){
         
         //Se recuperan las listas de instrucciones del modo indexado 
         metodosDeLectura lectura = new metodosDeLectura();
@@ -55,6 +57,18 @@ public class Excepciones {
         
         lineAux = line.replace(',', ' ');
         
+        if(lineAux.contains("*")){
+            int indice= lineAux.indexOf("*");
+            System.out.println("Indice: " + indice);
+            System.out.println("Tamaño: "+ lineAux.length());
+            String comentario = lineAux.substring(indice, lineAux.length()-2);
+            lineAux = lineAux.substring(0, indice);
+            System.out.println("El comentario es: " + comentario);
+            System.out.println("El lineAux: " + lineAux);
+        }
+        
+        
+        
         //System.out.println(line);
         
         //Se lee el numero total de palabras de la linea para validar que no tega mas ni menos operandos de los permitidos.
@@ -79,15 +93,15 @@ public class Excepciones {
                 System.out.println("SI es mnemonico excepcional");
                 palabra = stt.nextToken();
                 
-            }else if(numTotalPalabra>=6){
-                if(!lineAux.contains("*")){
+            } /*else if(numTotalPalabra>=6){
+                if(!lineAux.startsWith("*")){
                     mensaje = "\u001B[31m Error: La instrucción solo puede tener hasta maximo 3 operandos \u001B[0m\n";
                     //Guardamos la salida de la primer pasada
                     Output outPut = new Output(mensaje);
                     metodosDeLectura.salidas.add(outPut);
                     return line + "\n\t\t\t^Error: La instrucción solo puede tener hasta maximo 3 operandos";
                 }
-            }
+            }*/
                  
         
         
@@ -117,7 +131,7 @@ public class Excepciones {
                 switch(d){
                     case 1:
                         if(numTotalPalabra>=3 && numTotalPalabra<=4){
-                            if(numTotalPalabra==3){ //Es directo pues si tiviera X o Y tendria 4 palabras
+                            if(numTotalPalabra>=3){ //Es directo pues si tiviera X o Y tendria 4 palabras
                                 
                                 /* Como el opcode que le corresponde es el del modo DIRECTO,
                                 al conteo de memoria le debemos sumar 3 (número de bytes que ocupa el opcode con el operando)
@@ -143,9 +157,9 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                            newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
+                                            newLine=newLine.concat("\033[43;31m"+ExcepDirecto.get(palabra)); //Opcode directo
                                             palabraNueva = palabraNueva.substring(1);
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
                                             //Convierte a hexadecimal
@@ -157,9 +171,9 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                            newLine=newLine.concat((ExcepDirecto.get(palabra))); //Opcode directo
+                                            newLine=newLine.concat(("\033[43;31m"+ ExcepDirecto.get(palabra))); //Opcode directo
                                             palabraNueva = op;
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\u001B[41;33m" + palabraNueva + "\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }
@@ -186,9 +200,9 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra))); //Opcode indexado de X
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoX.get(palabra))); //Opcode indexado de X
                                             
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
@@ -200,9 +214,9 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra))); //Opcode indexado de X
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoX.get(palabra))); //Opcode indexado de X
                                             palabraNueva = op;
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }else if(palabraXY.equals("Y")){
@@ -219,8 +233,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                            newLine=newLine.concat((ExcepIndexadoY.get(palabra))); //Opcode indexado de X
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoY.get(palabra))); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
                                             //Convertir a hexadecimal
@@ -232,27 +246,27 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                            newLine=newLine.concat((ExcepIndexadoY.get(palabra))); //Opcode indexado de X
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoY.get(palabra))); //Opcode indexado de X
                                             palabraNueva = op;
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }else{
+                                        
                                         //Creo que este error es una de sintaxis, porque entra a este caso cuando se entra al caso de indexado pero no tiene X o Y 
-                                        mensaje ="\u001B[31m Error: La instruccion BCLR solo acepta 2 operandos. \u001B[0m\n";
+                                        mensaje ="\u001B[31m Error: Error de sintaxis. \u001B[0m\n";
                                         //Guardamos la salida de la primer pasada
                                         Output outPut = new Output(mensaje);
                                         metodosDeLectura.salidas.add(outPut);
-                                        return line + "\n\t\t\t^Error: La instruccion BCLR solo acepta 2 operandos.";
-                                    }
-                            }
-                        }else{
-                            mensaje = "\u001B[31m Error: BCLR debe tener 2 operandos. \u001B[0m\n";
-                            //Guardamos la salida de la primer pasada
-                            Output outPut = new Output(mensaje);
-                            metodosDeLectura.salidas.add(outPut);
-                            return line + "\n\t\t\t^Error: BCLR debe tener 2 operandos.";
-                            
+                                        return line + "\n\t\t\t^Error: Error de sintaxis. ";
+                                    }    
+                            }else{
+                                    mensaje = "\u001B[31m Error : BCLR debe tener 2 operandos.\u001B[0m\n";
+                                    //Guardamos la salida de la primer pasada
+                                    Output outPut = new Output(mensaje);
+                                    metodosDeLectura.salidas.add(outPut);
+                                    return line + "\n\t\t\t^Error : BCLR debe tener 2 operandos.";
+                                }
                         }
                     break;
                     
@@ -284,8 +298,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BSET
-                                            newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+ExcepDirecto.get(palabra)); //Opcode directo
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
                                             //Convertir a hexadecimal
@@ -297,9 +311,9 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                            newLine=newLine.concat((ExcepDirecto.get(palabra))); //Opcode directo
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepDirecto.get(palabra))); //Opcode directo
                                             palabraNueva = op;
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }
@@ -326,8 +340,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra))); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoX.get(palabra))); //Opcode directo
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
                                             //Convertir a hexadecimal
@@ -339,8 +353,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BCLR
-                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra))); //Opcode directo
-                                            newLine=newLine.concat(op); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoX.get(palabra))); //Opcode directo
+                                            newLine=newLine.concat("\u001B[41;33m"+op+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }else if(palabraXY.equals("Y")){
@@ -358,8 +372,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BSET
-                                            newLine=newLine.concat(ExcepIndexadoY.get(palabra)); //Opcode indexado de X
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+ExcepIndexadoY.get(palabra)); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                         System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
@@ -371,22 +385,21 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BSET
-                                            newLine=newLine.concat((ExcepIndexadoY.get(palabra))); //Opcode indexado de X
-                                            newLine=newLine.concat(op); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoY.get(palabra))); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+op+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }else{
                                         //Creo que este error es una de sintaxis, porque entra a este caso cuando se entra al caso de indexado pero no tiene X o Y 
-                                        mensaje = "\u001B[31m Error: La instruccion BSET solo acepta 2 operandos. \u001B[0m \n";
+                                        mensaje = "\u001B[31m Error: Error de sintaxis. \u001B[0m \n";
                                         //Guardamos la salida de la primer pasada
                                         Output outPut = new Output(mensaje);
                                         metodosDeLectura.salidas.add(outPut);
-                                        return line + "\n\t\t\t^Error : BSET debe tener 2 operandos.";
-                                        
+                                        return line + "\n\t\t\t^Error: Error de sintaxis.";
                                     }
                             }
                         }else{
-                            mensaje = "\u001B[31m Error : BSET debe tener 2 operandos.\u001B[0m \n";
+                            mensaje = "\u001B[31m Error : BSET debe tener 2 operandos.\u001B[0m\n";
                             //Guardamos la salida de la primer pasada
                             Output outPut = new Output(mensaje);
                             metodosDeLectura.salidas.add(outPut);
@@ -420,8 +433,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRCLR
-                                            newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+ExcepDirecto.get(palabra)); //Opcode directo
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
                                             //Convertir a hexadecimal
@@ -433,8 +446,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRCLR
-                                            newLine=newLine.concat((ExcepDirecto.get(palabra))); //Opcode directo
-                                            newLine=newLine.concat(op); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepDirecto.get(palabra))); //Opcode directo
+                                            newLine=newLine.concat("\u001B[41;33m"+op+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }
@@ -462,8 +475,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRCLR
-                                            newLine=newLine.concat(ExcepIndexadoX.get(palabra)); //Opcode indexado de X
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+ExcepIndexadoX.get(palabra)); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
@@ -475,8 +488,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRCLR
-                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra))); //Opcode indexado de X
-                                            newLine=newLine.concat(op); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoX.get(palabra))); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+op+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }else if(palabraXY.equals("Y")){
@@ -494,8 +507,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRCLR
-                                            newLine=newLine.concat(ExcepIndexadoY.get(palabra)); //Opcode indexado de X
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+ExcepIndexadoY.get(palabra)); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
@@ -506,17 +519,17 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRCLR
-                                            newLine=newLine.concat((ExcepIndexadoY.get(palabra))); //Opcode indexado de X
-                                            newLine=newLine.concat(op); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoY.get(palabra))); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+op+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }else{
                                             //Creo que este error es una de sintaxis, porque entra a este caso cuando se entra al caso de indexado pero no tiene X o Y 
-                                            mensaje = "\u001B[31m Error: La instruccion BRCLR solo acepta 3 operandos. \u001B[0m\n";
+                                            mensaje = "\u001B[31m Error: Error de sintaxis. \u001B[0m\n";
                                             //Guardamos la salida de la primer pasada
                                             Output outPut = new Output(mensaje);
                                             metodosDeLectura.salidas.add(outPut);
-                                            return line + "\n\t\t\t^Error: La instruccion BRCLR solo acepta 3 operandos.";
+                                            return line + "\n\t\t\t^Error: Error de sintaxis.";
                                         }
                             }
                         }else{
@@ -556,8 +569,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRSET
-                                            newLine=newLine.concat(ExcepDirecto.get(palabra)); //Opcode directo
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+ExcepDirecto.get(palabra)); //Opcode directo
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
                                             //Convierte a hexadecimal
@@ -569,8 +582,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRSET
-                                            newLine=newLine.concat((ExcepDirecto.get(palabra))); //Opcode directo
-                                            newLine=newLine.concat(op); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepDirecto.get(palabra))); //Opcode directo
+                                            newLine=newLine.concat("\u001B[41;33m"+op+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }
@@ -598,8 +611,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra);
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRSET
-                                            newLine=newLine.concat(ExcepIndexadoX.get(palabra)); //Opcode indexado de X
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+ExcepIndexadoX.get(palabra)); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
@@ -612,8 +625,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra+" ");
                                             instruccion=instruccion.concat(palabraNueva+" ");
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRSET
-                                            newLine=newLine.concat((ExcepIndexadoX.get(palabra))); //Opcode indexado de X
-                                            newLine=newLine.concat(op); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoX.get(palabra))); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+op+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }else if(palabraXY.equals("Y")){
@@ -631,8 +644,8 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra+" ");
                                             instruccion=instruccion.concat(palabraNueva+" ");
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRSET
-                                            newLine=newLine.concat(ExcepIndexadoY.get(palabra)); //Opcode indexado de X
-                                            newLine=newLine.concat(palabraNueva); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+ExcepIndexadoY.get(palabra)); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                         else if(!palabraNueva.startsWith("$")){
@@ -644,18 +657,17 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabra+" ");
                                             instruccion=instruccion.concat(palabraNueva+" ");
                                             //newLine=newLine.concat(palabra+" "); //Palabra BRSET
-                                            newLine=newLine.concat((ExcepIndexadoY.get(palabra))+" "); //Opcode indexado de X
-                                            newLine=newLine.concat(op); //Operando
+                                            newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoY.get(palabra))+" "); //Opcode indexado de X
+                                            newLine=newLine.concat("\u001B[41;33m"+op+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
                                     }else{
                                         //Creo que este error es una de sintaxis, porque entra a este caso cuando se entra al caso de indexado pero no tiene X o Y 
-                                        mensaje = "\u001B[31m Error: La instruccion BRSET solo acepta 3 operandos. \u001B[0m\n";
+                                        mensaje = "\u001B[31m Error: Error de sintaxis. \u001B[0m\n";
                                         //Guardamos la salida de la primer pasada
                                         Output outPut = new Output(mensaje);
                                         metodosDeLectura.salidas.add(outPut);
-                                        return line + "\n\t\t\t^Error: La instruccion BRSET solo acepta 3 operandos.";
-                                        
+                                        return line + "\n\t\t\t^Error: Error de sintaxis.";
                                     }
                             }
                         }else{
@@ -663,7 +675,7 @@ public class Excepciones {
                             //Guardamos la salida de la primer pasada
                             Output outPut = new Output(mensaje);
                             metodosDeLectura.salidas.add(outPut);
-                            return line + "\n\t\t\t^Error: BRCLR debe tener 3 operandos.";
+                            return line + "\n\t\t\t^Error: BRET debe tener 3 operandos.";
                         }
                     break;
                 }
@@ -703,7 +715,7 @@ public class Excepciones {
                             numMemoria = numMemoria + (palabra.length())/2;
                         }
                         instruccion=instruccion.concat(palabra+" ");
-                        newLine=newLine.concat(palabra+" ");
+                        newLine=newLine.concat("\u001B[41;33m"+palabra+"\u001B[0m"+" ");
                         System.out.println("La linea resultante es: " +newLine);
                     }else if(!palabra.contains("$")){// || palabra.startsWith("#$")){
                         if(palabra.startsWith("#")){
@@ -725,7 +737,7 @@ public class Excepciones {
                             
                             System.out.println(op+" Es el operando en hexadecimal");
                             instruccion=instruccion.concat(op);
-                            newLine=newLine.concat(op);
+                            newLine=newLine.concat("\u001B[41;33m"+op+"\u001B[0m");
                             System.out.println("La linea resultante es: " +newLine);
                         }else{
                             mensaje = "\u001B[31m Error: El segundo operando siempre debe ser inmediato. \u001B[0m\n";
@@ -765,38 +777,46 @@ public class Excepciones {
     }
     if (pasada == 2){
         //Nos ayuda a identificar si hay un error en la etiqueta
-        Boolean error = false;
+        
         StringTokenizer st = new StringTokenizer (line);
         String etiqueta = ""; //Nos sorve para guardar la etiqueta que vamos a verificar
         String inicio = ""; //Guardamos las pirmeras 4 palabras de la línea
         String Opcode = ""; //En esta variable guardamos el Opcode y los operandos que se obtuvieron en la primer pasada
+        int posMem = 0;
         //Recuperamos la etiqueta que se guardó en la primer pasada
         for(int i=0; i<5;i++){
            palabra = st.nextToken();
            if (i<2){
                inicio = inicio + palabra + " "; 
            }else if (i==2){
-               inicio = inicio + palabra + "\t";
+                inicio = inicio + palabra + "\t";
+                posMem = Integer.parseInt(palabra,16);
+                System.out.println("PosMem= "+posMem);
+                System.out.println("Inicio : " + ini);
            }else if (i==3){
-               inicio = inicio + palabra + " ";
+               
                Opcode = palabra; 
            }else if (i==4){
                etiqueta = palabra;
            }
         }
-        newLine = verificarEtiqueta(etiqueta, VCE, numMemoria, error);
+        newLine = verificarEtiqueta(etiqueta, VCE, posMem);
         
         line = "";
         //Guardamos el resto de la línea que corresponde a la línea original
         while(st.hasMoreTokens()){
            line = line + st.nextToken() + " ";
         }
+        System.out.println("Inicio: "+ inicio);
+        System.out.println("Linea originial: " + line);
+        System.out.println("Error/salto: " + newLine);
+        System.out.println("---Hay error: "+ error);
         
         if(error){
-            newLine = line + newLine;
+            newLine = inicio + line + newLine;
         }else{
-            System.out.print(Opcode+newLine+"\t\t\t"+line+"\n");
-            newLine = inicio + newLine + "\t\t\t" + line;
+            System.out.print("\033[43;31m"+Opcode+"\u001B[41;33m"+newLine+"\u001B[0m"+"\t\t\t"+line+"\n");
+            newLine = inicio + Opcode + newLine + "\t\t\t" + line;
         }
     }
         
@@ -806,7 +826,7 @@ public class Excepciones {
     return newLine;
     }
     
-    public String verificarEtiqueta(String palabra, Var_Cons_Etiq VCE, int numMem, boolean error){
+    public String verificarEtiqueta(String palabra, Var_Cons_Etiq VCE, int numMem){
         
         //Pos no ayuda a guardar la posición de la etiqueta
         int pos = 0;
@@ -827,7 +847,7 @@ public class Excepciones {
             if (pos<numMem){
                 //Caso de salto negativo
                 System.out.println("El salto es negativo");
-                salto = (numMem+2)-pos;
+                salto = (numMem+4)-pos;
                 System.out.println("El salto es: "+ salto);
                 if (salto <= 127){
                     error = false;
@@ -871,6 +891,9 @@ public class Excepciones {
                     //Convertimos el decimal a una cadena haxadecimal
                     String hexadecimal = Integer.toHexString(decimal);
                     hexadecimal = hexadecimal.toUpperCase();
+                    if(hexadecimal.length()==1){
+                        hexadecimal = "0" + hexadecimal;
+                    }
                     return hexadecimal;
                               
                 }else{
@@ -881,11 +904,15 @@ public class Excepciones {
             }else{
                 //Caso de salto positivo
                 System.out.println("El salto es positivo");
-                salto = pos - (numMem+2);
+                salto = pos - (numMem+4);
                 if (salto <= 128){
                     error = false;
                     //Calcular el valor del operando
                     String hexadecimal = Integer.toHexString(salto);
+                    hexadecimal = hexadecimal.toUpperCase();
+                    if(hexadecimal.length()==1){
+                        hexadecimal = "0" + hexadecimal;
+                    }
                     return hexadecimal;
                 }else{
                     error = true;

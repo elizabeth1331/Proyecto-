@@ -9,6 +9,7 @@
 package proyecto1;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -51,6 +52,17 @@ public class metodosDeLectura {
         
         //Creamos una instancia de la clase que nos sirve para guardar variables, constantes y etiquetas
         Var_Cons_Etiq VCE= new Var_Cons_Etiq();
+        
+        //Se elimina "archivo.txt" si existe
+        
+        File f=new File("Archivo.txt");
+        if (f.exists()){
+            f.delete();
+        }
+        f=new File(name + ".LST");
+        if (f.exists()){
+            f.delete();
+        }
         
         Scanner file;
         String line = "";
@@ -138,7 +150,7 @@ public class metodosDeLectura {
                         error = line+"\n\t\t\t^Error 09: INSTRUCCIÓN CARECE DE AL MENOS UN ESPACIO RELATIVO AL MARGEN"; 
                         }else{
                             error = VCE.agregarEtiqueta(palabra, numMemoria + inicio);
-                            System.out.println(VCE.Etiquetas);
+                            //System.out.println(VCE.Etiquetas);
                         }
                     
                 }else if(line.equals("")){
@@ -155,9 +167,9 @@ public class metodosDeLectura {
                 
             }
             
-            System.out.println("-------LISTA DE MENSAJES--------");
-            System.out.println("tamaño: " + salidas.size());
-            Output op = new Output();
+            //System.out.println("-------LISTA DE MENSAJES--------");
+            //System.out.println("tamaño: " + salidas.size());
+            //Output op = new Output();
             
             /*while(!salidas.isEmpty()){
                 op =salidas.remove(0);
@@ -193,10 +205,16 @@ public class metodosDeLectura {
         String palabra;
         String primerPalabra;
         Output op = new Output();
+        int ultimoSalto = 0;
+        List <String> segunda = new ArrayList();
+        int numsalto =0;
         
         while (!salidas.isEmpty()){ //Se va vaciando la lista de mensajes
-            
-            while(lineaSalto==0){ //Sacamos un elemento de la lista hasta que alguno corresponda a una línea con salto
+            //numsalto ++;
+            //System.out.println("El salto es: " + numsalto);
+                        
+            while(lineaSalto==0&&!salidas.isEmpty()){
+                //Sacamos un elemento de la lista hasta que alguno corresponda a una línea con salto
                 op =salidas.remove(0);
                 if (op.salto){
                     lineaSalto = op.linea;
@@ -204,6 +222,7 @@ public class metodosDeLectura {
                 }else{
                     System.out.print(op.mensaje);
                 }
+                 
             }
             
             try{
@@ -213,7 +232,11 @@ public class metodosDeLectura {
                  se irán transcribiendo las líneas que no tienen salto e iremos eliminando las líneas leidas. 
                 */
                 while (file.hasNextLine()&& numLinea != lineaSalto){ 
-                    System.out.println("Escribiendo archivo LST");
+                    //System.out.println("Escribiendo archivo LST");
+                    
+                    /*for(int i = 0; i<=numLinea; i++){
+                        line = file.nextLine();
+                    }*/
                     line = file.nextLine();
                     System.out.println(line);
                     StringTokenizer st = new StringTokenizer(line);
@@ -222,33 +245,58 @@ public class metodosDeLectura {
                     /*Se obtiene el número de la línea que se está leyendo para saber si corresponde o no a un salto*/
                     if (!primerPalabra.startsWith("^")&&st.countTokens()>2)
                         numLinea = Integer.parseInt(primerPalabra);
-                    System.out.println("numLinea = " + numLinea);
+                    //System.out.println("numLinea = " + numLinea);
                     if (numLinea == lineaSalto){
                         if(excepcion){
                             Excepciones EXC=new Excepciones();
-                            line=EXC.analizarLinea(line, m, VCE, variables, numMemoria, 2, numLinea);
+                            line=EXC.analizarLinea(line, m, VCE, variables, numMemoria, 2, numLinea, inicio);
                         }else{
                             Relativo REL=new Relativo();
                             line=REL.RevisarLinea(line, m, VCE, numMemoria,2, numLinea, inicio);
                         }
                     }
+                    
+                    if(ultimoSalto <= numLinea){
                         
-                    try {
-                        FileWriter fstream = new FileWriter(name+".LST", true);
-                        BufferedWriter out = new BufferedWriter(fstream);
-                        out.write(line + "\n");
-                        out.close();
-                    } catch (IOException ex) {
-                        System.out.println("Error: "+ex.getMessage());
+                        segunda.add(line);
+                        System.out.println("------Se agrega: "+ line);
                     }
-                        //file.close();
+                    
+                        
+                    
                 }
+                ultimoSalto = segunda.size();
+                file.close();
                 
             }catch(FileNotFoundException e){
                 System.out.println("Error al leer el archivo, " + e.getMessage());
             }
+            lineaSalto = 0;
             
-        }   
+            System.out.println("-------LISTA DE 2da pasada--------");
+            System.out.println("tamaño: " + salidas.size());
+            
+            for(int k = 0; k<segunda.size();k++){
+                System.out.println(segunda.get(k));
+                
+            }
+        }
+        
+        while(!segunda.isEmpty()){
+            String l = segunda.remove(0);
+            try {
+                FileWriter fstream = new FileWriter(name+".LST", true);
+                BufferedWriter out = new BufferedWriter(fstream);
+                out.write(l + "\n");
+                out.close();
+            } catch (IOException ex) {
+                System.out.println("Error: "+ex.getMessage());
+            }  
+        }
+        
+        
+        
+       
         
     }
     /**
@@ -272,7 +320,7 @@ public class metodosDeLectura {
         if(line.contains("BCLR")||line.contains("BRCLR")||line.contains("BRSET")||line.contains("BSET")||line.contains("bclr")||line.contains("brclr")||line.contains("brset")||line.contains("bset")){
             /*Si la linea contiene alguna de las 4 excepciones, va la clase de excepciones para verificar si 
             es una excepcion o tratarla como un mnemonico comun.*/
-            newLine=EXC.analizarLinea(line, m, VCE, variables, numMemoria, 1, numLinea);
+            newLine=EXC.analizarLinea(line, m, VCE, variables, numMemoria, 1, numLinea, inicio);
             //Si se regresa un error al analizar la línea, se devuelve la cadena con el error
             //f(newLine.contains("No es mnemonico excepcional") || newLine.contains("ERROR")){
             //return newLine;
