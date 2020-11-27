@@ -130,7 +130,7 @@ public class Lectura extends javax.swing.JFrame {
         if(seleccionado.showDialog(null, "ABRIR ARCHIVO")== JFileChooser.APPROVE_OPTION){
           archivo=seleccionado.getSelectedFile();
           if(archivo.canRead()){
-            if(archivo.getName().endsWith("ASC")||archivo.getName().endsWith("asc")||archivo.getName().endsWith("TXT")||archivo.getName().endsWith("txt")){
+            if(archivo.getName().endsWith("ASC")||archivo.getName().endsWith("asc")||archivo.getName().endsWith("TXT")||archivo.getName().endsWith("txt")||archivo.getName().endsWith("lst")||archivo.getName().endsWith("LST")){
               String contenido= op.abrirArchivo(archivo);
               txtAreaText.setText(contenido);
               read.Lectura(archivo.getName());
@@ -170,7 +170,7 @@ public class Lectura extends javax.swing.JFrame {
 
         if(seleccionado.showDialog(null, "Guardar archivo")== JFileChooser.APPROVE_OPTION){
           archivo=seleccionado.getSelectedFile();
-          if(archivo.getName().endsWith("ASC")||archivo.getName().endsWith("asc")||archivo.getName().endsWith("TXT")||archivo.getName().endsWith("txt")){
+          if(archivo.getName().endsWith("ASC")||archivo.getName().endsWith("asc")||archivo.getName().endsWith("TXT")||archivo.getName().endsWith("txt")||archivo.getName().endsWith("lst")||archivo.getName().endsWith("LST")){
               String contenido= txtAreaText.getText();
               String respuesta = op.GuardarArchivo(archivo, contenido);
               if(respuesta!=null){

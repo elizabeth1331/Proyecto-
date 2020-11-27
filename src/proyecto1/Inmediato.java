@@ -33,7 +33,7 @@ public class Inmediato {
      * @param line linea que supuestamente contiene una instrucción del modo de direccionamiento INM.
      * @return OPCODE de la instrucción procesada o mensaje de error.
      */
-    public String AnalizarLinea(String line, Mnemonicos m, Hashtable<String,Integer> variables){
+    public String AnalizarLinea(String line, Mnemonicos m, Hashtable<String,Integer> variables, int numMemoria){
         //Se llama a mnemónicos para recuperar la lista de instrucciones del modo Inmediato
         metodosDeLectura lectura = new metodosDeLectura();
         Inmediato=m.LeerOpcode("ListaInmediato.txt");
@@ -75,17 +75,26 @@ public class Inmediato {
                     newLine=newLine.concat(Extendido.get(palabra));
                     //System.out.println(instruccion +" Es instruccion del modo de direccionamiento extendido");
                     
+                    //Cálculo del número de espacios de memoria utilizado hasta el momento
+                    metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesExtendido.get(palabra)+(Extendido.get(palabra)).length()/2;
+                    
                     d=1;
                 }else if((Directo.containsKey(palabra))&&!(Extendido.containsKey(palabra))&&!(Inmediato.containsKey(palabra))){
                     instruccion=instruccion.concat(palabra);
                     newLine=newLine.concat(Directo.get(palabra));
                     //System.out.println(instruccion +" Es instruccion del modo de direccionamiento directo");
                     
+                    //Cálculo del número de espacios de memoria utilizado hasta el momento
+                    metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesDirecto.get(palabra)+(Directo.get(palabra)).length()/2;
+                    
                     d=2;
                 }else if((Inmediato.containsKey(palabra))&&!(Directo.containsKey(palabra))&&!(Extendido.containsKey(palabra))){
                     instruccion=instruccion.concat(palabra);
                     newLine=newLine.concat(Inmediato.get(palabra));
                     //System.out.println(instruccion +" Es instruccion del modo de direccionamiento inmediato");
+                    
+                    //Cálculo del número de espacios de memoria utilizado hasta el momento
+                    metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesInmediato.get(palabra)+(Inmediato.get(palabra)).length()/2;
                     
                     d=3;
                 }else{
@@ -153,7 +162,12 @@ public class Inmediato {
                         cha=true;
                         
                     }else{
-                        System.out.println("\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m");
+                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                        //Guardamos la salida de la primer pasada
+                        Output outPut = new Output();
+                        outPut.mensaje = mensaje;
+                        metodosDeLectura.salidas.add(outPut);
+                        
                         return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                     }
                     
@@ -166,7 +180,11 @@ public class Inmediato {
                         op=variables.get(palabra).toString();
                         //System.out.println("El operando "+palabra+" es una constante con valor: "+op);
                     }else if(((!variables.containsKey(palabra))&&(!hex))&&(!esNumero(palabra))&&(!cha)){
-                        System.out.println("\u001B[31m Error 001: CONSTANTE INEXTISTENTE\u001B[0m");
+                        String mensaje = "\u001B[31m Error 001: CONSTANTE INEXTISTENTE\u001B[0m\n";
+                        //Guardamos la salida de la primer pasada
+                        Output outPut = new Output();
+                        outPut.mensaje = mensaje;
+                        metodosDeLectura.salidas.add(outPut);
                         return line+"\n\t\t\t^Error 001: CONSTANTE INEXTISTENTE";
                     }
                     //El caso en que tuviese # y no se encontrara en la lista de variables o constantes también 
@@ -179,7 +197,12 @@ public class Inmediato {
                         op=variables.get(palabra).toString();
                         //System.out.println("El operando "+palabra+" es una variable con valor: "+op);
                     }else if(((!variables.containsKey(palabra))&&(!hex))&&(!esNumero(palabra))&&(!cha)){
-                        System.out.println("\u001B[31m Error 002: VARIABLE INEXTISTENTE\u001B[0m");
+                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 002: VARIABLE INEXTISTENTE\u001B[0m\n";
+                        //Guardamos la salida de la primer pasada
+                        Output outPut = new Output();
+                        outPut.mensaje = mensaje;
+                        metodosDeLectura.salidas.add(outPut);
+                        
                         return line+"\n\t\t\t^Error 002: VARIABLE INEXTISTENTE";
                     }
                 }
@@ -190,9 +213,13 @@ public class Inmediato {
                         if(BytesExtendido.get(instruccion)==(op.length()/2)&&(op.length()%2==0)){
                             //Si coinciden, se agrega a la cadena que será regresada
                             //System.out.println(instruccion+" Es instrucción de Extendido porque el op: "+op+" coincide con la lista");
-                            System.out.print("\n\u001B[45;30m"+newLine+"\u001B[0m");
+                            String mensaje = "\n\u001B[45;30m"+newLine+"\u001B[0m";
                             newLine=newLine.concat(op);
-                            System.out.print("\u001B[35m"+op+"\u001B[0m"+"\t\t\t"+line+"\n");
+                            mensaje = mensaje + "\u001B[35m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                            //Guardamos la salida de la primer pasada
+                            Output outPut = new Output();
+                            outPut.mensaje = mensaje;
+                            metodosDeLectura.salidas.add(outPut);
                         }
                         break;
                     case 2:
@@ -201,9 +228,13 @@ public class Inmediato {
                             //Si coinciden, se agrega a la cadena que será regresada
                             //System.out.println(instruccion+" Es instrucción de Directo porque el op: "+op+" coincide con la lista");
                             //System.out.println("\u001B[43;30m 43 Fondo en Amarillo (Yellow) con texto en negro u001B\u001B[0m");
-                            System.out.print("\n\u001B[46;30m"+newLine+"\u001B[0m");
+                            String mensaje = "\n\u001B[46;30m"+newLine+"\u001B[0m";
                             newLine=newLine.concat(op);
-                            System.out.print("\u001B[36m"+op+"\u001B[0m"+"\t\t\t"+line+"\n");
+                            mensaje = mensaje + "\u001B[36m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                            //Guardamos la salida de la primer pasada
+                            Output outPut = new Output();
+                            outPut.mensaje = mensaje;
+                            metodosDeLectura.salidas.add(outPut);
                         }
                         break;
                     case 3:
@@ -212,9 +243,13 @@ public class Inmediato {
                             //Si coinciden, se agrega a la cadena que será regresada
                             
                             //System.out.println(instruccion+" Es instrucción de Inmediato porque el op: "+op+" coincide con la lista");
-                            System.out.print("\n\u001B[43;30m"+newLine+"\u001B[0m");
+                            String mensaje = "\n\u001B[43;30m"+newLine+"\u001B[0m";
                             newLine=newLine.concat(op);
-                            System.out.print("\u001B[33m"+op+"\u001B[0m"+"\t\t\t"+line+"\n");
+                            mensaje = mensaje + "\u001B[33m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                            //Guardamos la salida de la primer pasada
+                            Output outPut = new Output();
+                            outPut.mensaje = mensaje;
+                            metodosDeLectura.salidas.add(outPut);
                         }
                         break;
                     case 0:
@@ -228,11 +263,19 @@ public class Inmediato {
                             if((BytesInmediato.containsKey(instruccion))&&(BytesInmediato.get(instruccion)==(op.length()/2)&&(op.length()%2==0))){
                                 //Si coinciden, se agrega a la cadena que será regresada
                                 //System.out.println("El operando coincide con la lista de Inmediato");
-                                System.out.print("\n\u001B[43;30m"+newLine+"\u001B[0m");
+                                String mensaje = "\n\u001B[43;30m"+newLine+"\u001B[0m";
                                 newLine=newLine.concat(op);
-                                System.out.print("\u001B[33m"+op+"\u001B[0m"+"\t\t\t"+line+"\n");
+                                mensaje = mensaje +"\u001B[33m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                                //Guardamos la salida de la primer pasada
+                                Output outPut = new Output();
+                                outPut.mensaje = mensaje;
+                                metodosDeLectura.salidas.add(outPut);
                             }else{
-                                System.out.println("\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m");
+                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                //Guardamos la salida de la primer pasada
+                                Output outPut = new Output();
+                                outPut.mensaje = mensaje;
+                                metodosDeLectura.salidas.add(outPut);
                                 return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                             }
                         }else{
@@ -249,20 +292,32 @@ public class Inmediato {
                                 //System.out.println(instruccion+" Es instrucción de Directo porque el op: "+op+" coincide con la lista");
                             
                                 newLine=newLine.concat(Directo.get(instruccion));
-                                System.out.print("\n\u001B[46;30m"+newLine+"\u001B[0m");
+                                String mensaje = "\n\u001B[46;30m"+newLine+"\u001B[0m";
                                 newLine=newLine.concat(op);
-                                System.out.print("\u001B[36m"+op+"\u001B[0m"+"\t\t\t"+line+"\n");
+                                mensaje = mensaje + "\u001B[36m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                                //Guardamos la salida de la primer pasada
+                                Output outPut = new Output();
+                                outPut.mensaje = mensaje;
+                                metodosDeLectura.salidas.add(outPut);
                             }else if((BytesExtendido.containsKey(instruccion))&&(BytesExtendido.get(instruccion)==(op.length()/2)&&(op.length()%2==0))){
                                 //Si coinciden, se agrega a la cadena que será regresada
                             
                                 //System.out.println(instruccion+" Es instrucción de Extendido porque el op: "+op+" coincide con la lista");
                             
                                 newLine=newLine.concat(Extendido.get(instruccion));
-                                System.out.print("\n\u001B[45;30m"+newLine+"\u001B[0m");
+                                String mensaje = "\n\u001B[45;30m"+newLine+"\u001B[0m";
                                 newLine=newLine.concat(op);
-                                System.out.print("\u001B[35m"+op+"\u001B[0m"+"\t\t\t"+line+"\n");
+                                mensaje = mensaje + "\u001B[35m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                                //Guardamos la salida de la primer pasada
+                                Output outPut = new Output();
+                                outPut.mensaje = mensaje;
+                                metodosDeLectura.salidas.add(outPut);
                             }else{
-                                System.out.println("\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m");
+                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                //Guardamos la salida de la primer pasada
+                                Output outPut = new Output();
+                                outPut.mensaje = mensaje;
+                                metodosDeLectura.salidas.add(outPut);
                                 return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                             }
                         }
@@ -273,12 +328,22 @@ public class Inmediato {
             if((numPalabra==3)&&(palabra.startsWith("*"))){
                 //Es un comentario, no es necesario realizar nada más
             }else if((numPalabra==3)&&(!palabra.startsWith("*"))){
-                System.out.println("\u001B[31m Error 000: ERROR DE SINTAXIS\u001B[0m");
+                String mensaje = line+"\n\t\t\t^\u001B[31m Error 000: ERROR DE SINTAXIS\u001B[0m\n";
+                //Guardamos la salida de la primer pasada
+                Output outPut = new Output();
+                outPut.mensaje = mensaje;
+                metodosDeLectura.salidas.add(outPut);
+                
                 return line+"\n\t\t\t^Error 000: ERROR DE SINTAXIS";
             }
         }
         if (numPalabra<2){
-            System.out.println("\u001B[31m Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\u001B[0m");
+            String mensaje = line+"\n\t\t\t^\u001B[31m Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\u001B[0m\n";
+            //Guardamos la salida de la primer pasada
+            Output outPut = new Output();
+            outPut.mensaje = mensaje;
+            metodosDeLectura.salidas.add(outPut);
+            
             return line+"\n\t\t\t^Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)";
         }
         //System.out.println("El número total de palabras leídas es "+numPalabra);
