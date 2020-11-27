@@ -30,6 +30,9 @@ public class Mnemonicos {
     Hashtable<String,Integer> BytesDirecto;
     Hashtable<String,String> Extendido;
     Hashtable<String,Integer> BytesExtendido;
+    Hashtable<String,String> ExcepDirecto;
+    Hashtable<String,String> ExcepIndexadoX;
+    Hashtable<String,String> ExcepIndexadoY;
     Hashtable<String,Integer> modo;
     Hashtable<String,String> mod;
     
@@ -48,6 +51,9 @@ public class Mnemonicos {
         this.BytesExtendido=new Hashtable<>();
         this.BytesIndexadoX=new Hashtable<>();
         this.BytesIndexadoY=new Hashtable<>();
+        this.ExcepDirecto = new Hashtable();
+        this.ExcepIndexadoX = new Hashtable();
+        this.ExcepIndexadoY = new Hashtable();
     }
     
     /**
@@ -55,6 +61,31 @@ public class Mnemonicos {
      * 
      */
     public void insertar(){
+        
+        //EXCEPCIONES*****************************************
+        
+        //OPCODE correspondiente a modo Directo 
+        
+        ExcepDirecto.put("BCLR","15");
+        ExcepDirecto.put("BRCLR","13");
+        ExcepDirecto.put("BRSET","12");
+        ExcepDirecto.put("BSET","14");
+        
+        //OPCODE correspondiente a modo Indexado respecto a X
+        
+        ExcepIndexadoX.put("BCLR","1D");
+        ExcepIndexadoX.put("BRCLR","1F");
+        ExcepIndexadoX.put("BRSET","1E");
+        ExcepIndexadoX.put("BSET","1C");
+        
+        //OPCODE correspondiente a modo Indexado respecto a Y
+        
+        ExcepIndexadoY.put("BCLR","181D");
+        ExcepIndexadoY.put("BRCLR","181F");
+        ExcepIndexadoY.put("BRSET","181E");
+        ExcepIndexadoY.put("BSET","181C");
+        
+        //EXCEPCIONES*****************************************
         
         //OPCODE correspondiente de cada instrucción Inmediato 
         
@@ -74,12 +105,12 @@ public class Mnemonicos {
         Inmediato.put("CPY","188C");
         Inmediato.put("EORA","88");
         Inmediato.put("EORB","C8");
-        Inmediato.put("IDAA","86");
-        Inmediato.put("IDAB","C6");
-        Inmediato.put("IDD","CC");
-        Inmediato.put("IDS","8E");
-        Inmediato.put("IDX","CE");
-        Inmediato.put("IDY","18CE");
+        Inmediato.put("LDAA","86");
+        Inmediato.put("LDAB","C6");
+        Inmediato.put("LDD","CC");
+        Inmediato.put("LDS","8E");
+        Inmediato.put("LDX","CE");
+        Inmediato.put("LDY","18CE");
         Inmediato.put("ORAA","8A");
         Inmediato.put("ORAB","CA");
         Inmediato.put("SBCA","82");
@@ -388,7 +419,7 @@ public class Mnemonicos {
         Extendido.put("STS","BF");
         
         Extendido.put("STX","FF");
-        Extendido.put("STY","FF");
+        Extendido.put("STY","18FF");
         
         Extendido.put("SUBA","B0");
         Extendido.put("SUBB","F0");
@@ -416,12 +447,12 @@ public class Mnemonicos {
         BytesInmediato.put("CPY",2);
         BytesInmediato.put("EORA",1);
         BytesInmediato.put("EORB",1);
-        BytesInmediato.put("IDAA",1);
-        BytesInmediato.put("IDAB",1);
-        BytesInmediato.put("IDD",2);
-        BytesInmediato.put("IDS",2);
-        BytesInmediato.put("IDX",2);
-        BytesInmediato.put("IDY",2);
+        BytesInmediato.put("LDAA",1);
+        BytesInmediato.put("LDAB",1);
+        BytesInmediato.put("LDD",2);
+        BytesInmediato.put("LDS",2);
+        BytesInmediato.put("LDX",2);
+        BytesInmediato.put("LDY",2);
         BytesInmediato.put("ORAA",1);
         BytesInmediato.put("ORAB",1);
         BytesInmediato.put("SBCA",1);
@@ -725,6 +756,31 @@ public class Mnemonicos {
      */
     public void guardarListas(){
         ObjectOutputStream fileOut;
+        //EXCEPCIONES*****************************************
+        try{
+            fileOut = new ObjectOutputStream(new FileOutputStream("ListaExcepDirecto.txt"));
+            fileOut.writeObject(ExcepDirecto);
+            fileOut.close();
+        }catch(IOException e){
+            System.out.println("No se pudo escribir el archivo ListaExcepDirecto.txt");
+        }
+        
+        try{
+            fileOut = new ObjectOutputStream(new FileOutputStream("ListaExcepIndexadoX.txt"));
+            fileOut.writeObject(ExcepIndexadoX);
+            fileOut.close();
+        }catch(IOException e){
+            System.out.println("No se pudo escribir el archivo ListaExcepIndexadoX.txt");
+        }
+        
+        try{
+            fileOut = new ObjectOutputStream(new FileOutputStream("ListaExcepIndexadoY.txt"));
+            fileOut.writeObject(ExcepIndexadoY);
+            fileOut.close();
+        }catch(IOException e){
+            System.out.println("No se pudo escribir el archivo ListaExcepIndexadoY.txt");
+        }
+        //EXCEPCIONES*****************************************
         try{
             fileOut = new ObjectOutputStream(new FileOutputStream("ListaInmediato.txt"));
             fileOut.writeObject(Inmediato);
@@ -823,6 +879,15 @@ public class Mnemonicos {
             }else if(file== "ListaExtendido.txt"){
                 mod=(Hashtable)fileIn.readObject();
                 fileIn.close(); 
+            }else if(file == "ListaExcepIndexadoX.txt"){
+                mod=(Hashtable)fileIn.readObject();
+                fileIn.close();
+            }else if(file== "ListaExcepIndexadoY.txt"){
+                mod=(Hashtable)fileIn.readObject();
+                fileIn.close(); 
+            }else if(file== "ListaExcepDirecto.txt"){
+                mod=(Hashtable)fileIn.readObject();
+                fileIn.close();
             }
             return mod;
         }catch(Exception e){

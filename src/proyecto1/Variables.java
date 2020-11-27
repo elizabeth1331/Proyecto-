@@ -18,7 +18,7 @@ public class Variables {
     
         public Hashtable<String,Integer> GuardarVariablesH(String clave, Integer valor,Hashtable<String,Integer> variables){
         
-        System.out.print("   jkjhdgjkh"+ clave +"---"+ valor+"\n ");
+        //System.out.print("   jkjhdgjkh"+ clave +"---"+ valor+"\n ");
         variables.put(clave,valor);        
         return variables;
         

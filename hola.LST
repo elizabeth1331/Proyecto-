@@ -9,15 +9,16 @@
 9 A  	31          ABCD   equ $31
 10 A  	
 11 A  	
+12 A 0	BNE CICLO 
+			^Error 003: ETIQUETA INEXISTENTE
 12 A 0	    BNE CICLO
 13 A 2	89FF			    ADCA #$FF *hola
 14 A 2	99FF			    ADCA $FF *hola2
 15 A 2	B9FFAA			    ADCA $FFAA *hola3
 16 A 2	    YYY #$F1
 			^Error 004: MNEMÓNICO INEXISTENTE
-17 A 2	    bcc #$F2
-18 A 4	    ADCA #DDRA
-			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+17 A 2	bcc #$F2 
+			^Error 003: ETIQUETA INEXISTENTE
 19 A 4	B91001			    ADCA DDRA
 20 A 4	8920			    ADCA #DDRR
 21 A 4	9920			    ADCA DDRR

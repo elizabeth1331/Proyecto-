@@ -24,7 +24,7 @@ public class IndexadoX {
         metodosDeLectura lectura = new metodosDeLectura();
         
     
-    public String revisarLineaX(String line, Mnemonicos m, Hashtable<String,Integer> variables){
+    public String revisarLineaX(String line, Mnemonicos m, Hashtable<String,Integer> variables, int numMemoria){
         
     
         IndexadoX=m.LeerOpcode("ListaIndexadoX.txt");
@@ -34,10 +34,10 @@ public class IndexadoX {
             String palabra, cop, dop;
             int numPalabra=0;
         // 
-            boolean ec=false;
+            boolean ec=true;
     
         //Esta cadena será la que se devolverá si la sintaxis es correcta
-            String newLine="", instruccion="", lc="", coment="", lineF="", salida="\n";
+            String newLine="", instruccion="", lc="", coment="", lineF="", salida="\n", nl="";
         
         //Se leen las palabras de la línea
         StringTokenizer st = new StringTokenizer (line);
@@ -58,16 +58,20 @@ public class IndexadoX {
                     if (IndexadoX.containsKey(palabra)){
                         
                         instruccion=instruccion.concat(palabra);
-                        newLine=newLine.concat(IndexadoX.get(palabra));
-                        System.out.println(instruccion +" Es instruccion de Indexado en X " + instruccion);
-                    }/*else if (lectura.EsInstruccion(palabra, m)){
-                        System.out.println("Error 000: ERROR DE SINTAXIS 1");
-                        //Instrucción de otro modo de direccionamiento con #
-                        System.out.println("Error 000: ERROR DE SINTAXIS 1");
-                        return "Error 000: ERROR DE SINTAXIS";
-                    }*/else{
-                        System.out.println("\n                         Error 004: MNEMÓNICO INEXISTENTE\n");
-                        return "\n                         Error 004: MNEMÓNICO INEXISTENTE\n";
+                        nl=newLine=newLine.concat(IndexadoX.get(palabra));
+                        //System.out.println(instruccion +" Es instruccion de Indexado en X ");
+                        
+                        //Cálculo del número de espacio en memoria utilizado hasta el momento
+                        metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesIndexadoX.get(palabra);
+                    }else{
+                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 004: MNEMÓNICO INEXISTENTE\u001B[0m\n";
+                        
+                        //Guardamos la salida de la primer pasada
+                        Output outPut = new Output();
+                        outPut.mensaje = mensaje;
+                        metodosDeLectura.salidas.add(outPut);
+                        
+                        return line+"\n\t\t\t^Error 004: MNEMÓNICO INEXISTENTE\n";
                     }
                 }
             
@@ -96,144 +100,207 @@ public class IndexadoX {
                                 if((newLine.length()%2 ==0 )&& (BytesIndexadoX.get(instruccion))==(Integer.parseInt(String.valueOf(newLine.length()/2)))){
                                 //Si coinciden, avisa que la longitud es correcta 
                                    // System.out.println("El tamaño de bytes coincide con el Mnemonico");
-                                    if(!(esD(aux))){
-                                     System.out.println("Es hexagecimal ++++"+ esD(aux) +aux);    
-                                    }else{
-                                      System.out.println("Es octal    ++++" +esD(aux) +aux);   
-                                    }
+                                    String mensaje = "\n\u001B[44;37m"+nl+"\u001B[0m";
+                                    mensaje = mensaje + "\u001B[34m"+aux+"\u001B[0m"+"\t\t\t"+instruccion + " " + lc+"\n";
+                                                                        
+                                    //Guardamos la salida de la primer pasada
+                                    Output outPut = new Output();
+                                    outPut.mensaje = mensaje;
+                                    metodosDeLectura.salidas.add(outPut);
+                                
                                 }else{
                                 //avisa que el tamaño es incorrecto y muestra el valor incorrecto 
                                    newLine=palabra;
                                    //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
                                     //System.out.println("-----La instruccion es "+instruccion +" y su numero de bytes a ocupar debe ser: "+BytesIndexadoX.get(instruccion));
-                                    System.out.println("\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n");
-                                    return "\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n";
+                                    String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                    
+                                    //Guardamos la salida de la primer pasada
+                                    Output outPut = new Output();
+                                    outPut.mensaje = mensaje;
+                                    metodosDeLectura.salidas.add(outPut);
+                                    
+                                    return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                                 }  
                              
                         }
                 //Define si es constante
-                    else if(false==(esD(recortarSS(palabra, 3))) && true==(esCoV(recortarCS(palabra, 2))) && true==(variables.containsKey(recortarSS(palabra, 3)))){
-                    //Busca a palabra en la HashTable de constantes y variables
-                        if(variables.containsKey(recortarSS(palabra, 3))){
-                                //Si existe guarda el valor de la variable en cop 
-                                cop=variables.get(recortarSS(palabra, 3)).toString();
+                    if(false==(esD(recortarSS(palabra, 3))) && true==(esCoV(recortarCS(palabra, 2))) && true==(variables.containsKey(recortarSS(palabra, 3)))){
+                        //Busca a palabra en la HashTable de constantes y variables
+                            if(variables.containsKey(recortarSS(palabra, 3))){
+                                    //Si existe guarda el valor de la variable en cop 
+                                    cop=variables.get(recortarSS(palabra, 3)).toString();
 
-                                //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
-                                  System.out.println("La instruccion es "+instruccion +" y su numero de bytes debe ser: "+BytesIndexadoX.get(instruccion));
+                                    //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
+                                      //System.out.println("La instruccion es "+instruccion +" y su numero de bytes debe ser: "+BytesIndexadoY.get(instruccion));
 
-                                   newLine=newLine.concat(cop);
+                                       newLine=newLine.concat(cop);
 
-                                  if((newLine.length()%2 ==0 )&& (BytesIndexadoX.get(instruccion))==(Integer.parseInt(String.valueOf(newLine.length()/2)))){
-                                //Si coinciden, se agrega a la cadena que será regresada
-                                       System.out.println("El tamaño de bytes coincide con el Mnemonico");
-
-                                  }else{
-                                      newLine=palabra;
-                                       System.out.println("\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n");
-                                       return "\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n";
-                                   }
-                               }
+                                      if((newLine.length()%2 ==0 )&& (BytesIndexadoX.get(instruccion))==(Integer.parseInt(String.valueOf(newLine.length()/2)))){
+                                            String mensaje = "\n\u001B[44;37m"+nl+"\u001B[0m";
+                                            mensaje = mensaje+"\u001B[34m"+cop+"\u001B[0m"+"\t\t\t"+instruccion + " " + lc+"\n";
+                                            
+                                            //Guardamos la salida de la primer pasada
+                                            Output outPut = new Output();
+                                            outPut.mensaje = mensaje;
+                                            metodosDeLectura.salidas.add(outPut);
+                                            
+                                      }else{
+                                          newLine=palabra;
+                                           String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                           
+                                            //Guardamos la salida de la primer pasada
+                                            Output outPut = new Output();
+                                            outPut.mensaje = mensaje;
+                                            metodosDeLectura.salidas.add(outPut);
+                                           
+                                           return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
+                                       }
+                            }
                     }else if(false==(esD(recortarCS(palabra, 2))) && true==(esCoV(recortarCS(palabra, 2)))&& false==(variables.containsKey(recortarCS(palabra, 2)))){
-                                //System.out.print(esCoV(recortarSS(palabra, 2))+ " ------ "+ palabra +" ------ "+recortarSS(palabra, 2)+" ------ "+lc);
-                                System.out.println("\n                         Error 001: CONSTANTE INEXISTENTE\n");
-                                return "\n                         Error 001: CONSTANTE INEXISTENTE\n";
+                             
+                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 001: CONSTANTE INEXISTENTE\u001B[0m\n";
+                                
+                                //Guardamos la salida de la primer pasada
+                                Output outPut = new Output();
+                                outPut.mensaje = mensaje;
+                                metodosDeLectura.salidas.add(outPut);
+                                
+                                return line+"\n\t\t\t^Error 001: CONSTANTE INEXISTENTE";
                     }
                 //Define si es variable
-                    else if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2))) && true==(variables.containsKey(recortarCS(palabra, 2))) && recortarCS(palabra, 2).startsWith("'")== false){ 
-                                //System.out.print((esD(palabra))+"   "+(esCoV(recortarCS(palabra, 2)))+"   "+recortarSS(palabra, 2));
-                                //lc=lc.concat(palabra);
+                     if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2))) && true==(variables.containsKey(recortarCS(palabra, 2))) && esCoH(recortarCS(palabra, 2))== false && Hexa( palabra)==true && recortarCS(palabra, 2).startsWith("$")== false){ 
 
-                            System.out.println("--------Es variable " + palabra);
-                                //Si existe guarda el valor de la variable en cop 
-                            
                                 cop=variables.get(recortarCS(palabra, 2)).toString();
                                
-                                   //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
-                                   System.out.println("La instruccion es "+instruccion +" y su numero de bytes debe ser: "+BytesIndexadoX.get(instruccion));
+                                //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
+                                    //System.out.println("La instruccion es "+instruccion +" y su numero de bytes debe ser: "+BytesIndexadoY.get(instruccion));
 
                                    newLine=newLine.concat(cop);
 
                                   if((newLine.length()%2 ==0 )&& (BytesIndexadoX.get(instruccion))==(Integer.parseInt(String.valueOf(newLine.length()/2)))){
-                                       //Si coinciden, se agrega a la cadena que será regresada
-                                       System.out.println("El tamaño de bytes coincide con el Mnemonico");
+                                    String mensaje = "\n\u001B[44;37m"+nl+"\u001B[0m";
+                                    mensaje = mensaje +"\u001B[34m"+cop+"\u001B[0m"+"\t\t\t"+instruccion + " " + lc+"\n";  
+                                    
+                                    //Guardamos la salida de la primer pasada
+                                    Output outPut = new Output();
+                                    outPut.mensaje = mensaje;
+                                    metodosDeLectura.salidas.add(outPut);
 
                                   }else{
-                                      System.out.print(newLine + cop);
-                                      newLine=palabra;
-                                       System.out.println("\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n");
-                                       return "\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n";
+                                        newLine=palabra;
+                                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                        //Guardamos la salida de la primer pasada
+                                        Output outPut = new Output();
+                                        outPut.mensaje = mensaje;
+                                        metodosDeLectura.salidas.add(outPut);
+                                        return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                                    }
-                        }else if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2)))&& false==(variables.containsKey(recortarSS(palabra, 2)))&& recortarCS(palabra, 2).startsWith("'")== false){
-                                    System.out.println("\n                         Error 002: VARIABLE INEXISTENTE\n "+recortarSS(palabra, 2));
-                                    return "\n                         Error 002: VARIABLE INEXISTENTE\n";
                         }
-                
+                     if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarCS(palabra, 2)))&& false==(variables.containsKey(recortarCS(palabra, 2))) && esCoH(recortarCS(palabra, 2))==false&& Hexa(palabra)==true &&recortarCS(palabra, 2).startsWith("$")== false){
+                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 001: VARIABLE INEXISTENTE\u001B[0m\n";
+                                
+                                //Guardamos la salida de la primer pasada
+                                Output outPut = new Output();
+                                outPut.mensaje = mensaje;
+                                metodosDeLectura.salidas.add(outPut);
+                                
+                                int num=recortarCS(palabra,3).length();
+                                
+                                return line+"\n\t\t\t^Error 001: VARIABLE INEXISTENTE";
+                        }
                 //Tratando a un caracter como operando 
-                    if(recortarCS(palabra, 2).startsWith("'")== true ){
+                    if(esCoH(recortarCS(palabra, 2))== true ){
                         aux =recortarSS(palabra, 3);
-                        System.out.print(aux + "operando tipo caracter ");
-                        
+          
                         //confirmar tamaño del operando
                             if(aux.length()==1){
-                                char character = palabra.charAt(0);
+                                char character = aux.charAt(0);
+                                
                                 int va = (int)character;
-                                cop=Integer.toHexString(va).toUpperCase();
-                                System.out.print(cop + "------------ ");
+                                cop=Integer.toHexString(va);
+                                //System.out.println(aux +palabra +"******************"+ character +"*****************"+va+"*****************"+cop);
                                 newLine=newLine.concat(cop);
+                                String mensaje = "\n\u001B[44;37m"+nl+"\u001B[0m";
+                                mensaje = mensaje + "\u001B[34m"+cop+"\u001B[0m"+"\t\t\t"+instruccion + " " + lc+"\n";  
+                                //Guardamos la salida de la primer pasada
+                                Output outPut = new Output();
+                                outPut.mensaje = mensaje;
+                                metodosDeLectura.salidas.add(outPut);
                             }else{  
                             newLine=palabra;
-                            System.out.println("\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n");
-                            return "\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n";
-                                       }
+                            String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                            
+                            //Guardamos la salida de la primer pasada
+                            Output outPut = new Output();
+                            outPut.mensaje = mensaje;
+                            metodosDeLectura.salidas.add(outPut);
+                            
+                            return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
+                            }
                     }
 
-                //Si es numérica pero no hexadecimal, entonces es decimal
+                //Tratando a un operando decimal
                     if((esD(recortarCS(palabra, 2)))&&!(palabra.startsWith("$"))){
-                                
-                                System.out.println(palabra+" Es un operando decimal  0" +recortarCS(palabra, 2) );
+                           
                             //Se convierte a número decimal
                                 int opN=Integer.parseInt(recortarCS(palabra, 2));
                             //Se convierte el número decimal a hexadecimal y como cadena
                                 aux=Integer.toHexString(opN).toUpperCase();
-                                System.out.println(aux+ " ---"+ newLine+" Es el operando en hexadecimal");
+                                //System.out.println(aux+ " ---"+ newLine+" operanco en Hexadecimal");
                             //Concatena el valor con su opcode correspondiente
                                 newLine=newLine.concat(aux);
                             //Compara para ver si el numero de bytes coincide 
                                 if((newLine.length()%2 ==0 )&& (BytesIndexadoX.get(instruccion))==(Integer.parseInt(String.valueOf(newLine.length()/2)))){
-                            //Si coinciden, avisa que la longitud es correcta 
-                            // System.out.println("El tamaño de bytes coincide con el Mnemonico");
+                                   String mensaje = "\n\u001B[44;37m"+nl+"\u001B[0m";
+                                   mensaje = mensaje + "\u001B[34m"+aux+"\u001B[0m"+"\t\t\t"+instruccion + " " + lc+"\n";
+                                   //Guardamos la salida de la primer pasada
+                                   Output outPut = new Output();
+                                   outPut.mensaje = mensaje;
+                                   metodosDeLectura.salidas.add(outPut);
                                 }else{
                                 //avisa que el tamaño es incorrecto y muestra el valor incorrecto 
                                    newLine=palabra;
                                 //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
                                 //System.out.println("-----La instruccion es "+instruccion +" y su numero de bytes a ocupar debe ser: "+BytesIndexadoX.get(instruccion));
-                                    System.out.println("\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n");
-                                    return "\n                         Error 007: MAGNITUD DE  OPERANDO ERRONEA\n";
+                                    String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                    //Guardamos la salida de la primer pasada
+                                    Output outPut = new Output();
+                                    outPut.mensaje = mensaje;
+                                    metodosDeLectura.salidas.add(outPut);
+                                    return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                                 }
-                    }
+                        }
             }
                             
             if((numPalabra==3)&&(palabra.startsWith("*"))){
-                ec=true;
+                ec=false;
                 //Es un comentario, no es necesario realizar nada más
                 coment=coment.concat(palabra + " ");
-            }else if(numPalabra>3 && ec==true){
+            }else if(numPalabra>3 && ec==false){
                 //Es un comentario, no es necesario realizar nada más
                 coment=coment.concat(palabra + " ");
             }else if((numPalabra==3)&&(!palabra.startsWith("*"))){
-                System.out.println("\n                         Error 000: ERROR DE SINTAXIS 2\n");
-                return "\n                         Error 000: ERROR DE SINTAXIS\n";
+                String mensaje = line+"\n\t\t\t^\u001B[31m Error 000: ERROR DE SINTAXIS 2\u001B[0m\n";
+                //Guardamos la salida de la primer pasada
+                Output outPut = new Output();
+                outPut.mensaje = mensaje;
+                metodosDeLectura.salidas.add(outPut);
+                return line+"\n\t\t\t^Error 005: Error 000: ERROR DE SINTAXIS";
             }
 
             }
             
         
         if (numPalabra<2){
-            System.out.println("\n                         Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\n");
-            return "\n                         Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\n";
+            String mensaje = line+"\n\t\t\t^\u001B[31m Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\u001B[0m\n";
+            //Guardamos la salida de la primer pasada
+            Output outPut = new Output();
+            outPut.mensaje = mensaje;
+            metodosDeLectura.salidas.add(outPut);
+            return line+"\n\t\t\t^Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)";
         }
-        lineF=salida.concat(newLine+"			    " + instruccion + " " + lc + " " + coment+ "\n");
-        System.out.println(lineF);
+       
         return newLine;
     }
 
@@ -255,8 +322,27 @@ public class IndexadoX {
         }
     }
     
+public boolean Hexa(String palabra){
+        int num=recortarCS(palabra,3).length();
+        if (esD(recortarCS(recortarSS(palabra,3), num-1))==false && esD(recortarSS(recortarSS(palabra,3), num-1))==false ){
+            
+            return false;
+        }else{
+            return true;
+            
+        }
+    }
     
-    //Funcion que quita ',X' / ',x', sin #
+    public boolean esCoH(String palabra){
+        if (palabra.startsWith("'")){ 
+            return true;
+        }else {
+            return false;
+        }
+    }
+    
+    
+    //Funcion que quita ',x' / ',X', sin #
     public String recortarCS(String palabra, int no){
         
                             int n=palabra.length();
@@ -265,7 +351,7 @@ public class IndexadoX {
                         //se crea un arreglo para guardar la constante a buscar
                             int v=n-no;
                             char[] auxP=new  char[v];
-                        //Nos quita # y ',X' / ',x'
+                        
                             for (int j = 0; j < v; j++){   
                               auxP[j]=p[j];
                               }
@@ -274,7 +360,7 @@ public class IndexadoX {
         return nPalabra;
         
     }
-    //Funcion que  quita # y ',X' / ',x'
+    //Funcion que  quita # y ',x' / ',X'
     public String recortarSS(String palabra, int no){
         
                             int n=palabra.length();
@@ -283,7 +369,7 @@ public class IndexadoX {
                         //se crea un arreglo para guardar la constante a buscar
                             int v=n-no;
                             char[] auxP=new  char[v];
-                        //Nos quita # y ',X' / ',x'
+                        
                             for (int j = 0; j < v; j++){   
                               auxP[j]=p[j+1];
                               }
@@ -293,7 +379,3 @@ public class IndexadoX {
         
     }
 }
-    
-    
-    
-
