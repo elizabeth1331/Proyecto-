@@ -41,6 +41,7 @@ public class Excepciones {
         //Palabra nos sirve para separar la linea en palabras y contabilizarlas
         String palabra;
         String palabraNueva = ""; //Para poder recorrer una palabra y visualizar el operando para discernir que tipo de opcode tendra
+        String palabraNuevaAux = "";
         String palabraXY = ""; //Para poder visualizar si el operando tiene X o Y y poner el opcode de indexado.
         String palabra1 = ""; //Para poder recorrer las palabras facilmente con nextoken sin tener que esperar a que el ciclo wile lo recorra.
         String mensaje = ""; //Para guardar los mensajes que se deberán mostrar en pantalla en la segunda pasada
@@ -51,7 +52,7 @@ public class Excepciones {
         boolean imm=false, hex=false, C=false, cha=false;
         
         //Esta cadena será la que se devolverá si la sintaxis es correcta, la que guarda la primera palabra y la que nos ayuda a convertir el operando
-        String newLine="", instruccion="", op="";;
+        String newLine="", instruccion="", op="",newLine2="";
         
         //Aquí se quitan las comas de la linea para poder contar las palabras y asi validar que sea un mnemonico de excepcion
         
@@ -115,10 +116,7 @@ public class Excepciones {
             
             palabra=palabra.toUpperCase();
             if(numPalabra==1){
-                /*if(palabra.startsWith("*")){
-                    //No hace nada pues es un comentario      //Segpun yo esto no es necesario porque afuera se comprueba si inicia con *
-                    return " ";
-                }else*/ if(palabra.equals("BCLR")){
+                if(palabra.equals("BCLR")){
                     d=1;
                 }else if(palabra.equals("BSET")){
                     d=2;
@@ -139,7 +137,7 @@ public class Excepciones {
                                 metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + 3;
                                 
                                 palabraNueva = palabra;
-                                palabraNueva= st.nextToken();
+                                palabraNueva= st.nextToken();//Segunda
                                 
                                 System.out.println("La segunda palabra es: " +palabraNueva);
                                     if(palabraNueva.contains("#")){
@@ -153,13 +151,10 @@ public class Excepciones {
                                     }else{
                                         if(palabraNueva.startsWith("$")){
                                             //Se quita $
-                                            palabraNueva = palabraNueva.replace('$', ' ');
-                                            instruccion=instruccion.concat(palabra);
-                                            instruccion=instruccion.concat(palabraNueva);
-                                            //newLine=newLine.concat(palabra+" "); //Palabra BCLR
+                                            palabraNuevaAux = palabraNueva.replace('$', ' ');
                                             newLine=newLine.concat("\033[43;31m"+ExcepDirecto.get(palabra)); //Opcode directo
-                                            palabraNueva = palabraNueva.substring(1);
-                                            newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
+                                            palabraNuevaAux = palabraNueva.substring(1);
+                                            newLine=newLine.concat("\u001B[41;33m"+palabraNuevaAux+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }else if(!palabraNueva.startsWith("$")){
                                             //Convierte a hexadecimal
@@ -179,10 +174,11 @@ public class Excepciones {
                                     }
                             }
                             if(numTotalPalabra==4){
-                                palabraNueva = palabra;
-                                palabraNueva= st.nextToken(); //Tiene la segunda palabra
-                                palabraXY = palabraNueva;
-                                palabraXY= st.nextToken(); //Tiene la tercer palabra
+                                
+                                //palabraNueva= st.nextToken(); //Tiene la tercera palabra
+                                palabraXY = st.nextToken();//Tiene la tercer palara
+                                System.out.println("Esta es la tercer palabra: "+palabraXY);
+                                //palabraXY= st.nextToken(); //Tiene la tercer palabra
                                 System.out.println("La tercer palabra es: " +palabraXY);
                                 palabraXY=palabraXY.toUpperCase();
                                     if(palabraXY.equals("X")){
@@ -201,7 +197,7 @@ public class Excepciones {
                                             instruccion=instruccion.concat(palabraNueva);
                                             //newLine=newLine.concat(palabra+" "); //Palabra BCLR
                                             newLine=newLine.concat("\033[43;31m"+(ExcepIndexadoX.get(palabra))); //Opcode indexado de X
-                                            
+                                           
                                             newLine=newLine.concat("\u001B[41;33m"+palabraNueva+"\u001B[0m"); //Operando
                                             System.out.println("La linea resultante es: " +newLine);
                                         }
@@ -260,14 +256,14 @@ public class Excepciones {
                                         metodosDeLectura.salidas.add(outPut);
                                         return line + "\n\t\t\t^Error: Error de sintaxis. ";
                                     }    
-                            }else{
+                            }
+                        }else{
                                     mensaje = "\u001B[31m Error : BCLR debe tener 2 operandos.\u001B[0m\n";
                                     //Guardamos la salida de la primer pasada
                                     Output outPut = new Output(mensaje);
                                     metodosDeLectura.salidas.add(outPut);
                                     return line + "\n\t\t\t^Error : BCLR debe tener 2 operandos.";
                                 }
-                        }
                     break;
                     
                     case 2:

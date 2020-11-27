@@ -1,0 +1,11 @@
+CONSTANTE     EQU $1789
+VAR           EQU $0000
+VAR1          EQU $0002
+VAR2          EQU $0003
+	  ORG $8000
+INICIO
+	  BCLR $07,#$80 *Comentario lslsls 
+	  BCLR $8C,#$80 dsds *comentario
+	  BCLR $05,X,#$AA
+	  BCLR $05,Y,#$AA,#$FF
+	  END 

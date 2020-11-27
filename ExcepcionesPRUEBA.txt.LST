@@ -1,0 +1,9 @@
+5 A  	8000		  ORG $8000
+6 A  	
+7 A 8000	[43;31m15[41;33m07[0m[41;33m80[0m 
+8 A 8003		  BCLR $8C,#$80 dsds *comentario
+			^Error: Error de sintaxis. 
+9 A 8006	[43;31m15[41;33m05[0m[43;31m1D[41;33m05[0m[41;33mAA[0m 
+10 A 800C		  BCLR $05,Y,#$AA,#$FF
+			^Error : BCLR debe tener 2 operandos.
+11 A  		  END 

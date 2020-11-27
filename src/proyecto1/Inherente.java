@@ -28,7 +28,7 @@ public class Inherente {
      * @return OPCODE de la instrucción procesada o mensaje de error.
      */
     public String AnalizarLinea(String line, Mnemonicos m, int numMemoria){
-        System.out.println("Entro a inherente");
+        //System.out.println("Entro a inherente");
         
         //Se llama a mnemónicos para recuperar la lista de instrucciones del modo Inherente
         metodosDeLectura lectura = new metodosDeLectura();
