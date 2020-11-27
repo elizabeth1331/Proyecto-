@@ -10,5 +10,4 @@ SALTO1
 	BRSET $89,Y,#$40 SALTE *Es un comntario
 	BCLR  $55,#$77 *Comentario 2
 	BCLR $55,#$77 GGJHI *ff
-	ADCA #$FF *hola
 END

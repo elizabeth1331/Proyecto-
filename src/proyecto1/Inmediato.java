@@ -162,7 +162,7 @@ public class Inmediato {
                         cha=true;
                         
                     }else{
-                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                        String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                         //Guardamos la salida de la primer pasada
                         Output outPut = new Output();
                         outPut.mensaje = mensaje;
@@ -197,7 +197,7 @@ public class Inmediato {
                         op=variables.get(palabra).toString();
                         //System.out.println("El operando "+palabra+" es una variable con valor: "+op);
                     }else if(((!variables.containsKey(palabra))&&(!hex))&&(!esNumero(palabra))&&(!cha)){
-                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 002: VARIABLE INEXTISTENTE\u001B[0m\n";
+                        String mensaje = "\u001B[31m Error 002: VARIABLE INEXTISTENTE\u001B[0m\n";
                         //Guardamos la salida de la primer pasada
                         Output outPut = new Output();
                         outPut.mensaje = mensaje;
@@ -271,7 +271,7 @@ public class Inmediato {
                                 outPut.mensaje = mensaje;
                                 metodosDeLectura.salidas.add(outPut);
                             }else{
-                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                                 //Guardamos la salida de la primer pasada
                                 Output outPut = new Output();
                                 outPut.mensaje = mensaje;
@@ -313,7 +313,7 @@ public class Inmediato {
                                 outPut.mensaje = mensaje;
                                 metodosDeLectura.salidas.add(outPut);
                             }else{
-                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                                 //Guardamos la salida de la primer pasada
                                 Output outPut = new Output();
                                 outPut.mensaje = mensaje;
@@ -328,7 +328,7 @@ public class Inmediato {
             if((numPalabra==3)&&(palabra.startsWith("*"))){
                 //Es un comentario, no es necesario realizar nada más
             }else if((numPalabra==3)&&(!palabra.startsWith("*"))){
-                String mensaje = line+"\n\t\t\t^\u001B[31m Error 000: ERROR DE SINTAXIS\u001B[0m\n";
+                String mensaje = "\u001B[31m Error 000: ERROR DE SINTAXIS\u001B[0m\n";
                 //Guardamos la salida de la primer pasada
                 Output outPut = new Output();
                 outPut.mensaje = mensaje;
@@ -338,7 +338,7 @@ public class Inmediato {
             }
         }
         if (numPalabra<2){
-            String mensaje = line+"\n\t\t\t^\u001B[31m Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\u001B[0m\n";
+            String mensaje = "\u001B[31m Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\u001B[0m\n";
             //Guardamos la salida de la primer pasada
             Output outPut = new Output();
             outPut.mensaje = mensaje;

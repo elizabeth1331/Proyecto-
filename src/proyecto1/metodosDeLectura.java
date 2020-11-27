@@ -59,8 +59,7 @@ public class metodosDeLectura {
         if (f.exists()){
             f.delete();
         }
-        String LST=name.substring(0,name.length()-3);
-        f=new File(LST + "LST");
+        f=new File(name + ".LST");
         if (f.exists()){
             f.delete();
         }
@@ -204,7 +203,7 @@ public class metodosDeLectura {
         int lineaSalto = 0;
         boolean excepcion = false; 
         String palabra;
-        String primerPalabra="";
+        String primerPalabra;
         Output op = new Output();
         int ultimoSalto = 0;
         List <String> segunda = new ArrayList();
@@ -221,7 +220,7 @@ public class metodosDeLectura {
                     lineaSalto = op.linea;
                     excepcion = op.excepcion;
                 }else{
-                    //System.out.print(op.mensaje);
+                    System.out.print(op.mensaje);
                 }
                  
             }
@@ -239,12 +238,9 @@ public class metodosDeLectura {
                         line = file.nextLine();
                     }*/
                     line = file.nextLine();
-                    //System.out.println(line);
+                    System.out.println(line);
                     StringTokenizer st = new StringTokenizer(line);
-                    if(st.hasMoreElements()){
-                        primerPalabra = st.nextToken();
-                    }
-                    
+                    primerPalabra = st.nextToken();
                     
                     /*Se obtiene el número de la línea que se está leyendo para saber si corresponde o no a un salto*/
                     if (!primerPalabra.startsWith("^")&&st.countTokens()>2)
@@ -263,7 +259,7 @@ public class metodosDeLectura {
                     if(ultimoSalto <= numLinea){
                         
                         segunda.add(line);
-                        //System.out.println("------Se agrega: "+ line);
+                        System.out.println("------Se agrega: "+ line);
                     }
                     
                         
@@ -277,21 +273,19 @@ public class metodosDeLectura {
             }
             lineaSalto = 0;
             
-            //System.out.println("-------LISTA DE 2da pasada--------");
-            //System.out.println("tamaño: " + salidas.size());
+            System.out.println("-------LISTA DE 2da pasada--------");
+            System.out.println("tamaño: " + salidas.size());
             
-        }
-        
-        for(int k = 0; k<segunda.size();k++){
+            for(int k = 0; k<segunda.size();k++){
                 System.out.println(segunda.get(k));
                 
+            }
         }
         
         while(!segunda.isEmpty()){
             String l = segunda.remove(0);
             try {
-                LST=name.substring(0,name.length()-3);
-                FileWriter fstream = new FileWriter(LST+"LST", true);
+                FileWriter fstream = new FileWriter(name+".LST", true);
                 BufferedWriter out = new BufferedWriter(fstream);
                 out.write(l + "\n");
                 out.close();
@@ -373,7 +367,7 @@ public class metodosDeLectura {
             op=EsInstruccion(palabra,m);
             switch (op){
                 case 0:
-                    System.out.println(line+"\u001B[31m Error 004: MNEMÓNICO INEXISTENTE\u001B[0m");
+                    System.out.println("\u001B[31m Error 004: MNEMÓNICO INEXISTENTE\u001B[0m");
                     newLine=line+"\n\t\t\t^Error 004: MNEMÓNICO INEXISTENTE";
                     break;
                 case 1:
