@@ -1,0 +1,108 @@
+1 A  	1001          DDRA   EQU   $1001
+2 A  	1009          DDRD   equ   $1009
+3 A  	1003          DDRG   EQU   $1003
+4 A  	10          DDRR   equ   $10
+5 A  	20          DDRR   equ   $20
+6 A  	20          DDRI   equ   $20
+7 A  	201          DDRF   equ   $201
+8 A  	*DR   eQu   $11 
+9 A  	31          ABCD   equ $31
+10 A  	
+11 A  	
+12 A 0	    BNE CICLO
+13 A 2	89FF			    ADCA #$FF *hola
+14 A 2	99FF			    ADCA $FF *hola2
+15 A 2	B9FFAA			    ADCA $FFAA *hola3
+16 A 2	    YYY #$F1
+			^Error 004: MNEMÓNICO INEXISTENTE
+17 A 2	    bcc #$F2
+18 A 4	    ADCA #DDRA
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+19 A 4	B91001			    ADCA DDRA
+20 A 4	8920			    ADCA #DDRR
+21 A 4	9920			    ADCA DDRR
+22 A 4	    ADCA #DDRB
+			^Error 001: CONSTANTE INEXTISTENTE
+23 A 4	    ADCA DDRB
+			^Error 002: VARIABLE INEXTISTENTE
+24 A 4	    adca #$FFF
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+25 A 4	    adca $FFF
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+26 A 4	    adca FFF
+			^Error 002: VARIABLE INEXTISTENTE
+27 A 4	C961			    adcb #'a
+28 A 4	D961			    adcb 'a
+29 A 4	    adcb 'ab *¿Esto se puede? ¿dos caractares para que se formen 16 bits?
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+30 A 4	C996			    adCB #150
+31 A 4	D996			    adCB 150
+32 A 4	F93A98			    adCB 15000
+33 A 4	9D11			    JSR $11
+34 A 4	781212			    ASL $1212
+35 A  	END
+36 A  	
+37 A 7	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+38 A 9	A620			    LDAA #DDRI,X *tamaño correcto, mnemomico existente, usa variable ----------------- correcto
+39 A B	              
+40 A B	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+41 A D	EC84			    LDD 132,Y  *tamaño correcto, mnemomico existente, valor decimal  ----------------- correcto
+42 A F	              
+43 A F	A620			    LdAa #DDRR,x *reconice constante ----------------- correcto
+44 A 11	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+45 A 13	A6			    LdAa ABCD,X *reconice variable ----------------- correcto 
+46 A 15	A631			    LdAa #ABCD,X *reconice constante ----------------- correcto
+47 A 17	A6			    LDAA DDRR,X *   reconice variable ----------------- correcto
+48 A 19	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+49 A 1B	A6			    LDAA DDAD,X *variable inexistente ----------------- correcto
+50 A 1D	EC17			    LDD $17,x * es octal ----------------- correcto
+51 A 1F	ECA7			    LDD $A7,X * es hexagecimal ----------------- correcto
+52 A 21	
+			^Error 004: MNEMÓNICO INEXISTENTE
+
+53 A 21	
+54 A 21	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+55 A 23	
+			^Error 001: VARIABLE INEXISTENTE
+56 A 23	
+57 A 25	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+58 A 27	A620			    LDAA #DDRI,Y *tamaño correcto, mnemomico existente, usa variable ----------------- correcto
+59 A 29	              
+60 A 29	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+61 A 2B	EC84			    LDD 132,Y  *tamaño correcto, mnemomico existente, valor decimal  ----------------- correcto
+62 A 2D	              
+63 A 2D	A620			    LdAa #DDRR,Y *reconice constante ----------------- correcto
+64 A 2F	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+65 A 31	A6			    LdAa ABCD,Y *reconice variable ----------------- correcto 
+66 A 33	A631			    LdAa #ABCD,y *reconice constante ----------------- correcto
+67 A 35	A6			    LDAA DDRR,Y *   reconice variable ----------------- correcto
+68 A 37	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+69 A 39	A6			    LDAA DDAD,y *variable inexistente ----------------- correcto
+70 A 3B	EC17			    LDD $17,y * es octal ----------------- correcto
+71 A 3D	
+			^Error 005: Error 000: ERROR DE SINTAXIS
+72 A 3F	
+			^Error 004: MNEMÓNICO INEXISTENTE
+
+73 A 3F	              
+74 A 3F	
+75 A 3F	EC73			    LDD 's,Y * 
+76 A 41	EC53			    LDD 'S,y * 
+77 A 43	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+78 A 45	              
+79 A 45	EC73			    LDD 's,X * 
+80 A 47	EC53			    LDD 'S,X * 
+81 A 49	
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+82 A 49	
+83 A  	END
