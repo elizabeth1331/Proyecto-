@@ -1,0 +1,12 @@
+ORG $8000
+INICIO
+	  ASLA *Comentario
+	  ABA *Comentario
+CICLO
+	  ABX 
+	  deca
+CICLO
+	  decb $89 $90 $80
+	  clra
+	  CLRB
+
