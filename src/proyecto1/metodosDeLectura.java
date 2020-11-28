@@ -41,8 +41,8 @@ public class metodosDeLectura {
     public void Lectura(String name){
         //Variable que ayuda a llevar el conteo de líneas que ocupan memoria 
         int numPalabra=0, inicio = 0;
-        
-        String error = "", memHexa ="", memHexaAux = "";
+        numMemoria = 0;
+        String error = "", memHexa ="", memHexaAux = "", inicioHexa= "";
         boolean end=false, wrong=false;
         
         /*Se crean varios archivos dentro de la carpeta del proyecto, cada archivo guarda una lista de las
@@ -66,6 +66,11 @@ public class metodosDeLectura {
             f.delete();
         }
         
+        f=new File(LST + "S19");
+        if (f.exists()){
+            f.delete();
+        }
+        
         Scanner file;
         String line = "";
         try {
@@ -82,13 +87,14 @@ public class metodosDeLectura {
                        memHexaAux = " ";
                     //Se salta a la sig línea
                     error = line;
-                }else if(line.startsWith("\t")|line.startsWith(" ")){
-                    if(line.contains("EQU")||line.contains("equ")){
+                }if(line.contains("EQU")||line.contains("equ")){
                         //No imprimimos la memoria
                         memHexaAux = " ";
-                    
+                        System.out.println("Agregó constante/var :");
+                        System.out.println(variables);
                         error = GuardarVariables(line, variables);
-                    }else if(line.contains("ORG")||line.contains("org")){
+                }else if(line.startsWith("\t")|line.startsWith(" ")){
+                   if(line.contains("ORG")||line.contains("org")){
                         //No imprimimos la memoria
                         memHexaAux = " ";
                     
@@ -100,6 +106,7 @@ public class metodosDeLectura {
                             palabra = st.nextToken();
                         }
                         inicio = Integer.parseInt(palabra.substring(1), 16);
+                        inicioHexa = palabra.substring(1);
                         memHexa = Integer.toHexString(inicio).toUpperCase();
                         
                         error= memHexa + "\t" + line;
@@ -303,6 +310,40 @@ public class metodosDeLectura {
                 System.out.println("Error: "+ex.getMessage());
             }  
         }
+        
+        /* Generar el S19
+        int noLinea = 0;
+        String lineaNueva = "";
+        
+        if(!wrong){
+           try{
+                file = new Scanner(new FileReader(LST + "LST"));
+                 while (file.hasNextLine()){
+                     
+                     //Leer linea y analizar 
+                     
+                     
+                     
+                     
+                     
+                     
+                 }
+                
+           }catch(Exception e){
+               
+           }
+           //Sacar 10 de la lista, incrementar en 1 el cntador noLinea
+           inicioHexa = inicioHexa + 10*noLinea;
+           
+           try {
+                        FileWriter fstream = new FileWriter(LST+"S19", true);
+                        BufferedWriter out = new BufferedWriter(fstream);
+                        out.write("<"+inicioHexa+"> " + lineaNueva + "\n");
+                        out.close();
+                    } catch (IOException ex) {
+                        System.out.println("Error: "+ex.getMessage());
+                    }  
+        }*/
         
         
         
