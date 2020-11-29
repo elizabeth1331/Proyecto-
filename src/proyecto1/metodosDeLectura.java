@@ -34,15 +34,15 @@ public class metodosDeLectura {
      */
     
     //Se crea HashTable donde guardar las variables o/y constantes
-    Hashtable<String,Integer> variables=new Hashtable();
+    Hashtable<String,String> variables=new Hashtable();
     static int numMemoria = 0;
     static List<Output> salidas = new ArrayList<Output>();
     
     public void Lectura(String name){
         //Variable que ayuda a llevar el conteo de líneas que ocupan memoria 
         int numPalabra=0, inicio = 0;
-        
-        String error = "", memHexa ="", memHexaAux = "";
+        numMemoria = 0;
+        String error = "", memHexa ="", memHexaAux = "", inicioHexa= "";
         boolean end=false, wrong=false;
         
         /*Se crean varios archivos dentro de la carpeta del proyecto, cada archivo guarda una lista de las
@@ -59,7 +59,14 @@ public class metodosDeLectura {
         if (f.exists()){
             f.delete();
         }
-        f=new File(name + ".LST");
+        
+        String LST=name.substring(0,name.length()-3);
+        f=new File(LST + "LST");
+        if (f.exists()){
+            f.delete();
+        }
+        
+        f=new File(LST + "S19");
         if (f.exists()){
             f.delete();
         }
@@ -69,7 +76,7 @@ public class metodosDeLectura {
         try {
             file = new Scanner(new FileReader(name));
             int num=0;
-            while (file.hasNextLine()) {
+            while (file.hasNextLine()&&end==false) {
                 num++;
                 line = file.nextLine();
                 //System.out.println("*****LIRIO******La memoria es:"+numMemoria);
@@ -80,58 +87,134 @@ public class metodosDeLectura {
                        memHexaAux = " ";
                     //Se salta a la sig línea
                     error = line;
-                }else if(line.startsWith("\t")|line.startsWith(" ")){
-                    memHexa = Integer.toHexString(inicio+numMemoria).toUpperCase();
-                    memHexaAux = memHexa;
-                    error = DifModoDeDireccionamiento(line, m, numMemoria, VCE, num, inicio);
-                    if(error.contains("error")||error.contains("Error")||error.contains("ERROR")){
-                        wrong=true;
-                    }
                 }else if(line.contains("EQU")||line.contains("equ")){
-                    //No imprimimos la memoria
-                    memHexaAux = " ";
-                    
-                    error = GuardarVariables(line, variables);
-                }else if(line.startsWith("ORG")||line.startsWith("org")){
-                    //No imprimimos la memoria
-                    memHexaAux = " ";
-                    
-                    //Asignar el valor de inicio de memoria
-                    StringTokenizer st = new StringTokenizer (line);
-                    String palabra = "";
-                    
-                    for(int i=0; i<=1;i++){
-                        palabra = st.nextToken();
+                        //No imprimimos la memoria
+                        memHexaAux = " ";
+                        error = GuardarVariables(line, variables);
+                }else if(line.startsWith("\t")||line.startsWith(" ")){
+                    String lineAux=line;
+                    while(lineAux.startsWith(" ")){
+                            lineAux=lineAux.substring(1);
                     }
-                    inicio = Integer.parseInt(palabra.substring(1), 16);
-                    memHexa = Integer.toHexString(inicio).toUpperCase();
-                                        
-                    error= memHexa + "\t" + line;
-                }else if(line.contains("FCB")||line.contains("fcb")){
-                    //Separados por coma o por espacio ?
-                    
-                    //No imprimimos la memoria
-                    memHexaAux = " ";
-                    
-                    StringTokenizer st = new StringTokenizer (line);
-                    //Leemos la ínea hasta encontrar el primer espacio
-                    String palabra = "";
-                                      
-                    while(st.hasMoreTokens()){
-                        palabra = st.nextToken();
-                        if(palabra.startsWith("*")){
-                            break;
+                    while(lineAux.startsWith("\t")){
+                            lineAux=lineAux.replace("\t","");
+                    }
+                    if(lineAux.startsWith("*")){
+                     //No imprimimos la memoria
+                       memHexaAux = " ";
+                    //Se salta a la sig línea
+                    error = line;
+                    }else if(lineAux.startsWith("ORG")||lineAux.startsWith("org")){
+                        //No imprimimos la memoria
+                        memHexaAux = " ";
+                        int numP=0;
+                        if(lineAux.startsWith("ORG"))
+                            lineAux=lineAux.replace("ORG","");
+                        if(lineAux.startsWith("org"))
+                                lineAux=lineAux.replace("org","");
+                        while(lineAux.startsWith(" ")){
+                            lineAux=lineAux.substring(1);
+                        }    
+                        //Asignar el valor de inicio de memoria
+                        StringTokenizer st = new StringTokenizer (lineAux);
+                        String palabra = "";
+                        while(st.hasMoreTokens()){
+                            palabra = st.nextToken();
+                            numP++;
+                            if(palabra.startsWith("*")){
+                                numP--;
+                                break;
+                            }else if(palabra.startsWith("$")){
+                                inicio = Integer.parseInt(palabra.substring(1),16);
+                                memHexa = Integer.toHexString(inicio).toUpperCase();
+                            }else{
+                                break;
+                            }
+                            if(numP==1){
+                                error= memHexa + "\t" + lineAux;
+                            }else{
+                                error=line+"\n\t\t\t^Error: Sintaxis incorrecta";
+                            }
                         }
-                        palabra = palabra.substring(1);
-                        error = error + palabra;
+                    }else if(lineAux.startsWith("FCB")||lineAux.startsWith("fcb")){
+                        boolean bien=false;
+                        int numB = 0;
+                        if(lineAux.startsWith("FCB"))
+                            lineAux=lineAux.replace("FCB","");
+                        if(lineAux.startsWith("fcb"))
+                            lineAux=lineAux.replace("fcb","");
+                        while(lineAux.startsWith(" ")){
+                            lineAux=lineAux.substring(1);
+                        }
+                        //Separados por coma o por espacio
+                        if(lineAux.contains(",")){
+                            lineAux=lineAux.replace(","," ");
+                        }
+                        StringTokenizer st = new StringTokenizer (lineAux);
+                        //Leemos la ínea hasta encontrar el primer espacio
+                        String palabra = "";
+                        error="";
+                        while(st.hasMoreTokens()){
+                            palabra = st.nextToken();
+                            //System.out.println("Palabra a analizar:"+palabra);
+                            if(palabra.startsWith("*")){
+                                bien=true;
+                                break;
+                            }else if(palabra.startsWith("$")){
+                                palabra = palabra.substring(1);
+                                //System.out.println("Palabra substring(1):"+palabra);
+                                error = error + palabra;
+                                numB=numB+1;
+                                //System.out.println("numB al momento de "+lineAux+" es: "+numB);
+                                bien=true;
+                            }else{
+                                bien=false;
+                                error="";
+                                error=line+"\n\t\t\t^Error: Sintaxis incorrecta";
+                                memHexaAux=" ";
+                                break;
+                            }
+                        }
+                        if(lineAux.equals("")){
+                            //No se calcula la dirección porque no tiene operandos
+                            memHexaAux=" ";
+                            //Se imprime la original porque la auxiliar está vacia
+                            error = line;
+                        }else if(bien){
+                            //Se concatena la original porque la auxiliar no tiene la instruccion fcb
+                            
+                            error=error+line;
+                            //System.out.println("Esta es la que se imprime ¿no?"+error);
+                            //Se debe calcular la dirección porque tiene operandos
+                            numMemoria = numMemoria + numB;
+                            memHexaAux=Integer.toHexString(inicio+numMemoria).toUpperCase();
+                        }
+                    }else if(lineAux.startsWith("END")||lineAux.startsWith("end")){
+                        if(lineAux.contains("END"))
+                            lineAux=lineAux.replace("END","");
+                        if(lineAux.contains("end"))
+                            lineAux=lineAux.replace("end","");
+                        while(lineAux.startsWith(" ")){
+                            lineAux=lineAux.substring(1);
+                        }
+                        if(lineAux.startsWith("*")||lineAux.equals("")){
+                            end=true;
+                            error=line;
+                        }else{
+                            System.out.println(line+"\n\t\t\t^Error: Sintaxis incorrecta");
+                        }
+                        //No imprimimos la memoria
+                        memHexaAux = "  ";
+                    }
+                else{
+                        memHexa = Integer.toHexString(inicio+numMemoria).toUpperCase();
+                        memHexaAux = memHexa;
+                        error = DifModoDeDireccionamiento(line, m, numMemoria, VCE, num, inicio);
+                        if(error.contains("error")||error.contains("Error")||error.contains("ERROR")){
+                            wrong=true;
+                        }
                     }
                     
-                }else if(line.equals("END")||line.equals("end")){
-                    //No imprimimos la memoria
-                    memHexaAux = " ";
-                    //Terminar la lectura del archivo?
-                    end=true;
-                    error=line;
                 }else if(!line.equals("")){
                     //No imprimimos la memoria
                     memHexaAux = " ";
@@ -150,6 +233,11 @@ public class metodosDeLectura {
                         error = line+"\n\t\t\t^Error 09: INSTRUCCIÓN CARECE DE AL MENOS UN ESPACIO RELATIVO AL MARGEN"; 
                         }else{
                             error = VCE.agregarEtiqueta(palabra, numMemoria + inicio);
+                            if(!variables.contains(palabra)){
+                                Integer intAux = numMemoria + inicio;
+                                variables.put(palabra, intAux.toHexString(inicio).toUpperCase());
+                            }
+                            
                             //System.out.println(VCE.Etiquetas);
                         }
                     
@@ -203,16 +291,16 @@ public class metodosDeLectura {
         int lineaSalto = 0;
         boolean excepcion = false; 
         String palabra;
-        String primerPalabra;
+        String primerPalabra = "";
         Output op = new Output();
-        int ultimoSalto = 0;
+        int ultimoSalto = 0, saltoAnterior = 0;
         List <String> segunda = new ArrayList();
         int numsalto =0;
         
         while (!salidas.isEmpty()){ //Se va vaciando la lista de mensajes
             //numsalto ++;
             //System.out.println("El salto es: " + numsalto);
-                        
+            saltoAnterior = segunda.size();           
             while(lineaSalto==0&&!salidas.isEmpty()){
                 //Sacamos un elemento de la lista hasta que alguno corresponda a una línea con salto
                 op =salidas.remove(0);
@@ -240,7 +328,8 @@ public class metodosDeLectura {
                     line = file.nextLine();
                     System.out.println(line);
                     StringTokenizer st = new StringTokenizer(line);
-                    primerPalabra = st.nextToken();
+                    if(st.hasMoreTokens())
+                        primerPalabra = st.nextToken();
                     
                     /*Se obtiene el número de la línea que se está leyendo para saber si corresponde o no a un salto*/
                     if (!primerPalabra.startsWith("^")&&st.countTokens()>2)
@@ -253,14 +342,20 @@ public class metodosDeLectura {
                         }else{
                             Relativo REL=new Relativo();
                             line=REL.RevisarLinea(line, m, VCE, numMemoria,2, numLinea, inicio);
+                            if (Relativo.error){
+                                ultimoSalto = saltoAnterior;
+                            }
                         }
                     }
-                    
-                    if(ultimoSalto <= numLinea){
-                        
+                    if(ultimoSalto!=0){
+                        if(ultimoSalto < numLinea){
+                            segunda.add(line);
+                            System.out.println("------Se agrega: "+ line);
+                        }
+                    }else{
                         segunda.add(line);
-                        System.out.println("------Se agrega: "+ line);
                     }
+                    
                     
                         
                     
@@ -282,10 +377,11 @@ public class metodosDeLectura {
             }
         }
         
+                       
         while(!segunda.isEmpty()){
             String l = segunda.remove(0);
             try {
-                FileWriter fstream = new FileWriter(name+".LST", true);
+                FileWriter fstream = new FileWriter(LST+"LST", true);
                 BufferedWriter out = new BufferedWriter(fstream);
                 out.write(l + "\n");
                 out.close();
@@ -293,6 +389,40 @@ public class metodosDeLectura {
                 System.out.println("Error: "+ex.getMessage());
             }  
         }
+        
+        /* Generar el S19
+        int noLinea = 0;
+        String lineaNueva = "";
+        
+        if(!wrong){
+           try{
+                file = new Scanner(new FileReader(LST + "LST"));
+                 while (file.hasNextLine()){
+                     
+                     //Leer linea y analizar 
+                     
+                     
+                     
+                     
+                     
+                     
+                 }
+                
+           }catch(Exception e){
+               
+           }
+           //Sacar 10 de la lista, incrementar en 1 el cntador noLinea
+           inicioHexa = inicioHexa + 10*noLinea;
+           
+           try {
+                        FileWriter fstream = new FileWriter(LST+"S19", true);
+                        BufferedWriter out = new BufferedWriter(fstream);
+                        out.write("<"+inicioHexa+"> " + lineaNueva + "\n");
+                        out.close();
+                    } catch (IOException ex) {
+                        System.out.println("Error: "+ex.getMessage());
+                    }  
+        }*/
         
         
         
@@ -393,13 +523,13 @@ public class metodosDeLectura {
         //Se recuperan las tablas de todos los modos de direccionamiento 
         //System.out.println("La palabra a diferenciar es:"+palabra);
         
-        Hashtable<String, String> Inmediato = new Hashtable();
-        Hashtable<String,String> Inherente = new Hashtable();
-        Hashtable<String, String> Relativo = new Hashtable();
-        Hashtable<String, String> IndexadoX = new Hashtable();
-        Hashtable<String, String> IndexadoY = new Hashtable();
-        Hashtable<String, String> Directo = new Hashtable();
-        Hashtable<String, String> Extendido = new Hashtable();
+        Hashtable<String, String> Inmediato;
+        Hashtable<String,String> Inherente;
+        Hashtable<String, String> Relativo;
+        Hashtable<String, String> IndexadoX;
+        Hashtable<String, String> IndexadoY;
+        Hashtable<String, String> Directo;
+        Hashtable<String, String> Extendido;
         
         Inmediato = m.LeerOpcode("ListaInmediato.txt");
         Relativo = m.LeerOpcode("ListaRelativo.txt");
@@ -423,11 +553,12 @@ public class metodosDeLectura {
          
     }
     
-    public String GuardarVariables(String line, Hashtable<String,Integer> variables){
+    public String GuardarVariables(String line, Hashtable<String,String> variables){
        //Palabra nos sirve para separar la linea en palabras y contabilizarlas
                     String palabra, clave="";
-                    Integer valor=0;
+                    String valor="";
                     int numPalabra=0;
+                    String aux="";
 
                     //Se leen las palabras de la línea
                     StringTokenizer st1 = new StringTokenizer (line);
@@ -435,7 +566,7 @@ public class metodosDeLectura {
                     {
                         palabra = st1.nextToken();
                         numPalabra++;
-                        String aux="";
+                        aux="";
 
                         /*Guarda el nombre de la variable o etiqueta*/
                         if(numPalabra==1){
@@ -444,7 +575,15 @@ public class metodosDeLectura {
 
                         //Guarda el contenido de la variable, quitando el $ en el proceso 
                         if((numPalabra==3)){
-                            int n=palabra.length();
+                            String Saux=palabra.substring(1);
+                            if(Saux.length()==2||Saux.length()==4){
+                               valor=Saux; 
+                            }else{
+                                System.out.println("\u001B[31m Error: LONGITUD DE VARIABLE INCORRECTA\u001B[0m");
+                                return line+"\n\t\t\t^Error: LONGITUD DE VARIABLE INCORRECTA";
+                            }
+                            
+                            /*int n=palabra.length();
 
                             // Se transforma la palabra a cadena
                             char[] p = palabra.toCharArray();
@@ -455,7 +594,8 @@ public class metodosDeLectura {
                                 auxP[j]=p[j+1];
                             }
                             aux = String.valueOf(auxP);
-                            valor=Integer.parseInt(aux);
+                            int aux2=Integer.parseInt(aux);
+                            valor=Integer.toHexString(aux2).toString().toUpperCase();*/
                         }
                     }
                     //Envia a la funcion para guardar en la HashTable, y revisar que no contenga
@@ -466,7 +606,7 @@ public class metodosDeLectura {
                 return valor+"          "+line;
                     
 }
-    public Hashtable<String,Integer> GuardarVariablesH(String clave, Integer valor){
+    public Hashtable<String,String> GuardarVariablesH(String clave, String valor){
         
         //System.out.print("\n   "+ clave +"---"+ valor+"\n");
         if(variables.containsKey(clave)){

@@ -24,7 +24,7 @@ public class IndexadoY {
         metodosDeLectura lectura = new metodosDeLectura();
         
     
-    public String revisarLineaY(String line, Mnemonicos m, Hashtable<String,Integer> variables, int numMemoria){
+    public String revisarLineaY(String line, Mnemonicos m, Hashtable<String,String> variables, int numMemoria){
         
     
         IndexadoY=m.LeerOpcode("ListaIndexadoX.txt");
@@ -59,17 +59,17 @@ public class IndexadoY {
                         
                         instruccion=instruccion.concat(palabra);
                         nl=newLine=newLine.concat(IndexadoY.get(palabra));
-                        System.out.println(instruccion +" Es instruccion de Indexado en Y ");
+                        //System.out.println(instruccion +" Es instruccion de Indexado en Y ");
                         
                         //Cálculo del número de espacio en memoria utilizado hasta el momento
                         metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesIndexadoY.get(palabra);
                     }else{
-                        String mensaje = "\u001B[31m Error 004: MNEMÓNICO INEXISTENTE\u001B[0m\n";
+                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 004: MNEMÓNICO INEXISTENTE\u001B[0m\n";
                         //Guardamos la salida de la primer pasada
                         Output outPut = new Output();
                         outPut.mensaje = mensaje;
                         metodosDeLectura.salidas.add(outPut);
-                        return "\n\t\t\t^Error 004: MNEMÓNICO INEXISTENTE\n";
+                        return line+"\n\t\t\t^Error 004: MNEMÓNICO INEXISTENTE\n";
                     }
                 }
             
@@ -110,12 +110,12 @@ public class IndexadoY {
                                    newLine=palabra;
                                    //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
                                     //System.out.println("-----La instruccion es "+instruccion +" y su numero de bytes a ocupar debe ser: "+BytesIndexadoX.get(instruccion));
-                                    String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                    String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                                     //Guardamos la salida de la primer pasada
                                     Output outPut = new Output();
                                     outPut.mensaje = mensaje;
                                     metodosDeLectura.salidas.add(outPut);
-                                    return "\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
+                                    return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                                 }  
                              
                         }
@@ -124,7 +124,7 @@ public class IndexadoY {
                         //Busca a palabra en la HashTable de constantes y variables
                             if(variables.containsKey(recortarSS(palabra, 3))){
                                     //Si existe guarda el valor de la variable en cop 
-                                    cop=variables.get(recortarSS(palabra, 3)).toString();
+                                    cop=variables.get(recortarSS(palabra, 3));
 
                                     //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
                                       //System.out.println("La instruccion es "+instruccion +" y su numero de bytes debe ser: "+BytesIndexadoY.get(instruccion));
@@ -140,27 +140,27 @@ public class IndexadoY {
                                             metodosDeLectura.salidas.add(outPut);
                                       }else{
                                             newLine=palabra;
-                                            String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                            String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                                             //Guardamos la salida de la primer pasada
                                             Output outPut = new Output();
                                             outPut.mensaje = mensaje;
                                             metodosDeLectura.salidas.add(outPut);
-                                            return "\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
+                                            return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                                        }
                             }
                     }else if(false==(esD(recortarCS(palabra, 2))) && true==(esCoV(recortarCS(palabra, 2)))&& false==(variables.containsKey(recortarCS(palabra, 2)))){
                              
-                                String mensaje = "\u001B[31m Error 001: CONSTANTE INEXISTENTE\u001B[0m\n";
+                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 001: CONSTANTE INEXISTENTE\u001B[0m\n";
                                 //Guardamos la salida de la primer pasada
                                 Output outPut = new Output();
                                 outPut.mensaje = mensaje;
                                 metodosDeLectura.salidas.add(outPut);
-                                return "\n\t\t\t^Error 001: CONSTANTE INEXISTENTE";
+                                return line+"\n\t\t\t^Error 001: CONSTANTE INEXISTENTE";
                     }
                 //Define si es variable
                      if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2))) && true==(variables.containsKey(recortarCS(palabra, 2))) && esCoH(recortarCS(palabra, 2))== false && Hexa( palabra)==true && recortarCS(palabra, 2).startsWith("$")== false){ 
 
-                                cop=variables.get(recortarCS(palabra, 2)).toString();
+                                cop=variables.get(recortarCS(palabra, 2));
                                
                                 //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
                                     //System.out.println("La instruccion es "+instruccion +" y su numero de bytes debe ser: "+BytesIndexadoY.get(instruccion));
@@ -177,23 +177,23 @@ public class IndexadoY {
 
                                   }else{
                                         newLine=palabra;
-                                        String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                                         //Guardamos la salida de la primer pasada
                                         Output outPut = new Output();
                                         outPut.mensaje = mensaje;
                                         metodosDeLectura.salidas.add(outPut);
-                                        return "\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
+                                        return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                                    }
                         }
                      if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarCS(palabra, 2)))&& false==(variables.containsKey(recortarCS(palabra, 2))) && esCoH(recortarCS(palabra, 2))==false&& Hexa(palabra)==true &&recortarCS(palabra, 2).startsWith("$")== false){
-                                String mensaje = "\u001B[31m Error 001: VARIABLE INEXISTENTE\u001B[0m\n";
+                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 001: VARIABLE INEXISTENTE\u001B[0m\n";
                                 //Guardamos la salida de la primer pasada
                                 Output outPut = new Output();
                                 outPut.mensaje = mensaje;
                                 metodosDeLectura.salidas.add(outPut);
                                  int num=recortarCS(palabra,3).length();
                                 
-                                return "\n\t\t\t^Error 001: VARIABLE INEXISTENTE";
+                                return line+"\n\t\t\t^Error 001: VARIABLE INEXISTENTE";
                         }
                 //Tratando a un caracter como operando 
                     if(esCoH(recortarCS(palabra, 2))== true ){
@@ -215,12 +215,12 @@ public class IndexadoY {
                                 metodosDeLectura.salidas.add(outPut);
                             }else{
                                 newLine=palabra;
-                                String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                                 //Guardamos la salida de la primer pasada
                                 Output outPut = new Output();
                                 outPut.mensaje = mensaje;
                                 metodosDeLectura.salidas.add(outPut);
-                                return "\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
+                                return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                             }
                     }
 
@@ -247,12 +247,12 @@ public class IndexadoY {
                                    newLine=palabra;
                                 //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
                                 //System.out.println("-----La instruccion es "+instruccion +" y su numero de bytes a ocupar debe ser: "+BytesIndexadoX.get(instruccion));
-                                    String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                    String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                                     //Guardamos la salida de la primer pasada
                                     Output outPut = new Output();
                                     outPut.mensaje = mensaje;
                                     metodosDeLectura.salidas.add(outPut);
-                                    return "\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
+                                    return line+"\n\t\t\t^Error 007: MAGNITUD DE  OPERANDO ERRONEA";
                                 }
                         }
             }
@@ -265,24 +265,24 @@ public class IndexadoY {
                 //Es un comentario, no es necesario realizar nada más
                 coment=coment.concat(palabra + " ");
             }else if((numPalabra==3)&&(!palabra.startsWith("*"))){
-                String mensaje = "\u001B[31m Error 000: ERROR DE SINTAXIS 2\u001B[0m\n";
+                String mensaje = line+"\n\t\t\t^\u001B[31m Error 000: ERROR DE SINTAXIS 2\u001B[0m\n";
                 //Guardamos la salida de la primer pasada
                 Output outPut = new Output();
                 outPut.mensaje = mensaje;
                 metodosDeLectura.salidas.add(outPut);
-                return "\n\t\t\t^Error 005: Error 000: ERROR DE SINTAXIS";
+                return line+"\n\t\t\t^Error 005: Error 000: ERROR DE SINTAXIS";
             }
 
             }
             
         
         if (numPalabra<2){
-            String mensaje = "\u001B[31m Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\u001B[0m\n";
+            String mensaje = line+"\n\t\t\t^\u001B[31m Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\u001B[0m\n";
             //Guardamos la salida de la primer pasada
             Output outPut = new Output();
             outPut.mensaje = mensaje;
             metodosDeLectura.salidas.add(outPut);
-            return "\n\t\t\t^Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)";
+            return line+"\n\t\t\t^Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)";
         }
        
         return newLine;

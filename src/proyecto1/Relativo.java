@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
  */
 public class Relativo {
     Hashtable<String, String> Relativo;
-    static Boolean error;
+    static public Boolean error;
     
     /**
      * Constructor
@@ -108,6 +108,8 @@ public class Relativo {
                     newLine = verificarEtiqueta(palabra, VCE, posMem);
                     if(error){
                         newLine = inicio + linea + newLine;
+                        metodosDeLectura.salidas.get(numLinea-1).salto = false;
+                       
                     }else{
                         System.out.print("\n\033[46;34m"+Relativo.get(instruccion)+"\u001B[44;36m"+newLine+"\u001B[0m"+"\t\t\t"+linea+"\n");
                         newLine = inicio+Relativo.get(instruccion)+newLine+"\t\t\t"+linea;
@@ -134,6 +136,7 @@ public class Relativo {
         //Pos no ayuda a guardar la posición de la etiqueta
         int pos = 0;
         int salto = 0;
+        
         
         //Buscar si existe esa etiqueta                    
         pos = VCE.buscarEtiqueta(palabra);

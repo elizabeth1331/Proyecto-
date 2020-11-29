@@ -1,16 +1,119 @@
-1 A  	8000	ORG $8000
-2 A  	
-3 A 8000		LDX #CONSTANTE
+1 A  	1001          DDRA   EQU   $1001
+2 A  	1009          DDRD   equ   $1009
+3 A  	1003          DDRG   EQU   $1003
+4 A  	10          DDRR   equ   $10
+5 A  	20          DDRR   equ   $20
+6 A  	20          DDRI   equ   $20
+7 A  	DDRF   equ   $201
+			^Error: LONGITUD DE VARIABLE INCORRECTA
+8 A  	*DR   eQu   $11 
+9 A  	31          ABCD   equ $31
+10 A  	
+11 A  	8000	$8000 *ia me quiero morir
+12 A  	
+13 A  	    *BNE CICLO
+14 A 8000	89FF			    ADCA #$FF *hola
+15 A 8002	99FF			    ADCA $FF *hola2
+16 A 8004	B9FFAA			    ADCA $FFAA *hola3
+17 A 8007	    YYY #$F1
+			^Error 004: MNEMÓNICO INEXISTENTE
+18 A  	    *bcc #$F2
+19 A 8007	    ADCA #DDRA
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+20 A 8007	B91001			    ADCA DDRA
+21 A 800A	8920			    ADCA #DDRR
+22 A 800C	9920			    ADCA DDRR
+23 A 800E	    ADCA #DDRB
 			^Error 001: CONSTANTE INEXTISTENTE
-4 A  	
-5 A 8003	01          	NOP
-6 A 8004	01          	NOP
-7 A  	
-8 A 8005	01          	NOP
-9 A 8006	01          	NOP
-10 A 8007	[43;31m181E[41;33m89[0m[41;33m40[0m SALTE	BRSET $89,Y,#$40 SALTE *Es un comntario
-11 A 800C		BCLR  $55,#$77 *Comentario 2
-			^Error : BCLR debe tener 2 operandos.
-12 A 800F		BCLR $55,#$77 GGJHI *ff
-			^Error: Error de sintaxis. 
-13 A  	END
+24 A 800E	    ADCA DDRB
+			^Error 002: VARIABLE INEXTISTENTE
+25 A 800E	    adca #$FFF
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+26 A 800E	    adca $FFF
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+27 A 800E	    adca FFF
+			^Error 002: VARIABLE INEXTISTENTE
+28 A 800E	C961			    adcb #'a
+29 A 8010	D961			    adcb 'a
+30 A 8012	    adcb 'ab *Esto no se puede
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+31 A 8012	C996			    adCB #150
+32 A 8014	D996			    adCB 150
+33 A 8016	F93A98			    adCB 15000
+34 A 8019	9D11			    JSR $11
+35 A 801B	781212			    ASL $1212
+36 A 8020	1414	FCB $14,$14
+37 A 8022	1211    fcb $12,$11
+38 A  	    *END
+39 A  	
+40 A 8022	    LDAA #DDRF,X *tamaño incorrecto, mnemomico existente, usa variable ----------------- correcto
+			^Error 001: CONSTANTE INEXISTENTE
+41 A 8024	A620			    LDAA #DDRI,X *tamaño correcto, mnemomico existente, usa variable ----------------- correcto
+42 A 8026	              
+43 A 8026	    LDD $172,y *tamaño incorrecto, mnemomico existente, no usa variable ----------------- correcto
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+44 A 8028	EC84			    LDD 132,Y  *tamaño correcto, mnemomico existente, valor decimal  ----------------- correcto
+45 A 802A	              
+46 A 802A	A620			    LdAa #DDRR,x *reconice constante ----------------- correcto
+47 A 802C	    LdAa 1331,X *decimal y tamaño incorrecto ----------------- correcto
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+48 A 802E	A6			    LdAa ABCD,X *reconice variable ----------------- correcto 
+49 A 8030	A631			    LdAa #ABCD,X *reconice constante ----------------- correcto
+50 A 8032	A6			    LDAA DDRR,X *   reconice variable ----------------- correcto
+51 A 8034	    LDD $17A,X  * longitud erronea----------------- correcto
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+52 A 8036	A6			    LDAA DDAD,X *variable inexistente ----------------- correcto
+53 A 8038	EC17			    LDD $17,x * es octal ----------------- correcto
+54 A 803A	ECA7			    LDD $A7,X * es hexagecimal ----------------- correcto
+55 A 803C	    ldn $172,X  *no existe mnemonico ----------------- correcto
+			^Error 004: MNEMÓNICO INEXISTENTE
+
+56 A 803C	
+57 A 803C	    LDAB $672,y *tamaño incorrecto, mnemomico existente, no usa variable ----------------- correcto
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+58 A 803E	    LDX F11,Y  **tamaño correcto, mnemomico existente, valor decimal  por probar ----------------- correcto
+			^Error 001: VARIABLE INEXISTENTE
+59 A 803E	
+60 A 8040	    LDAA #DDRF,y *tamaño incorrecto, mnemomico existente, usa variable ----------------- correcto
+			^Error 001: CONSTANTE INEXISTENTE
+61 A 8042	A620			    LDAA #DDRI,Y *tamaño correcto, mnemomico existente, usa variable ----------------- correcto
+62 A 8044	              
+63 A 8044	    LDD $172,Y *tamaño incorrecto, mnemomico existente, no usa variable ----------------- correcto
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+64 A 8046	EC84			    LDD 132,Y  *tamaño correcto, mnemomico existente, valor decimal  ----------------- correcto
+65 A 8048	              
+66 A 8048	A620			    LdAa #DDRR,Y *reconice constante ----------------- correcto
+67 A 804A	    LdAa 1331,y *decimal y tamaño incorrecto ----------------- correcto
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+68 A 804C	A6			    LdAa ABCD,Y *reconice variable ----------------- correcto 
+69 A 804E	A631			    LdAa #ABCD,y *reconice constante ----------------- correcto
+70 A 8050	A6			    LDAA DDRR,Y *   reconice variable ----------------- correcto
+71 A 8052	    LDD $17A,y  * longitud erronea----------------- correcto
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+72 A 8054	A6			    LDAA DDAD,y *variable inexistente ----------------- correcto
+73 A 8056	EC17			    LDD $17,y * es octal ----------------- correcto
+74 A 8058	    LDD $A7,y  es hexagecimal ----------------- correcto
+			^Error 005: Error 000: ERROR DE SINTAXIS
+75 A 805A	    ldn $172,y  no existe mnemonico ----------------- correcto
+			^Error 004: MNEMÓNICO INEXISTENTE
+
+76 A 805A	              
+77 A 805A	
+78 A 805A	EC73			    LDD 's,Y * 
+79 A 805C	EC53			    LDD 'S,y * 
+80 A 805E	    LDD 'se,Y *
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+81 A 8060	              
+82 A 8060	EC73			    LDD 's,X * 
+83 A 8062	EC53			    LDD 'S,X * 
+84 A 8064	    LDD 'se,X * 
+			^Error 007: MAGNITUD DE  OPERANDO ERRONEA
+85 A 8064	
+86 A  	    FCB $14,15 *si ves esto dale like
+			^Error: Sintaxis incorrecta
+87 A 8069	141516    FCB $14,$15 $16 *si ves esto dale likex2
+88 A  		FCB 
+89 A 8069		FCB *ojo aquí
+90 A  	    FCB esto no se puede
+			^Error: Sintaxis incorrecta
+91 A   		END *Esto sí se puede
