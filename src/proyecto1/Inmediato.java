@@ -33,7 +33,7 @@ public class Inmediato {
      * @param line linea que supuestamente contiene una instrucción del modo de direccionamiento INM.
      * @return OPCODE de la instrucción procesada o mensaje de error.
      */
-    public String AnalizarLinea(String line, Mnemonicos m, Hashtable<String,Integer> variables, int numMemoria){
+    public String AnalizarLinea(String line, Mnemonicos m, Hashtable<String,String> variables, int numMemoria){
         //Se llama a mnemónicos para recuperar la lista de instrucciones del modo Inmediato
         metodosDeLectura lectura = new metodosDeLectura();
         Inmediato=m.LeerOpcode("ListaInmediato.txt");
@@ -75,26 +75,21 @@ public class Inmediato {
                     newLine=newLine.concat(Extendido.get(palabra));
                     //System.out.println(instruccion +" Es instruccion del modo de direccionamiento extendido");
                     
-                    //Cálculo del número de espacios de memoria utilizado hasta el momento
-                    metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesExtendido.get(palabra)+(Extendido.get(palabra)).length()/2;
+                   
                     
                     d=1;
                 }else if((Directo.containsKey(palabra))&&!(Extendido.containsKey(palabra))&&!(Inmediato.containsKey(palabra))){
                     instruccion=instruccion.concat(palabra);
                     newLine=newLine.concat(Directo.get(palabra));
                     //System.out.println(instruccion +" Es instruccion del modo de direccionamiento directo");
-                    
-                    //Cálculo del número de espacios de memoria utilizado hasta el momento
-                    metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesDirecto.get(palabra)+(Directo.get(palabra)).length()/2;
-                    
+                   
                     d=2;
                 }else if((Inmediato.containsKey(palabra))&&!(Directo.containsKey(palabra))&&!(Extendido.containsKey(palabra))){
                     instruccion=instruccion.concat(palabra);
                     newLine=newLine.concat(Inmediato.get(palabra));
                     //System.out.println(instruccion +" Es instruccion del modo de direccionamiento inmediato");
                     
-                    //Cálculo del número de espacios de memoria utilizado hasta el momento
-                    metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesInmediato.get(palabra)+(Inmediato.get(palabra)).length()/2;
+               
                     
                     d=3;
                 }else{
@@ -162,7 +157,7 @@ public class Inmediato {
                         cha=true;
                         
                     }else{
-                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                        String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                         //Guardamos la salida de la primer pasada
                         Output outPut = new Output();
                         outPut.mensaje = mensaje;
@@ -177,7 +172,7 @@ public class Inmediato {
                 if(imm){
                     if(variables.containsKey(palabra)){
                         //El operando es una constante porque tenía #
-                        op=variables.get(palabra).toString();
+                        op=variables.get(palabra);
                         //System.out.println("El operando "+palabra+" es una constante con valor: "+op);
                     }else if(((!variables.containsKey(palabra))&&(!hex))&&(!esNumero(palabra))&&(!cha)){
                         String mensaje = "\u001B[31m Error 001: CONSTANTE INEXTISTENTE\u001B[0m\n";
@@ -194,10 +189,10 @@ public class Inmediato {
                 }else{
                     if(variables.containsKey(palabra)){
                         //El operando es una variable porque no tenía #
-                        op=variables.get(palabra).toString();
+                        op=variables.get(palabra);
                         //System.out.println("El operando "+palabra+" es una variable con valor: "+op);
                     }else if(((!variables.containsKey(palabra))&&(!hex))&&(!esNumero(palabra))&&(!cha)){
-                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 002: VARIABLE INEXTISTENTE\u001B[0m\n";
+                        String mensaje = "\u001B[31m Error 002: VARIABLE INEXTISTENTE\u001B[0m\n";
                         //Guardamos la salida de la primer pasada
                         Output outPut = new Output();
                         outPut.mensaje = mensaje;
@@ -216,6 +211,9 @@ public class Inmediato {
                             String mensaje = "\n\u001B[45;30m"+newLine+"\u001B[0m";
                             newLine=newLine.concat(op);
                             mensaje = mensaje + "\u001B[35m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                            
+                             //Cálculo del número de espacios de memoria utilizado hasta el momento
+                             metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesExtendido.get(instruccion)+(Extendido.get(instruccion)).length()/2;
                             //Guardamos la salida de la primer pasada
                             Output outPut = new Output();
                             outPut.mensaje = mensaje;
@@ -231,6 +229,9 @@ public class Inmediato {
                             String mensaje = "\n\u001B[46;30m"+newLine+"\u001B[0m";
                             newLine=newLine.concat(op);
                             mensaje = mensaje + "\u001B[36m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                            
+                             //Cálculo del número de espacios de memoria utilizado hasta el momento
+                            metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesDirecto.get(instruccion)+(Directo.get(instruccion)).length()/2;
                             //Guardamos la salida de la primer pasada
                             Output outPut = new Output();
                             outPut.mensaje = mensaje;
@@ -246,6 +247,9 @@ public class Inmediato {
                             String mensaje = "\n\u001B[43;30m"+newLine+"\u001B[0m";
                             newLine=newLine.concat(op);
                             mensaje = mensaje + "\u001B[33m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                            
+                             //Cálculo del número de espacios de memoria utilizado hasta el momento
+                            metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesInmediato.get(instruccion)+(Inmediato.get(instruccion)).length()/2;
                             //Guardamos la salida de la primer pasada
                             Output outPut = new Output();
                             outPut.mensaje = mensaje;
@@ -266,12 +270,14 @@ public class Inmediato {
                                 String mensaje = "\n\u001B[43;30m"+newLine+"\u001B[0m";
                                 newLine=newLine.concat(op);
                                 mensaje = mensaje +"\u001B[33m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                                 //Cálculo del número de espacios de memoria utilizado hasta el momento
+                                    metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesInmediato.get(instruccion)+(Inmediato.get(instruccion)).length()/2;
                                 //Guardamos la salida de la primer pasada
                                 Output outPut = new Output();
                                 outPut.mensaje = mensaje;
                                 metodosDeLectura.salidas.add(outPut);
                             }else{
-                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                                 //Guardamos la salida de la primer pasada
                                 Output outPut = new Output();
                                 outPut.mensaje = mensaje;
@@ -295,6 +301,9 @@ public class Inmediato {
                                 String mensaje = "\n\u001B[46;30m"+newLine+"\u001B[0m";
                                 newLine=newLine.concat(op);
                                 mensaje = mensaje + "\u001B[36m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                                
+                                //Cálculo del número de espacios de memoria utilizado hasta el momento
+                                metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesDirecto.get(instruccion)+(Directo.get(instruccion)).length()/2;
                                 //Guardamos la salida de la primer pasada
                                 Output outPut = new Output();
                                 outPut.mensaje = mensaje;
@@ -308,12 +317,14 @@ public class Inmediato {
                                 String mensaje = "\n\u001B[45;30m"+newLine+"\u001B[0m";
                                 newLine=newLine.concat(op);
                                 mensaje = mensaje + "\u001B[35m"+op+"\u001B[0m"+"\t\t\t"+line+"\n";
+                                 //Cálculo del número de espacios de memoria utilizado hasta el momento
+                                metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesExtendido.get(instruccion)+(Extendido.get(instruccion)).length()/2;
                                 //Guardamos la salida de la primer pasada
                                 Output outPut = new Output();
                                 outPut.mensaje = mensaje;
                                 metodosDeLectura.salidas.add(outPut);
                             }else{
-                                String mensaje = line+"\n\t\t\t^\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
+                                String mensaje = "\u001B[31m Error 007: MAGNITUD DE  OPERANDO ERRONEA\u001B[0m\n";
                                 //Guardamos la salida de la primer pasada
                                 Output outPut = new Output();
                                 outPut.mensaje = mensaje;
@@ -328,7 +339,7 @@ public class Inmediato {
             if((numPalabra==3)&&(palabra.startsWith("*"))){
                 //Es un comentario, no es necesario realizar nada más
             }else if((numPalabra==3)&&(!palabra.startsWith("*"))){
-                String mensaje = line+"\n\t\t\t^\u001B[31m Error 000: ERROR DE SINTAXIS\u001B[0m\n";
+                String mensaje = "\u001B[31m Error 000: ERROR DE SINTAXIS\u001B[0m\n";
                 //Guardamos la salida de la primer pasada
                 Output outPut = new Output();
                 outPut.mensaje = mensaje;
@@ -338,7 +349,7 @@ public class Inmediato {
             }
         }
         if (numPalabra<2){
-            String mensaje = line+"\n\t\t\t^\u001B[31m Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\u001B[0m\n";
+            String mensaje = "\u001B[31m Error 005: INSTRUCCIÓN CARECE DE  OPERANDO(S)\u001B[0m\n";
             //Guardamos la salida de la primer pasada
             Output outPut = new Output();
             outPut.mensaje = mensaje;

@@ -24,7 +24,7 @@ public class IndexadoX {
         metodosDeLectura lectura = new metodosDeLectura();
         
     
-    public String revisarLineaX(String line, Mnemonicos m, Hashtable<String,Integer> variables, int numMemoria){
+    public String revisarLineaX(String line, Mnemonicos m, Hashtable<String,String> variables, int numMemoria){
         
     
         IndexadoX=m.LeerOpcode("ListaIndexadoX.txt");
@@ -129,7 +129,7 @@ public class IndexadoX {
                         //Busca a palabra en la HashTable de constantes y variables
                             if(variables.containsKey(recortarSS(palabra, 3))){
                                     //Si existe guarda el valor de la variable en cop 
-                                    cop=variables.get(recortarSS(palabra, 3)).toString();
+                                    cop=variables.get(recortarSS(palabra, 3));
 
                                     //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
                                       //System.out.println("La instruccion es "+instruccion +" y su numero de bytes debe ser: "+BytesIndexadoY.get(instruccion));
@@ -171,7 +171,7 @@ public class IndexadoX {
                 //Define si es variable
                      if(false==(esD(recortarCS(palabra, 2))) && false==(esCoV(recortarSS(palabra, 2))) && true==(variables.containsKey(recortarCS(palabra, 2))) && esCoH(recortarCS(palabra, 2))== false && Hexa( palabra)==true && recortarCS(palabra, 2).startsWith("$")== false){ 
 
-                                cop=variables.get(recortarCS(palabra, 2)).toString();
+                                cop=variables.get(recortarCS(palabra, 2));
                                
                                 //Se comprueba que la longitud del operando coincida con el necesario por la instrucción
                                     //System.out.println("La instruccion es "+instruccion +" y su numero de bytes debe ser: "+BytesIndexadoY.get(instruccion));

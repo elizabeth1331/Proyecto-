@@ -69,7 +69,7 @@ public class Inherente {
                         //Cálculo del número de espacio en memoria utilizado hasta el momento
                         metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesInherente.get(palabra);
                     }else{
-                        String mensaje = line+"\n\t\t\t^\u001B[31m Error 004: MNEMÓNICO INEXISTENTE \u001B[0m\n";
+                        String mensaje = "\u001B[31m Error 004: MNEMÓNICO INEXISTENTE \u001B[0m\n";
                         //Guardamos la salida de la primer pasada
                         Output outPut = new Output();
                         outPut.mensaje = mensaje;
@@ -93,7 +93,7 @@ public class Inherente {
                         metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesInherente.get(palabra);
                     }
                 }else{
-                    String mensaje = line+"\n\t\t\t^\u001B[31m Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S) \u001B[0m\n";
+                    String mensaje = "\u001B[31m Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S) \u001B[0m\n";
                     //Guardamos la salida de la primer pasada
                     Output outPut = new Output();
                     outPut.mensaje = mensaje;
@@ -106,7 +106,7 @@ public class Inherente {
                 if(palabra.startsWith("*")){
                     //Es un comentario, no es necesario realizar nada más
                 }else if(!palabra.startsWith("*")){
-                    String mensaje = line+"\n\t\t\t^\u001B[31m Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S) \u001B[0m\n";
+                    String mensaje = "\u001B[31m Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S) \u001B[0m\n";
                     //Guardamos la salida de la primer pasada
                     Output outPut = new Output();
                     outPut.mensaje = mensaje;
