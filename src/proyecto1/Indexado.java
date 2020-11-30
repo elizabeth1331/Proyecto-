@@ -58,7 +58,7 @@ public class Indexado {
                     instruccion=instruccion.concat(palabra);
                     newLine=newLine.concat(IndexadoX.get(palabra));
                     System.out.println(instruccion +" Es instruccion de Indexado en X");
-                }else if (lectura.EsInstruccion(palabra, m)){
+                //}else if (lectura.EsInstruccion(palabra, m)){
                     System.out.println("Error 000: ERROR DE SINTAXIS 1");
                     //Instrucción de otro modo de direccionamiento con #
                     System.out.println("Error 000: ERROR DE SINTAXIS 1");

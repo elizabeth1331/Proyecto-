@@ -105,12 +105,12 @@ public class Mnemonicos {
         Inmediato.put("CPY","188C");
         Inmediato.put("EORA","88");
         Inmediato.put("EORB","C8");
-        Inmediato.put("IDAA","86");
-        Inmediato.put("IDAB","C6");
-        Inmediato.put("IDD","CC");
-        Inmediato.put("IDS","8E");
-        Inmediato.put("IDX","CE");
-        Inmediato.put("IDY","18CE");
+        Inmediato.put("LDAA","86");
+        Inmediato.put("LDAB","C6");
+        Inmediato.put("LDD","CC");
+        Inmediato.put("LDS","8E");
+        Inmediato.put("LDX","CE");
+        Inmediato.put("LDY","18CE");
         Inmediato.put("ORAA","8A");
         Inmediato.put("ORAB","CA");
         Inmediato.put("SBCA","82");
@@ -419,7 +419,7 @@ public class Mnemonicos {
         Extendido.put("STS","BF");
         
         Extendido.put("STX","FF");
-        Extendido.put("STY","FF");
+        Extendido.put("STY","18FF");
         
         Extendido.put("SUBA","B0");
         Extendido.put("SUBB","F0");
@@ -447,12 +447,12 @@ public class Mnemonicos {
         BytesInmediato.put("CPY",2);
         BytesInmediato.put("EORA",1);
         BytesInmediato.put("EORB",1);
-        BytesInmediato.put("IDAA",1);
-        BytesInmediato.put("IDAB",1);
-        BytesInmediato.put("IDD",2);
-        BytesInmediato.put("IDS",2);
-        BytesInmediato.put("IDX",2);
-        BytesInmediato.put("IDY",2);
+        BytesInmediato.put("LDAA",1);
+        BytesInmediato.put("LDAB",1);
+        BytesInmediato.put("LDD",2);
+        BytesInmediato.put("LDS",2);
+        BytesInmediato.put("LDX",2);
+        BytesInmediato.put("LDY",2);
         BytesInmediato.put("ORAA",1);
         BytesInmediato.put("ORAB",1);
         BytesInmediato.put("SBCA",1);

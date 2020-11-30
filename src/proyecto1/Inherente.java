@@ -27,7 +27,8 @@ public class Inherente {
      * @param line linea que supuestamente contiene una instrucción del modo de direccionamiento INH.
      * @return OPCODE de la instrucción procesada o mensaje de error.
      */
-    public String AnalizarLinea(String line, Mnemonicos m){
+    public String AnalizarLinea(String line, Mnemonicos m, int numMemoria){
+        //System.out.println("Entro a inherente");
         
         //Se llama a mnemónicos para recuperar la lista de instrucciones del modo Inherente
         metodosDeLectura lectura = new metodosDeLectura();
@@ -60,12 +61,20 @@ public class Inherente {
                     palabra=palabra.toUpperCase();
                     if (Inherente.containsKey(palabra)){
                         instruccion=instruccion.concat(palabra+" ");
-                        newLine=newLine.concat(palabra+" ");
+                                                
                         newLine=newLine.concat(Inherente.get(palabra));
+                        
                         //System.out.println("La linea resultante es: " +newLine);
+                        
+                        //Cálculo del número de espacio en memoria utilizado hasta el momento
+                        metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesInherente.get(palabra);
                     }else{
-                        System.out.println("Error 004: MNEMÓNICO INEXISTENTE");
-                        return "Error 004: MNEMÓNICO INEXISTENTE";
+                        String mensaje = "\u001B[31m Error 004: MNEMÓNICO INEXISTENTE \u001B[0m\n";
+                        //Guardamos la salida de la primer pasada
+                        Output outPut = new Output();
+                        outPut.mensaje = mensaje;
+                        metodosDeLectura.salidas.add(outPut);
+                        return line + "\n\t\t\t^Error 004: MNEMÓNICO INEXISTENTE";
                     }
                 }
             }else if((numPalabra==1)&& numTotalPalabra>=2){
@@ -75,13 +84,21 @@ public class Inherente {
                     palabra=palabra.toUpperCase();
                     if (Inherente.containsKey(palabra)){
                         instruccion=instruccion.concat(palabra+" ");
-                        newLine=newLine.concat(palabra+" ");
+                        
                         newLine=newLine.concat(Inherente.get(palabra));
+                        
                         //System.out.println("La linea resultante es: " +newLine);
+                        
+                        //Cálculo del número de espacio en memoria utilizado hasta el momento
+                        metodosDeLectura.numMemoria = metodosDeLectura.numMemoria + BytesInherente.get(palabra);
                     }
                 }else{
-                    System.out.println("Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)");
-                    return "Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)";
+                    String mensaje = "\u001B[31m Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S) \u001B[0m\n";
+                    //Guardamos la salida de la primer pasada
+                    Output outPut = new Output();
+                    outPut.mensaje = mensaje;
+                    metodosDeLectura.salidas.add(outPut);
+                    return line + "\n\t\t\t^Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)";
                 }
             }
             
@@ -89,11 +106,24 @@ public class Inherente {
                 if(palabra.startsWith("*")){
                     //Es un comentario, no es necesario realizar nada más
                 }else if(!palabra.startsWith("*")){
-                    System.out.println("Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)");
-                    return "Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)";
+                    String mensaje = "\u001B[31m Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S) \u001B[0m\n";
+                    //Guardamos la salida de la primer pasada
+                    Output outPut = new Output();
+                    outPut.mensaje = mensaje;
+                    metodosDeLectura.salidas.add(outPut);
+                    return line + "\n\t\t\t^Error 006: INSTRUCCIÓN NO LLEVA OPERANDO(S)";
                 }
             }
         }
+        //System.out.println("******La resiltante es:" + newLine);
+        String mensaje ="\u001B[42;30m"+ newLine+ "\u001B[0m";
+        mensaje = mensaje + "\t\t\t"+line+"\n";
+        //Guardamos la salida de la primer pasada
+        Output outPut = new Output();
+        outPut.mensaje = mensaje;
+        metodosDeLectura.salidas.add(outPut);
+        
+        newLine = newLine.concat("          "+ line); 
         return newLine;
     }
 }
